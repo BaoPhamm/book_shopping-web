@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "books")
-public class Books {
+public class Book {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +24,11 @@ public class Books {
 	private Double price;
 	private String img_src;
 
-	public Books() {
+	public Book() {
 		super();
 	}
 
-	public Books(long id, String title, String author, long total_pages, long required_age, Date release_date,
+	public Book(long id, String title, String author, long total_pages, long required_age, Date release_date,
 			Double price, String img_src) {
 		super();
 		this.id = id;
