@@ -8,22 +8,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class MvcConfiguration implements WebMvcConfigurer {
 
-	@Value("${cors.allowedOrigins}")
-	private String allowedOrigins;
+	@Value("${frontend.host}")
+	private String frontend_host;
 
-//	@Bean
-//	public RestTemplate getRestTemplate() {
-//		return new RestTemplate();
-//	}
-
-//	@Override
-//	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//		registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-//	}
+	@Value("${backend.host}")
+	private String backend_host;
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/api/v1/**").allowedOrigins("*")
+		registry.addMapping("/api/v1/*").allowedOrigins(frontend_host, backend_host)
 				.allowedMethods("HEAD", "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE").allowedHeaders("*");
 	}
 }
