@@ -3,7 +3,6 @@ package com.springboot.shopping.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +16,6 @@ import com.springboot.shopping.dto.book.BookRequest;
 import com.springboot.shopping.dto.book.BookResponse;
 import com.springboot.shopping.mapper.BookMapper;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1")
 public class BookController {
@@ -49,7 +47,8 @@ public class BookController {
 
 	// Update an existing book
 	@PutMapping("/books/update/{id}")
-	public ResponseEntity<BookResponse> updateBook(@PathVariable("id") Long BookId, @RequestBody BookRequest bookRequest) {
+	public ResponseEntity<BookResponse> updateBook(@PathVariable("id") Long BookId,
+			@RequestBody BookRequest bookRequest) {
 		return ResponseEntity.ok(bookMapper.updateBook(BookId, bookRequest));
 	}
 
