@@ -13,15 +13,13 @@ import com.springboot.shopping.model.Book;
 import com.springboot.shopping.repository.BookRepository;
 import com.springboot.shopping.service.BookService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
 	private final BookRepository bookRepository;
-
-	public BookServiceImpl(BookRepository bookRepository) {
-		super();
-		this.bookRepository = bookRepository;
-	}
 
 	@Override
 	public List<Book> findAllBooks() {

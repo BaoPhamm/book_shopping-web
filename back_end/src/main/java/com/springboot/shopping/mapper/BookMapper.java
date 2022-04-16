@@ -9,17 +9,14 @@ import com.springboot.shopping.dto.book.BookResponse;
 import com.springboot.shopping.model.Book;
 import com.springboot.shopping.service.BookService;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class BookMapper {
 
 	private final CommonMapper commonMapper;
 	private final BookService bookService;
-
-	public BookMapper(CommonMapper commonMapper, BookService bookService) {
-		super();
-		this.commonMapper = commonMapper;
-		this.bookService = bookService;
-	}
 
 	public BookResponse findBookById(Long bookId) {
 		return commonMapper.convertToResponse(bookService.findBookById(bookId).get(), BookResponse.class);

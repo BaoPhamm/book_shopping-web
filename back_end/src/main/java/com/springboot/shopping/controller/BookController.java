@@ -16,44 +16,42 @@ import com.springboot.shopping.dto.book.BookRequest;
 import com.springboot.shopping.dto.book.BookResponse;
 import com.springboot.shopping.mapper.BookMapper;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/books")
+@RequiredArgsConstructor
 public class BookController {
 
 	private final BookMapper bookMapper;
 
-	public BookController(BookMapper bookMapper) {
-		super();
-		this.bookMapper = bookMapper;
-	}
-
 	// Get book by ID
-	@GetMapping("/books/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<BookResponse> getBookById(@PathVariable("id") Long BookId) {
 		return ResponseEntity.ok(bookMapper.findBookById(BookId));
 	}
 
 	// Get All books
-	@GetMapping("/books")
+	@GetMapping()
 	public ResponseEntity<List<BookResponse>> getAllBooks() {
 		return ResponseEntity.ok(bookMapper.findAllBooks());
 	}
 
 	// Create a new book
-	@PostMapping("/books/create")
+	@PostMapping("/create")
 	public ResponseEntity<BookResponse> saveBook(@RequestBody BookRequest bookRequest) {
 		return ResponseEntity.ok(bookMapper.createBook(bookRequest));
 	}
 
 	// Update an existing book
-	@PutMapping("/books/update/{id}")
+	@PutMapping("/update/{id}")
 	public ResponseEntity<BookResponse> updateBook(@PathVariable("id") Long BookId,
 			@RequestBody BookRequest bookRequest) {
 		return ResponseEntity.ok(bookMapper.updateBook(BookId, bookRequest));
 	}
 
 	// Delete an existing book by ID
-	@DeleteMapping("/books/delete/{id}")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<List<BookResponse>> deleteBook(@PathVariable("id") Long BookId) {
 		return ResponseEntity.ok(bookMapper.deleteBook(BookId));
 	}
