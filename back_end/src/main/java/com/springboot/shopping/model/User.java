@@ -16,9 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = "username"),
-		@UniqueConstraint(columnNames = "phoneNumber") })
-//@Table(name = "users")
+@Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = "username") })
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,10 +32,6 @@ public class User {
 	private String password;
 	private String phoneNumber;
 	private String address;
-
-//	@ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-//	@CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
-//	@Enumerated(EnumType.STRING)
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<Role> roles = new ArrayList<>();

@@ -8,7 +8,6 @@ import com.springboot.shopping.dto.role.RoleRequest;
 import com.springboot.shopping.dto.role.RoleResponse;
 import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
-import com.springboot.shopping.model.Book;
 import com.springboot.shopping.model.Role;
 import com.springboot.shopping.model.User;
 import com.springboot.shopping.service.UserService;
@@ -28,6 +27,10 @@ public class UserMapper {
 
 	public UserResponse findUserByUsername(String username) {
 		return commonMapper.convertToResponse(userService.findUserByUsername(username).get(), UserResponse.class);
+	}
+
+	public User findUserByUsernameReturnObject(String username) {
+		return userService.findUserByUsername(username).get();
 	}
 
 	public List<UserResponse> findAllUsers() {
