@@ -2,6 +2,7 @@ package com.springboot.shopping.service.impl;
 
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.springboot.shopping.exception.PasswordConfirmationException;
@@ -20,7 +21,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
-	// private final PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public String registerUser(User user, String password2) {
@@ -41,7 +42,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 
 		user.getRoles().add(role.get());
-		// user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		userRepository.save(user);
 		return "User successfully registered.";
 	}

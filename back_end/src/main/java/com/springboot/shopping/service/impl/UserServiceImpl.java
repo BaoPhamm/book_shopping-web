@@ -1,12 +1,20 @@
 package com.springboot.shopping.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.springboot.shopping.exception.ApiRequestException;
+import com.springboot.shopping.exception.UserNotFoundException;
+import com.springboot.shopping.exception.UserRoleExistException;
 import com.springboot.shopping.model.Role;
 import com.springboot.shopping.model.User;
 import com.springboot.shopping.repository.RoleRepository;
@@ -14,14 +22,25 @@ import com.springboot.shopping.repository.UserRepository;
 import com.springboot.shopping.service.UserService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		Optional<User> user = userRepository.findByUsername(username);
+		if (!user.isPresent()) {	
+			throw new UserNotFoundException();
+		}
+		Collection<SimpleGrantedAuthority> Authorities = new ArrayList<>();
+		user.get().getRoles().forEach(role -> Authorities.add(new SimpleGrantedAuthority(role.getName())));
+		return new org.springframework.security.core.userdetails.User(user.get().getUsername(),
+				user.get().getPassword(), Authorities);
+	}
 
 	@Override
 	public Optional<User> findUserById(Long userId) {
@@ -64,9 +83,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void addRoleToUser(String username, String roleName) {
-		Optional<User> user = userRepository.findByUsername(username);
-		Optional<Role> role = roleRepository.findByname(roleName);
-		user.get().getRoles().add(role.get());
+		User user = userRepository.findByUsername(username)
+				.orElseThrow(() -> new ApiRequestException("User not found!", HttpStatus.NOT_FOUND));
+		Role role = roleRepository.findByname(roleName)
+				.orElseThrow(() -> new ApiRequestException("Role not found!", HttpStatus.NOT_FOUND));
+		if (user.getRoles().contains(role)) {
+			throw new UserRoleExistException("User already has this role !");
+		}
+		user.getRoles().add(role);
+		userRepository.save(user);
 	}
 
 }
