@@ -50,42 +50,6 @@ public class UserController {
 	@Value("${jwt.secret}")
 	private String secretKey;
 
-	// Get user by ID
-	@GetMapping("/users/{id}")
-	public ResponseEntity<UserResponse> getUserById(@PathVariable("id") Long UserId) {
-		return ResponseEntity.ok(userMapper.findUserById(UserId));
-	}
-
-	// Get All users
-	@GetMapping("/users")
-	public ResponseEntity<List<UserResponse>> getAllUsers() {
-		return ResponseEntity.ok(userMapper.findAllUsers());
-	}
-
-	// Update an existing user
-	@PutMapping("/users/update/{id}")
-	public ResponseEntity<UserResponse> updateProfileUser(@PathVariable("id") Long UserId,
-			@RequestBody UserRequest userRequest) {
-		return ResponseEntity.ok(userMapper.updateProfileUser(UserId, userRequest));
-	}
-
-	// Delete an existing user by ID
-	@DeleteMapping("/users/delete/{id}")
-	public ResponseEntity<List<UserResponse>> deleteUser(@PathVariable("id") Long UserId) {
-		return ResponseEntity.ok(userMapper.deleteUser(UserId));
-	}
-
-	@PostMapping("/users/create/role")
-	public ResponseEntity<RoleResponse> createRole(@RequestBody RoleRequest roleRequest) {
-		return ResponseEntity.ok(userMapper.createRole(roleRequest));
-	}
-
-	@PostMapping("/users/role/addtouser")
-	public ResponseEntity<?> addRoleToUser(@RequestBody AddRoleToUserForm addRoleToUserForm) {
-		userMapper.addRoleToUser(addRoleToUserForm.getUsername(), addRoleToUserForm.getRolename());
-		return ResponseEntity.ok().build();
-	}
-
 	@GetMapping("/token/refresh")
 	public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String authorizationHeader = request.getHeader(AUTHORIZATION);

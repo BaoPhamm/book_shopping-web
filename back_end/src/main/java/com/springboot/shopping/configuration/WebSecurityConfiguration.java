@@ -44,12 +44,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		// Disable Cross-Site Request Forgery
 		http.csrf().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.authorizeRequests().antMatchers("/api/v1/login/**", "/api/v1/token/refresh/**").permitAll();
-		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/books/**").hasAnyAuthority("USER");
-		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/users/**").hasAnyAuthority("USER");
-		http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/v1/users/delete/**").hasAnyAuthority("ADMIN");
-		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/users/add-role-to-user/**")
-				.hasAnyAuthority("ADMIN");
+		http.authorizeRequests().antMatchers("/api/v1/login/**", "/api/v1/token/refresh/**", "/swagger-ui.html",
+				"/swagger-ui/**", "/v3/api-docs/**").permitAll();
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/token/refresh").hasAnyAuthority("USER");
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/admin/**").hasAnyAuthority("ADMIN");
+		http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/v1/admin/**").hasAnyAuthority("ADMIN");
+		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/admin/**").hasAnyAuthority("ADMIN");
+		http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/v1/admin/**").hasAnyAuthority("ADMIN");
 		http.authorizeRequests().anyRequest().fullyAuthenticated();
 		http.addFilter(customAuthenticationFilter);
 		http.addFilterBefore(new CustomAuthorizationFilter(secretKey), UsernamePasswordAuthenticationFilter.class);
