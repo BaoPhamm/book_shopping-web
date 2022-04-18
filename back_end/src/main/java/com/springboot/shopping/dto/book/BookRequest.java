@@ -25,19 +25,19 @@ public class BookRequest {
 	private String author;
 
 	@NotNull(message = "Fill in the input field")
-	private long total_pages;
+	private long totalPages;
 
 	@NotNull(message = "Fill in the input field")
-	private long required_age;
+	private long requiredAge;
 
 	@NotBlank(message = "Fill in the input field")
 	@Length(max = 255)
-	private Date release_date;
+	private Date releaseDate;
 
 	@NotNull(message = "Fill in the input field")
 	private Double price;
 
 	@NotBlank(message = "Fill in the input field")
 	@Length(max = 255)
-	private String img_src;
+	private String imgSrc;
 }

@@ -13,9 +13,9 @@ public class BookResponse {
 	private long id;
 	private String title;
 	private String author;
-	private long total_pages;
-	private long required_age;
-	private Date release_date;
+	private long totalPages;
+	private long requiredAge;
+	private Date releaseDate;
 	private Double price;
-	private String img_src;
+	private String imgSrc;
 }
