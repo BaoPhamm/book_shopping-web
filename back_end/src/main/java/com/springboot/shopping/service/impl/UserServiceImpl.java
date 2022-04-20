@@ -11,9 +11,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.springboot.shopping.exception.ApiRequestException;
+import com.springboot.shopping.exception.PasswordConfirmationException;
 import com.springboot.shopping.exception.UserNotFoundException;
 import com.springboot.shopping.exception.UserRoleExistException;
 import com.springboot.shopping.model.Role;
@@ -30,6 +32,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -92,6 +95,34 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		}
 		user.getRoles().add(role);
 		userRepository.save(user);
+	}
+	
+    @Override
+    public UserEntity updateProfile(String username, UserEntity user) {
+    	UserEntity userFromDb = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ApiRequestException("Username not found.", HttpStatus.NOT_FOUND));
+        userFromDb.setFirstName(user.getFirstName());
+        userFromDb.setLastName(user.getLastName());
+        userFromDb.setAddress(user.getAddress());
+        userFromDb.setPhoneNumber(user.getPhoneNumber());
+        userRepository.save(userFromDb);
+        return userFromDb;
+    }
+    
+	@Override
+	public String passwordReset(String username, String password, String password2) {
+		if (password2.isBlank()) {
+			throw new PasswordConfirmationException("Password confirmation cannot be blank.");
+		}
+		if (password != null && !password.equals(password2)) {
+			throw new PasswordConfirmationException("Passwords do not match.");
+		}
+		UserEntity user = userRepository.findByUsername(username)
+				.orElseThrow(() -> new ApiRequestException("User not found.", HttpStatus.NOT_FOUND));
+		user.setPassword(passwordEncoder.encode(password));
+		userRepository.save(user);
+		return "Password successfully changed!";
+
 	}
 
 }

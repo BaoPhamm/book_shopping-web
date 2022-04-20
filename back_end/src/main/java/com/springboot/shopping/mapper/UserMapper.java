@@ -3,11 +3,14 @@ package com.springboot.shopping.mapper;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
 
+import com.springboot.shopping.dto.PasswordResetRequest;
 import com.springboot.shopping.dto.role.RoleRequest;
 import com.springboot.shopping.dto.role.RoleResponse;
 import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
+import com.springboot.shopping.exception.InputFieldException;
 import com.springboot.shopping.model.Role;
 import com.springboot.shopping.model.UserEntity;
 import com.springboot.shopping.service.UserService;
@@ -49,11 +52,22 @@ public class UserMapper {
 	public UserResponse updateProfileUser(Long userId, UserRequest userRequest) {
 		UserEntity user = commonMapper.convertToEntity(userRequest, UserEntity.class);
 		return commonMapper.convertToResponse(userService.updateProfileUser(userId, user), UserResponse.class);
-
 	}
 
 	public List<UserResponse> deleteUser(Long userId) {
 		return commonMapper.convertToResponseList(userService.deleteUser(userId), UserResponse.class);
+	}
+	
+    public UserResponse updateProfile(String username, UserRequest userRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new InputFieldException(bindingResult);
+        }
+        UserEntity user = commonMapper.convertToEntity(userRequest, UserEntity.class);
+        return commonMapper.convertToResponse(userService.updateProfile(username, user), UserResponse.class);
+    }
+    
+	public String passwordReset(String username, PasswordResetRequest passwordReset) {
+		return userService.passwordReset(username, passwordReset.getPassword(), passwordReset.getPassword2());
 	}
 
 }

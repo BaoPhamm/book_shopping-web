@@ -11,11 +11,14 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,12 +33,14 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springboot.shopping.dto.PasswordResetRequest;
 import com.springboot.shopping.dto.auth.AuthenticationRequest;
 import com.springboot.shopping.dto.role.RoleRequest;
 import com.springboot.shopping.dto.role.RoleResponse;
 import com.springboot.shopping.dto.user.AddRoleToUserForm;
 import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
+import com.springboot.shopping.exception.InputFieldException;
 import com.springboot.shopping.mapper.UserMapper;
 import com.springboot.shopping.model.Role;
 import com.springboot.shopping.model.UserEntity;
@@ -44,12 +49,40 @@ import com.springboot.shopping.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class UserController {
 
 	private final UserMapper userMapper;
 	private final JwtProvider jwtProvider;
+
+	@GetMapping("/info")
+	public ResponseEntity<UserResponse> getUserInfo() {
+		// Get username from SecurityContextHolder
+		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return ResponseEntity.ok(userMapper.findUserByUsername(username));
+	}
+	
+    @PutMapping("/edit/info")
+    public ResponseEntity<UserResponse> updateUserInfo(@Valid @RequestBody UserRequest request,
+                                                       BindingResult bindingResult) {
+    	String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(userMapper.updateProfile(username, request, bindingResult));
+    }
+    
+	@PutMapping("/edit/password")
+	public ResponseEntity<String> updateUserPassword(@Valid @RequestBody PasswordResetRequest passwordReset,
+			BindingResult bindingResult) {
+		
+		// Get username from SecurityContextHolder
+		String username = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (bindingResult.hasErrors()) {
+			throw new InputFieldException(bindingResult);
+		} else {
+			return ResponseEntity.ok(userMapper.passwordReset(username, passwordReset));
+		}
+	}
 
 	@GetMapping("/token/refresh")
 	public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {

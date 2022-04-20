@@ -21,5 +21,9 @@ public interface UserService {
 	UserEntity updateProfileUser(Long userId, UserEntity user);
 
 	List<UserEntity> deleteUser(Long userId);
+	
+	UserEntity updateProfile(String email, UserEntity user);
+	
+	String passwordReset(String username, String password, String password2);
 
 }
