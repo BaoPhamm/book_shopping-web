@@ -36,7 +36,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 		
 		// Don't check Authorization for request to login and refresh token
 		if (request.getServletPath().equals("/api/v1/auth/login")
-				|| request.getServletPath().equals("/api/v1/token/refresh")) {
+				|| request.getServletPath().equals("/api/v1/user/refresh")) {
 			filterChain.doFilter(request, response);
 		} else {
 			// Get request Header
