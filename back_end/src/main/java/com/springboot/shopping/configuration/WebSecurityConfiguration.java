@@ -24,11 +24,9 @@ import lombok.RequiredArgsConstructor;
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	@Value("${jwt.secret}")
-	private String secretKey;
-
 	private final UserDetailsService userDetailsService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final CustomAuthorizationFilter customAuthorizationFilter;
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -41,15 +39,30 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		// Disable Cross-Site Request Forgery
 		http.csrf().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.authorizeRequests().antMatchers("/api/v1/auth/login/**", "/api/v1/token/refresh/**", "/swagger-ui.html",
-				"/swagger-ui/**", "/v3/api-docs/**").permitAll();
+		
+		// Without Authorization
+		http.authorizeRequests().antMatchers(
+				"/api/v1/auth/login/**",
+				"/api/v1/token/refresh/**",
+				"/api/v1/books/**",
+				"/swagger-ui.html",
+				"/swagger-ui/**",
+				"/v3/api-docs/**"
+				).permitAll();
+		
+		// User Authorization
 		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/token/refresh").hasAnyAuthority("USER");
+		http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/v1/auth/edit/**").hasAnyAuthority("USER");
+		
+		// Admin Authorization
 		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/admin/**").hasAnyAuthority("ADMIN");
 		http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/v1/admin/**").hasAnyAuthority("ADMIN");
 		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/admin/**").hasAnyAuthority("ADMIN");
 		http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/v1/admin/**").hasAnyAuthority("ADMIN");
 		http.authorizeRequests().anyRequest().fullyAuthenticated();
-		http.addFilterBefore(new CustomAuthorizationFilter(secretKey), UsernamePasswordAuthenticationFilter.class);
+		
+		// Add FilterBefore
+		http.addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Bean
