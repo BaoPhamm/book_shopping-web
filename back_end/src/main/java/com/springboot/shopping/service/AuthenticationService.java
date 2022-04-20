@@ -9,7 +9,5 @@ public interface AuthenticationService {
 	String registerUser(UserEntity user, String password2);
 	
 	Map<String, String> login(String username, String password);
-	
-	String passwordReset(String username, String password, String password2);
 
 }

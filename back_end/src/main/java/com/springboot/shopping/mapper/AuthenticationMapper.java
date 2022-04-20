@@ -40,8 +40,4 @@ public class AuthenticationMapper {
 		return response;
 	}
 
-	public String passwordReset(String username, PasswordResetRequest passwordReset) {
-		return authenticationService.passwordReset(username, passwordReset.getPassword(), passwordReset.getPassword2());
-	}
-
 }

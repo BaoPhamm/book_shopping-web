@@ -30,18 +30,4 @@ public class AuthenticationController {
 	public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
 		return ResponseEntity.ok(authenticationMapper.login(request));
 	}
-
-	@PutMapping("/edit/password")
-	public ResponseEntity<String> updateUserPassword(@Valid @RequestBody PasswordResetRequest passwordReset,
-			BindingResult bindingResult) {
-		
-		// Get username from SecurityContextHolder
-		String username = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (bindingResult.hasErrors()) {
-			throw new InputFieldException(bindingResult);
-		} else {
-			return ResponseEntity.ok(authenticationMapper.passwordReset(username, passwordReset));
-		}
-	}
 }

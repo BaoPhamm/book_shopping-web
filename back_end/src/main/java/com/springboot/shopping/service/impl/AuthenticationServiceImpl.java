@@ -97,20 +97,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			throw new ApiRequestException("Incorrect password or email", HttpStatus.FORBIDDEN);
 		}
 	}
-
-	@Override
-	public String passwordReset(String username, String password, String password2) {
-		if (password2.isBlank()) {
-			throw new PasswordConfirmationException("Password confirmation cannot be blank.");
-		}
-		if (password != null && !password.equals(password2)) {
-			throw new PasswordConfirmationException("Passwords do not match.");
-		}
-		UserEntity user = userRepository.findByUsername(username)
-				.orElseThrow(() -> new ApiRequestException("User not found.", HttpStatus.NOT_FOUND));
-		user.setPassword(passwordEncoder.encode(password));
-		userRepository.save(user);
-		return "Password successfully changed!";
-
-	}
+	
 }
