@@ -38,7 +38,8 @@ import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
 import com.springboot.shopping.mapper.UserMapper;
 import com.springboot.shopping.model.Role;
-import com.springboot.shopping.model.User;
+import com.springboot.shopping.model.UserEntity;
+import com.springboot.shopping.security.JwtProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,29 +49,24 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
 	private final UserMapper userMapper;
-	@Value("${jwt.secret}")
-	private String secretKey;
+	private final JwtProvider jwtProvider;
 
 	@GetMapping("/token/refresh")
 	public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String authorizationHeader = request.getHeader(AUTHORIZATION);
 		if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 			try {
-				String refresh_token = authorizationHeader.substring("Bearer ".length());
-				Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
-				JWTVerifier jwtVerifier = JWT.require(algorithm).build();
-				DecodedJWT decodedJWT = jwtVerifier.verify(refresh_token);
-				String username = decodedJWT.getSubject();
-				User user = userMapper.findUserByUsernameReturnObject(username);
-
-				String access_token = JWT.create().withSubject(user.getUsername())
-						.withExpiresAt(new Date(System.currentTimeMillis() + 20 * 60 * 1000))
-						.withIssuer(request.getRequestURI().toString())
-						.withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
-						.sign(algorithm);
+				// Get username from header
+				String username = jwtProvider.getUsername(authorizationHeader);
+				// Get User entity from DB
+				UserEntity user = userMapper.findUserByUsernameReturnObject(username);
+				// Get User roles
+				List<String> userRoles = user.getRoles().stream().map(Role::getName).collect(Collectors.toList());
+				// Create new accessToken
+				String accessToken = jwtProvider.createToken(username, userRoles);
 
 				Map<String, String> tokens = new HashMap<String, String>();
-				tokens.put("access_token", access_token);
+				tokens.put("accessToken", accessToken);
 				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 				new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 

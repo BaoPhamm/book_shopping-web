@@ -1,10 +1,8 @@
 package com.springboot.shopping.security;
 
-import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,42 +17,39 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
+
+@Component
+@RequiredArgsConstructor
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
-	private final String secretKey;
-
-	public CustomAuthorizationFilter(String secretKey) {
-		this.secretKey = secretKey;
-	}
+	private final JwtProvider jwtProvider;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		if (request.getServletPath().equals("/api/v1/login")
+		
+		// Don't check Authorization for request to login and refresh token
+		if (request.getServletPath().equals("/api/v1/auth/login")
 				|| request.getServletPath().equals("/api/v1/token/refresh")) {
 			filterChain.doFilter(request, response);
 		} else {
+			// Get request Header
 			String authorizationHeader = request.getHeader(AUTHORIZATION);
+			
 			if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 				try {
-					String token = authorizationHeader.substring("Bearer ".length());
-					Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
-					JWTVerifier jwtVerifier = JWT.require(algorithm).build();
-					DecodedJWT decodedJWT = jwtVerifier.verify(token);
-					String username = decodedJWT.getSubject();
-					String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
-					Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-					stream(roles).forEach(role -> {
-						authorities.add(new SimpleGrantedAuthority(role));
-					});
+					// Get username from header
+					String username = jwtProvider.getUsername(authorizationHeader);
+					// Get user's authorities from header
+					Collection<SimpleGrantedAuthority> authorities = jwtProvider.getAuthorities(authorizationHeader);
+
+					// Create and save authenticationToken to SecurityContextHolder
 					UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 							username, null, authorities);
 					SecurityContextHolder.getContext().setAuthentication(authenticationToken);
