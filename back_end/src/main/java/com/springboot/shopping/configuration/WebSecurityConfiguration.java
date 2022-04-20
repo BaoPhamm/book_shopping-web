@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.springboot.shopping.security.CustomAuthenticationFilter;
 import com.springboot.shopping.security.CustomAuthorizationFilter;
 
 import lombok.RequiredArgsConstructor;
@@ -38,13 +37,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(
-				authenticationManagerBean(), secretKey);
-		customAuthenticationFilter.setFilterProcessesUrl("/api/v1/login");
+
 		// Disable Cross-Site Request Forgery
 		http.csrf().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.authorizeRequests().antMatchers("/api/v1/login/**", "/api/v1/token/refresh/**", "/swagger-ui.html",
+		http.authorizeRequests().antMatchers("/api/v1/auth/login/**", "/api/v1/token/refresh/**", "/swagger-ui.html",
 				"/swagger-ui/**", "/v3/api-docs/**").permitAll();
 		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/token/refresh").hasAnyAuthority("USER");
 		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/admin/**").hasAnyAuthority("ADMIN");
@@ -52,7 +49,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/admin/**").hasAnyAuthority("ADMIN");
 		http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/v1/admin/**").hasAnyAuthority("ADMIN");
 		http.authorizeRequests().anyRequest().fullyAuthenticated();
-		http.addFilter(customAuthenticationFilter);
 		http.addFilterBefore(new CustomAuthorizationFilter(secretKey), UsernamePasswordAuthenticationFilter.class);
 	}
 
