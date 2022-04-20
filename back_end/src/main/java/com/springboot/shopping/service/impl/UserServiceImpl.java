@@ -16,7 +16,7 @@ import com.springboot.shopping.exception.ApiRequestException;
 import com.springboot.shopping.exception.UserNotFoundException;
 import com.springboot.shopping.exception.UserRoleExistException;
 import com.springboot.shopping.model.Role;
-import com.springboot.shopping.model.User;
+import com.springboot.shopping.model.UserEntity;
 import com.springboot.shopping.repository.RoleRepository;
 import com.springboot.shopping.repository.UserRepository;
 import com.springboot.shopping.service.UserService;
@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<User> user = userRepository.findByUsername(username);
+		Optional<UserEntity> user = userRepository.findByUsername(username);
 		if (!user.isPresent()) {	
 			throw new UserNotFoundException();
 		}
@@ -43,17 +43,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public Optional<User> findUserById(Long userId) {
+	public Optional<UserEntity> findUserById(Long userId) {
 		return userRepository.findById(userId);
 	}
 
 	@Override
-	public Optional<User> findUserByUsername(String username) {
+	public Optional<UserEntity> findUserByUsername(String username) {
 		return userRepository.findByUsername(username);
 	}
 
 	@Override
-	public List<User> findAllUsers() {
+	public List<UserEntity> findAllUsers() {
 		return userRepository.findAll();
 	}
 
@@ -63,8 +63,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public User updateProfileUser(Long userId, User user) {
-		User userFromDb = userRepository.findById(userId)
+	public UserEntity updateProfileUser(Long userId, UserEntity user) {
+		UserEntity userFromDb = userRepository.findById(userId)
 				.orElseThrow(() -> new ApiRequestException("User not found!", HttpStatus.NOT_FOUND));
 		userFromDb.setFirstName(user.getFirstName());
 		userFromDb.setLastName(user.getLastName());
@@ -74,8 +74,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public List<User> deleteUser(Long userId) {
-		User userFromDb = userRepository.findById(userId)
+	public List<UserEntity> deleteUser(Long userId) {
+		UserEntity userFromDb = userRepository.findById(userId)
 				.orElseThrow(() -> new ApiRequestException("User not found!", HttpStatus.NOT_FOUND));
 		userRepository.deleteById(userId);
 		return userRepository.findAll();
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public void addRoleToUser(String username, String roleName) {
-		User user = userRepository.findByUsername(username)
+		UserEntity user = userRepository.findByUsername(username)
 				.orElseThrow(() -> new ApiRequestException("User not found!", HttpStatus.NOT_FOUND));
 		Role role = roleRepository.findByname(roleName)
 				.orElseThrow(() -> new ApiRequestException("Role not found!", HttpStatus.NOT_FOUND));

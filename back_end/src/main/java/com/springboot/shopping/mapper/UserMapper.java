@@ -9,7 +9,7 @@ import com.springboot.shopping.dto.role.RoleResponse;
 import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
 import com.springboot.shopping.model.Role;
-import com.springboot.shopping.model.User;
+import com.springboot.shopping.model.UserEntity;
 import com.springboot.shopping.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class UserMapper {
 		return commonMapper.convertToResponse(userService.findUserByUsername(username).get(), UserResponse.class);
 	}
 
-	public User findUserByUsernameReturnObject(String username) {
+	public UserEntity findUserByUsernameReturnObject(String username) {
 		return userService.findUserByUsername(username).get();
 	}
 
@@ -47,7 +47,7 @@ public class UserMapper {
 	}
 
 	public UserResponse updateProfileUser(Long userId, UserRequest userRequest) {
-		User user = commonMapper.convertToEntity(userRequest, User.class);
+		UserEntity user = commonMapper.convertToEntity(userRequest, UserEntity.class);
 		return commonMapper.convertToResponse(userService.updateProfileUser(userId, user), UserResponse.class);
 
 	}
