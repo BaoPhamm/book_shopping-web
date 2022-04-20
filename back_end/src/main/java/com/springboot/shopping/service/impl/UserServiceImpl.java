@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,14 +33,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<UserEntity> user = userRepository.findByUsername(username);
-		if (!user.isPresent()) {	
+		Optional<UserEntity> userEntity = userRepository.findByUsername(username);
+		if (!userEntity.isPresent()) {
 			throw new UserNotFoundException();
 		}
 		Collection<SimpleGrantedAuthority> Authorities = new ArrayList<>();
-		user.get().getRoles().forEach(role -> Authorities.add(new SimpleGrantedAuthority(role.getName())));
-		return new org.springframework.security.core.userdetails.User(user.get().getUsername(),
-				user.get().getPassword(), Authorities);
+		userEntity.get().getRoles().forEach(role -> Authorities.add(new SimpleGrantedAuthority(role.getName())));
+		return new User(userEntity.get().getUsername(), userEntity.get().getPassword(), Authorities);
 	}
 
 	@Override
