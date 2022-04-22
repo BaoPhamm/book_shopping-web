@@ -74,6 +74,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			// Create authenticationToken
 			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,
 					password);
+			System.out.println(username);
+			System.out.println(password);
 			// Authenticate User
 			Authentication authentication = authenticationManager.authenticate(authenticationToken);
 			// Get user Principal
@@ -97,5 +99,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			throw new ApiRequestException("Incorrect password or email", HttpStatus.FORBIDDEN);
 		}
 	}
-	
+
 }
