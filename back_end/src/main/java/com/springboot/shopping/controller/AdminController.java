@@ -15,11 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.shopping.dto.book.BookRequest;
 import com.springboot.shopping.dto.book.BookResponse;
+import com.springboot.shopping.dto.order.OrderResponse;
 import com.springboot.shopping.dto.role.RoleRequest;
 import com.springboot.shopping.dto.role.RoleResponse;
 import com.springboot.shopping.dto.user.AddRoleToUserForm;
+import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
 import com.springboot.shopping.mapper.BookMapper;
+import com.springboot.shopping.mapper.OrderMapper;
 import com.springboot.shopping.mapper.UserMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -31,6 +34,7 @@ public class AdminController {
 
 	private final UserMapper userMapper;
 	private final BookMapper bookMapper;
+	private final OrderMapper orderMapper;
 
 	@Value("${jwt.secret}")
 	private String secretKey;
@@ -81,6 +85,21 @@ public class AdminController {
 	@DeleteMapping("/books/delete/{id}")
 	public ResponseEntity<List<BookResponse>> deleteBook(@PathVariable("id") Long BookId) {
 		return ResponseEntity.ok(bookMapper.deleteBook(BookId));
+	}
+
+	@GetMapping("/orders")
+	public ResponseEntity<List<OrderResponse>> getAllOrders() {
+		return ResponseEntity.ok(orderMapper.findAllOrders());
+	}
+
+	@PostMapping("/order")
+	public ResponseEntity<List<OrderResponse>> getUserOrdersByUsername(@RequestBody UserRequest user) {
+		return ResponseEntity.ok(orderMapper.findOrderByUsername(user.getUsername()));
+	}
+
+	@DeleteMapping("/order/delete/{orderId}")
+	public ResponseEntity<List<OrderResponse>> deleteOrder(@PathVariable(value = "orderId") Long orderId) {
+		return ResponseEntity.ok(orderMapper.deleteOrder(orderId));
 	}
 
 }
