@@ -35,6 +35,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
+		// Enable cors
+		http.cors();
 		// Disable Cross-Site Request Forgery
 		http.csrf().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -61,7 +63,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/v1/admin/**").hasAnyAuthority("ADMIN");
 		http.authorizeRequests().anyRequest().fullyAuthenticated();
 
-		// Add FilterBefore
+		// Add AuthorizationFilter
 		http.addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 
