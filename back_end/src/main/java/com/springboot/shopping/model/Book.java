@@ -26,10 +26,11 @@ public class Book {
 
 	private String title;
 	private String author;
-	private long total_pages;
-	private long required_age;
-	private Date release_date;
-	private Double price;
-	private String img_src;
+	private long totalPages;
+	private long requiredAge;
+	private Date releaseDate;
+	private Integer price;
+	private String imgSrc;
+	private String description;
 
 }
