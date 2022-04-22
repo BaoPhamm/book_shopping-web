@@ -24,6 +24,7 @@ public class Order {
 	private Long id;
 	private Double totalPrice;
 	private LocalDate date;
+	private String username;
 	private String firstName;
 	private String lastName;
 	private String address;
