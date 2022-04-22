@@ -16,6 +16,7 @@ public class BookResponse {
 	private long totalPages;
 	private long requiredAge;
 	private Date releaseDate;
-	private Double price;
+	private Integer price;
 	private String imgSrc;
+	private String description;
 }
