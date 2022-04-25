@@ -10,6 +10,10 @@ public interface BookService {
 	Optional<Book> findBookById(Long bookId);
 
 	List<Book> findAllBooks();
+	
+	List<Book> findBooksByCategory(String categoryName);
+	
+	String addCategoryToBook(String findByTitle, String categoryName);
 
 	Book createBook(Book book);
 

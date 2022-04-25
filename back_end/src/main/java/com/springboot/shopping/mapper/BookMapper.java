@@ -30,6 +30,10 @@ public class BookMapper {
 		Book book = commonMapper.convertToEntity(bookRequest, Book.class);
 		return commonMapper.convertToResponse(bookService.createBook(book), BookResponse.class);
 	}
+	
+	public String addCategoryToBook(String findByTitle, String categoryName) {
+		return bookService.addCategoryToBook(findByTitle, categoryName);
+	}
 
 	public BookResponse updateBook(Long bookId, BookRequest bookRequest) {
 		Book book = commonMapper.convertToEntity(bookRequest, Book.class);
@@ -38,6 +42,10 @@ public class BookMapper {
 
 	public List<BookResponse> deleteBook(Long bookId) {
 		return commonMapper.convertToResponseList(bookService.deleteBook(bookId), BookResponse.class);
+	}
+	
+	public List<BookResponse> findBooksByCategory(String categoryName) {
+		return commonMapper.convertToResponseList(bookService.findBooksByCategory(categoryName), BookResponse.class);
 	}
 
 }

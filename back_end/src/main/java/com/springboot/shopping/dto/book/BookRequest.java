@@ -39,5 +39,9 @@ public class BookRequest {
 
 	@NotBlank(message = "Fill in the input field")
 	@Length(max = 255)
+	private String description;
+
+	@NotBlank(message = "Fill in the input field")
+	@Length(max = 255)
 	private String imgSrc;
 }

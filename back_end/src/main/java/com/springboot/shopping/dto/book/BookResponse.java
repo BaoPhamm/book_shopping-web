@@ -1,6 +1,9 @@
 package com.springboot.shopping.dto.book;
 
 import java.sql.Date;
+import java.util.Set;
+
+import com.springboot.shopping.model.Category;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,4 +22,5 @@ public class BookResponse {
 	private Integer price;
 	private String imgSrc;
 	private String description;
+	private Set<Category> Categories;
 }
