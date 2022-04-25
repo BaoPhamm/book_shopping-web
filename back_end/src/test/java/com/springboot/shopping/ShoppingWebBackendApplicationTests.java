@@ -10,4 +10,9 @@ class ShoppingWebBackendApplicationTests {
 	void contextLoads() {
 	}
 
+	@Test
+	public void main() {
+		ShoppingWebBackendApplication.main(new String[] {});
+	}
+
 }

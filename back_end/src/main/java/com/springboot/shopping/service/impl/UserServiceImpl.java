@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.springboot.shopping.exception.ApiRequestException;
 import com.springboot.shopping.exception.PasswordConfirmationException;
+import com.springboot.shopping.exception.RoleExistException;
 import com.springboot.shopping.exception.UserNotFoundException;
 import com.springboot.shopping.exception.UserRoleExistException;
 import com.springboot.shopping.model.Role;
@@ -62,6 +63,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public Role createRole(Role role) {
+		Optional<Role> roleFromDb = roleRepository.findByname(role.getName());
+		if (roleFromDb.isPresent()) {
+			throw new RoleExistException("Role is already exist.");
+		}
 		return roleRepository.save(role);
 	}
 
@@ -85,7 +90,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public void addRoleToUser(String username, String roleName) {
+	public String addRoleToUser(String username, String roleName) {
 		UserEntity user = userRepository.findByUsername(username)
 				.orElseThrow(() -> new ApiRequestException("User not found!", HttpStatus.NOT_FOUND));
 		Role role = roleRepository.findByname(roleName)
@@ -95,20 +100,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		}
 		user.getRoles().add(role);
 		userRepository.save(user);
+		return "Role successfully added.";
 	}
-	
-    @Override
-    public UserEntity updateProfile(String username, UserEntity user) {
-    	UserEntity userFromDb = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ApiRequestException("Username not found.", HttpStatus.NOT_FOUND));
-        userFromDb.setFirstName(user.getFirstName());
-        userFromDb.setLastName(user.getLastName());
-        userFromDb.setAddress(user.getAddress());
-        userFromDb.setPhoneNumber(user.getPhoneNumber());
-        userRepository.save(userFromDb);
-        return userFromDb;
-    }
-    
+
+	@Override
+	public UserEntity updateProfile(String username, UserEntity user) {
+		UserEntity userFromDb = userRepository.findByUsername(username)
+				.orElseThrow(() -> new ApiRequestException("Username not found.", HttpStatus.NOT_FOUND));
+		userFromDb.setFirstName(user.getFirstName());
+		userFromDb.setLastName(user.getLastName());
+		userFromDb.setAddress(user.getAddress());
+		userFromDb.setPhoneNumber(user.getPhoneNumber());
+		userRepository.save(userFromDb);
+		return userFromDb;
+	}
+
 	@Override
 	public String passwordReset(String username, String password, String password2) {
 		if (password2.isBlank()) {

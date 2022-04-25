@@ -21,12 +21,14 @@ import org.mockito.ArgumentCaptor;
 
 import com.springboot.shopping.model.Book;
 import com.springboot.shopping.repository.BookRepository;
+import com.springboot.shopping.repository.CategoryRepository;
 import com.springboot.shopping.service.impl.BookServiceImpl;
 
 class BookServiceTest {
 
 	private BookServiceImpl bookServiceImpl;
 	private BookRepository bookRepository;
+	private CategoryRepository categoryRepository;
 	private Book expectedBook;
 	private Book expectedBookSecond;
 	private List<Book> expectedBookList;
@@ -35,7 +37,7 @@ class BookServiceTest {
 	void beforeEach() {
 		// Mock BookRepository 
 		bookRepository = mock(BookRepository.class);
-		bookServiceImpl = new BookServiceImpl(bookRepository);
+		bookServiceImpl = new BookServiceImpl(bookRepository, categoryRepository);
 		
 		// Book 1
 		expectedBook = Book.builder()
@@ -82,6 +84,8 @@ class BookServiceTest {
 	void findBookById_ShouldReturnBook_WhenIdValid() {
 		Optional<Book> bookResult = bookServiceImpl.findBookById(123L);
 		assertThat(bookResult.get().equals(expectedBook), is(true));
+		
+		// Expect functions call
 		verify(bookRepository, times(1)).findById(123L);
 	}
 	@Test
@@ -89,6 +93,8 @@ class BookServiceTest {
 		Exception exception = assertThrows(NoSuchElementException.class, () ->
 		bookServiceImpl.findBookById(125L));
 		assertThat(exception.getMessage(), is("No value present"));
+		
+		// Expect functions call
 		verify(bookRepository, times(1)).findById(125L);
 	}
 
@@ -100,6 +106,8 @@ class BookServiceTest {
 			assertThat(book.equals(expectedBookList.get(bookListResult.indexOf(book))), is(true));
 		});
 		assertThat(bookListResult.size(), is(2));
+		
+		// Expect functions call
 		verify(bookRepository, times(1)).findAll();
 	}
 
@@ -111,6 +119,8 @@ class BookServiceTest {
 		verify(bookRepository).save(bookCaptor.capture());
 		Book createdBook = bookCaptor.getValue();
 		assertThat(bookResult.equals(createdBook), is(true));
+		
+		// Expect functions call
 		verify(bookRepository, times(1)).save(createdBook);
 	}
 
@@ -122,6 +132,8 @@ class BookServiceTest {
 		verify(bookRepository).save(bookCaptor.capture());
 		Book createdBook = bookCaptor.getValue();
 		assertThat(bookResult.equals(createdBook), is(true));
+		
+		// Expect functions call
 		verify(bookRepository, times(1)).findById(123L);
 		verify(bookRepository, times(1)).save(createdBook);
 	}
@@ -130,6 +142,8 @@ class BookServiceTest {
 		Exception exception = assertThrows(NoSuchElementException.class, () ->
 		bookServiceImpl.updateBook(125L, expectedBook));
 		assertThat(exception.getMessage(), is("No value present"));
+		
+		// Expect functions call
 		verify(bookRepository, times(1)).findById(125L);
 	}
 
@@ -141,6 +155,8 @@ class BookServiceTest {
 			assertThat(book.equals(expectedBookList.get(bookListResult.indexOf(book))), is(true));
 		});
 		assertThat(bookListResult.size(), is(2));
+		
+		// Expect functions call
 		verify(bookRepository, times(1)).findById(123L);
 		verify(bookRepository, times(1)).deleteById(123L);
 		verify(bookRepository, times(1)).findAll();
@@ -150,6 +166,8 @@ class BookServiceTest {
 		Exception exception = assertThrows(NoSuchElementException.class, () ->
 		bookServiceImpl.deleteBook(125L));
 		assertThat(exception.getMessage(), is("No value present"));
+		
+		// Expect functions call
 		verify(bookRepository, times(1)).findById(125L);
 	}
 

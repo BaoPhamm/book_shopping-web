@@ -16,7 +16,7 @@ public interface UserService {
 
 	Role createRole(Role role);
 
-	void addRoleToUser(String username, String roleName);
+	String addRoleToUser(String username, String roleName);
 
 	UserEntity updateProfileUser(Long userId, UserEntity user);
 

@@ -45,8 +45,8 @@ public class UserMapper {
 		return commonMapper.convertToResponse(userService.createRole(role), RoleResponse.class);
 	}
 
-	public void addRoleToUser(String username, String roleName) {
-		userService.addRoleToUser(username, roleName);
+	public String addRoleToUser(String username, String roleName) {
+		return userService.addRoleToUser(username, roleName);
 	}
 
 	public UserResponse updateProfileUser(Long userId, UserRequest userRequest) {
