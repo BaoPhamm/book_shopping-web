@@ -16,10 +16,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
+import com.springboot.shopping.dto.RegistrationRequest;
+import com.springboot.shopping.dto.auth.AuthenticationRequest;
+import com.springboot.shopping.dto.auth.AuthenticationResponse;
 import com.springboot.shopping.exception.ApiRequestException;
+import com.springboot.shopping.exception.InputFieldException;
 import com.springboot.shopping.exception.PasswordConfirmationException;
 import com.springboot.shopping.exception.UserExistException;
+import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Role;
 import com.springboot.shopping.model.UserEntity;
 import com.springboot.shopping.repository.RoleRepository;
@@ -38,44 +44,50 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	private final PasswordEncoder passwordEncoder;
 	private final AuthenticationManager authenticationManager;
 	private final JwtProvider jwtProvider;
+	private final CommonMapper commonMapper;
 
 	@Value("${jwt.secret}")
 	private String secretKey;
 
 	@Override
-	public String registerUser(UserEntity user, String password2) {
+	public String registerUser(RegistrationRequest registrationRequest, BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			throw new InputFieldException(bindingResult);
+		}
+		UserEntity newUser = commonMapper.convertToEntity(registrationRequest, UserEntity.class);
 
 		// Create default role is "USER"
 		Optional<Role> role = roleRepository.findByname("USER");
 
-		if (user.getPassword() != null && !user.getPassword().equals(password2)) {
+		if (newUser.getPassword() != null && !newUser.getPassword().equals(registrationRequest.getPasswordRepeat())) {
 			throw new PasswordConfirmationException("Passwords do not match.");
 		}
-		Optional<UserEntity> userFromDb = userRepository.findByUsername(user.getUsername());
+		Optional<UserEntity> userFromDb = userRepository.findByUsername(newUser.getUsername());
 		if (userFromDb.isPresent()) {
 			throw new UserExistException("UserName is already used.");
 		}
 
-		Optional<UserEntity> checkUserPhoneNumFromDb = userRepository.findByUsername(user.getPhoneNumber());
+		Optional<UserEntity> checkUserPhoneNumFromDb = userRepository.findByUsername(newUser.getPhoneNumber());
 		if (checkUserPhoneNumFromDb.isPresent()) {
 			throw new UserExistException("Phone number is already used.");
 		}
 
-		user.getRoles().add(role.get());
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		userRepository.save(user);
+		newUser.getRoles().add(role.get());
+		newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+		userRepository.save(newUser);
 		return "User successfully registered.";
 	}
 
 	@Override
-	public Map<String, String> login(String username, String password) {
+	public AuthenticationResponse login(AuthenticationRequest request) {
 
+		String username = request.getUsername();
+		String password = request.getPassword();
 		try {
 			// Create authenticationToken
 			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,
 					password);
-			System.out.println(username);
-			System.out.println(password);
 			// Authenticate User
 			Authentication authentication = authenticationManager.authenticate(authenticationToken);
 			// Get user Principal
@@ -89,12 +101,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			String refreshToken = jwtProvider.createRefreshToken(user.getUsername());
 
 			// Put attributes into response
-			Map<String, String> response = new HashMap<>();
-			response.put("username", username);
-			response.put("accessToken", accessToken);
-			response.put("refreshToken", refreshToken);
-			response.put("userRoles", userRoles.toString());
+			Map<String, String> credentials = new HashMap<>();
+			credentials.put("username", username);
+			credentials.put("accessToken", accessToken);
+			credentials.put("refreshToken", refreshToken);
+			credentials.put("userRoles", userRoles.toString());
+
+			AuthenticationResponse response = new AuthenticationResponse();
+			response.setUsername(credentials.get("username"));
+			response.setToken(credentials.get("accessToken"));
+			response.setRefreshToken(credentials.get("refreshToken"));
+			response.setUserRoles(credentials.get("userRoles"));
 			return response;
+
 		} catch (AuthenticationException e) {
 			throw new ApiRequestException("Incorrect password or email", HttpStatus.FORBIDDEN);
 		}

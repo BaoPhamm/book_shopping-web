@@ -25,7 +25,7 @@ public class RegistrationRequest {
 	private String password;
 
 	@Size(min = 6, max = 16, message = "The password confirmation must be between 6 and 16 characters long")
-	private String password2;
+	private String passwordRepeat;
 
 	@Size(min = 10, max = 11, message = "The phone number must be has atleast 10 characters long")
 	private String phoneNumber;
