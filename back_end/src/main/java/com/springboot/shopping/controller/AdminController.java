@@ -16,13 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springboot.shopping.dto.book.AddCategoryToBookForm;
 import com.springboot.shopping.dto.book.BookRequest;
 import com.springboot.shopping.dto.book.BookResponse;
+import com.springboot.shopping.dto.category.CategoryRequest;
+import com.springboot.shopping.dto.category.CategoryResponse;
 import com.springboot.shopping.dto.order.OrderResponse;
 import com.springboot.shopping.dto.role.RoleRequest;
 import com.springboot.shopping.dto.role.RoleResponse;
 import com.springboot.shopping.dto.user.AddRoleToUserForm;
-import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
 import com.springboot.shopping.mapper.BookMapper;
+import com.springboot.shopping.mapper.CategoryMapper;
 import com.springboot.shopping.mapper.OrderMapper;
 import com.springboot.shopping.mapper.UserMapper;
 
@@ -36,6 +38,7 @@ public class AdminController {
 	private final UserMapper userMapper;
 	private final BookMapper bookMapper;
 	private final OrderMapper orderMapper;
+	private final CategoryMapper categoryMapper;
 
 	@Value("${jwt.secret}")
 	private String secretKey;
@@ -74,11 +77,11 @@ public class AdminController {
 	public ResponseEntity<BookResponse> saveBook(@RequestBody BookRequest bookRequest) {
 		return ResponseEntity.ok(bookMapper.createBook(bookRequest));
 	}
-	
+
 	@PostMapping("/books/category/addtobook")
 	public ResponseEntity<String> addCategoryToBook(@RequestBody AddCategoryToBookForm addCategoryToBookForm) {
-		bookMapper.addCategoryToBook(addCategoryToBookForm.getBookTitle(), addCategoryToBookForm.getCategoryName());
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(bookMapper.addCategoryToBook(addCategoryToBookForm.getBookTitle(),
+				addCategoryToBookForm.getCategoryName()));
 	}
 
 	// Update an existing book
@@ -100,13 +103,32 @@ public class AdminController {
 	}
 
 	@PostMapping("/order")
-	public ResponseEntity<List<OrderResponse>> getUserOrdersByUsername(@RequestBody UserRequest user) {
-		return ResponseEntity.ok(orderMapper.findOrderByUsername(user.getUsername()));
+	public ResponseEntity<List<OrderResponse>> getUserOrdersByUsername(@RequestBody String userName) {
+		return ResponseEntity.ok(orderMapper.findOrderByUsername(userName));
 	}
 
 	@DeleteMapping("/order/delete/{orderId}")
-	public ResponseEntity<List<OrderResponse>> deleteOrder(@PathVariable(value = "orderId") Long orderId) {
+	public ResponseEntity<List<OrderResponse>> deleteOrder(@PathVariable("orderId") Long orderId) {
 		return ResponseEntity.ok(orderMapper.deleteOrder(orderId));
+	}
+
+	// Create a new category
+	@PostMapping("/category/create")
+	public ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest categoryRequest) {
+		return ResponseEntity.ok(categoryMapper.createCategory(categoryRequest));
+	}
+
+	// Update an existing category
+	@PutMapping("/category/update/{id}")
+	public ResponseEntity<CategoryResponse> updateCategory(@PathVariable("id") Long categoryId,
+			@RequestBody CategoryRequest categoryRequest) {
+		return ResponseEntity.ok(categoryMapper.updateCategory(categoryId, categoryRequest));
+	}
+
+	// Delete an existing category by ID
+	@DeleteMapping("/category/delete/{id}")
+	public ResponseEntity<List<CategoryResponse>> deleteCategory(@PathVariable("id") Long categoryId) {
+		return ResponseEntity.ok(categoryMapper.deleteCategory(categoryId));
 	}
 
 }
