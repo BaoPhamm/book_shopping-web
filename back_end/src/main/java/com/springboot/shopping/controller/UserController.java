@@ -32,7 +32,6 @@ import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
 import com.springboot.shopping.exception.InputFieldException;
 import com.springboot.shopping.mapper.OrderMapper;
-import com.springboot.shopping.mapper.UserMapper;
 import com.springboot.shopping.model.Role;
 import com.springboot.shopping.model.UserEntity;
 import com.springboot.shopping.security.JwtProvider;
@@ -110,16 +109,17 @@ public class UserController {
 			throw new RuntimeException("Refesh token is missing!");
 		}
 	}
-	
-    @GetMapping("/orders")
-    public ResponseEntity<List<OrderResponse>> getUserOrders() {
-    	String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(orderMapper.findOrderByUsername(username));
-    }
-    
-    @PostMapping("/order")
-    public ResponseEntity<OrderResponse> postOrder(@Valid @RequestBody OrderRequest order, BindingResult bindingResult) {
-        return ResponseEntity.ok(orderMapper.postOrder(order, bindingResult));
-    }
+
+	@GetMapping("/orders")
+	public ResponseEntity<List<OrderResponse>> getUserOrders() {
+		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return ResponseEntity.ok(orderMapper.findOrderByUsername(username));
+	}
+
+	@PostMapping("/order")
+	public ResponseEntity<OrderResponse> postOrder(@Valid @RequestBody OrderRequest order,
+			BindingResult bindingResult) {
+		return ResponseEntity.ok(orderMapper.postOrder(order, bindingResult));
+	}
 
 }

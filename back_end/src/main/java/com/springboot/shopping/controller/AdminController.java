@@ -19,14 +19,12 @@ import com.springboot.shopping.dto.book.BookResponse;
 import com.springboot.shopping.dto.category.CategoryRequest;
 import com.springboot.shopping.dto.category.CategoryResponse;
 import com.springboot.shopping.dto.order.OrderResponse;
-import com.springboot.shopping.dto.role.RoleRequest;
 import com.springboot.shopping.dto.role.RoleResponse;
 import com.springboot.shopping.dto.user.AddRoleToUserForm;
 import com.springboot.shopping.dto.user.UserResponse;
-import com.springboot.shopping.mapper.BookMapper;
 import com.springboot.shopping.mapper.CategoryMapper;
 import com.springboot.shopping.mapper.OrderMapper;
-import com.springboot.shopping.mapper.UserMapper;
+import com.springboot.shopping.service.BookService;
 import com.springboot.shopping.service.RoleService;
 import com.springboot.shopping.service.UserService;
 
@@ -39,7 +37,7 @@ public class AdminController {
 
 	private final UserService userService;
 	private final RoleService roleService;
-	private final BookMapper bookMapper;
+	private final BookService bookService;
 	private final OrderMapper orderMapper;
 	private final CategoryMapper categoryMapper;
 
@@ -78,12 +76,12 @@ public class AdminController {
 	// Create a new book
 	@PostMapping("/books/create")
 	public ResponseEntity<BookResponse> saveBook(@RequestBody BookRequest bookRequest) {
-		return ResponseEntity.ok(bookMapper.createBook(bookRequest));
+		return ResponseEntity.ok(bookService.createBook(bookRequest));
 	}
 
 	@PostMapping("/books/category/addtobook")
 	public ResponseEntity<String> addCategoryToBook(@RequestBody AddCategoryToBookForm addCategoryToBookForm) {
-		return ResponseEntity.ok(bookMapper.addCategoryToBook(addCategoryToBookForm.getBookTitle(),
+		return ResponseEntity.ok(bookService.addCategoryToBook(addCategoryToBookForm.getBookTitle(),
 				addCategoryToBookForm.getCategoryName()));
 	}
 
@@ -91,13 +89,13 @@ public class AdminController {
 	@PutMapping("/books/update/{id}")
 	public ResponseEntity<BookResponse> updateBook(@PathVariable("id") Long BookId,
 			@RequestBody BookRequest bookRequest) {
-		return ResponseEntity.ok(bookMapper.updateBook(BookId, bookRequest));
+		return ResponseEntity.ok(bookService.updateBook(BookId, bookRequest));
 	}
 
 	// Delete an existing book by ID
 	@DeleteMapping("/books/delete/{id}")
 	public ResponseEntity<List<BookResponse>> deleteBook(@PathVariable("id") Long BookId) {
-		return ResponseEntity.ok(bookMapper.deleteBook(BookId));
+		return ResponseEntity.ok(bookService.deleteBook(BookId));
 	}
 
 	@GetMapping("/orders")

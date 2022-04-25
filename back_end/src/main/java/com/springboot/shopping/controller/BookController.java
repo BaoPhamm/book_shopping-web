@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.shopping.dto.book.BookResponse;
-import com.springboot.shopping.mapper.BookMapper;
-import com.springboot.shopping.mapper.CategoryMapper;
+import com.springboot.shopping.service.BookService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,24 +20,24 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookController {
 
-	private final BookMapper bookMapper;
+	private final BookService bookService;
 
 	// Get book by ID
 	@GetMapping("/{id}")
 	public ResponseEntity<BookResponse> getBookById(@PathVariable("id") Long BookId) {
-		return ResponseEntity.ok(bookMapper.findBookById(BookId));
+		return ResponseEntity.ok(bookService.findBookById(BookId));
 	}
 
 	// Get All books
 	@GetMapping()
 	public ResponseEntity<List<BookResponse>> getAllBooks() {
-		return ResponseEntity.ok(bookMapper.findAllBooks());
+		return ResponseEntity.ok(bookService.findAllBooks());
 	}
-	
+
 	// Get All books
 	@PostMapping("/category")
 	public ResponseEntity<List<BookResponse>> getBooksByCategory(@RequestBody String categoryName) {
-		return ResponseEntity.ok(bookMapper.findBooksByCategory(categoryName));
+		return ResponseEntity.ok(bookService.findBooksByCategory(categoryName));
 	}
-	
+
 }

@@ -6,14 +6,15 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import com.springboot.shopping.dto.book.BookRequest;
+import com.springboot.shopping.dto.book.BookResponse;
 import com.springboot.shopping.exception.ApiRequestException;
+import com.springboot.shopping.exception.BookExistException;
 import com.springboot.shopping.exception.UserRoleExistException;
+import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Book;
 import com.springboot.shopping.model.Category;
-import com.springboot.shopping.model.Role;
-import com.springboot.shopping.model.UserEntity;
 import com.springboot.shopping.repository.BookRepository;
 import com.springboot.shopping.repository.CategoryRepository;
 import com.springboot.shopping.service.BookService;
@@ -26,58 +27,80 @@ public class BookServiceImpl implements BookService {
 
 	private final BookRepository bookRepository;
 	private final CategoryRepository categoryRepository;
+	private final CommonMapper commonMapper;
 
 	@Override
-	public List<Book> findAllBooks() {
-		return bookRepository.findAll();
+	public List<BookResponse> findAllBooks() {
+		return commonMapper.convertToResponseList(bookRepository.findAll(), BookResponse.class);
 	}
 
 	@Override
-	public Optional<Book> findBookById(Long bookId) {
-		return bookRepository.findById(bookId);
+	public BookResponse findBookById(Long bookId) {
+		return commonMapper.convertToResponse(bookRepository.findById(bookId), BookResponse.class);
 	}
 
 	@Override
-	public Book createBook(Book book) {
-		return bookRepository.save(book);
+	public BookResponse createBook(BookRequest bookRequest) {
+
+		Book newBook = commonMapper.convertToEntity(bookRequest, Book.class);
+		Optional<Book> bookFromDb = bookRepository.findByTitle(bookRequest.getTitle());
+		if (bookFromDb.isPresent()) {
+			throw new BookExistException("Book is already existed");
+		}
+		return commonMapper.convertToResponse(bookRepository.save(newBook), BookResponse.class);
 	}
 
 	@Override
 	public String addCategoryToBook(String bookTitle, String categoryName) {
-		Book book = bookRepository.findByTitle(bookTitle)
-				.orElseThrow(() -> new ApiRequestException("Book not found!", HttpStatus.NOT_FOUND));
-		Category category = categoryRepository.findByName(categoryName)
-				.orElseThrow(() -> new ApiRequestException("Category not found!", HttpStatus.NOT_FOUND));
-		if (book.getCategories().contains(category)) {
+
+		Optional<Book> bookFromDb = bookRepository.findByTitle(bookTitle);
+		if (bookFromDb.isEmpty()) {
+			throw new ApiRequestException("Book not found!", HttpStatus.NOT_FOUND);
+		}
+		Optional<Category> categoryFromDb = categoryRepository.findByName(categoryName);
+		if (categoryFromDb.isEmpty()) {
+			throw new ApiRequestException("Category not found!", HttpStatus.NOT_FOUND);
+		}
+		if (bookFromDb.get().getCategories().contains(categoryFromDb.get())) {
 			throw new UserRoleExistException("Book already has this category !");
 		}
-		book.getCategories().add(category);
-		bookRepository.save(book);
+		bookFromDb.get().getCategories().add(categoryFromDb.get());
+		bookRepository.save(bookFromDb.get());
 		return "Category successfully added.";
 	}
 
 	@Override
-	public Book updateBook(Long bookId, Book book) {
-		bookRepository.findById(bookId)
-				.orElseThrow(() -> new ApiRequestException("Book not found!", HttpStatus.NOT_FOUND));
-		book.setId(bookId);
-		return bookRepository.save(book);
+	public BookResponse updateBook(Long bookId, BookRequest bookRequest) {
+
+		Optional<Book> bookFromDb = bookRepository.findById(bookId);
+		if (bookFromDb.isEmpty()) {
+			throw new ApiRequestException("Book not found!", HttpStatus.NOT_FOUND);
+		}
+		bookFromDb.get().setId(bookId);
+		return commonMapper.convertToResponse(bookRepository.save(bookFromDb.get()), BookResponse.class);
 	}
 
 	@Override
 	@Transactional
-	public List<Book> deleteBook(Long bookId) {
-		bookRepository.findById(bookId)
-				.orElseThrow(() -> new ApiRequestException("Book not found!", HttpStatus.NOT_FOUND));
+	public List<BookResponse> deleteBook(Long bookId) {
+
+		Optional<Book> bookFromDb = bookRepository.findById(bookId);
+		if (bookFromDb.isEmpty()) {
+			throw new ApiRequestException("Book not found!", HttpStatus.NOT_FOUND);
+		}
 		bookRepository.deleteById(bookId);
-		return bookRepository.findAll();
+		return commonMapper.convertToResponseList(bookRepository.findAll(), BookResponse.class);
 	}
 
 	@Override
-	public List<Book> findBooksByCategory(String categoryName) {
-		categoryRepository.findByName(categoryName)
-				.orElseThrow(() -> new ApiRequestException("Category not found!", HttpStatus.NOT_FOUND));
-		return bookRepository.findByCategory(categoryName);
+	public List<BookResponse> findBooksByCategory(String categoryName) {
+
+		Optional<Category> categoryFromDb = categoryRepository.findByName(categoryName);
+		if (categoryFromDb.isEmpty()) {
+			throw new ApiRequestException("Category not found!", HttpStatus.NOT_FOUND);
+		}
+		return commonMapper.convertToResponseList(bookRepository.findByCategory(categoryName), BookResponse.class);
+
 	}
 
 }

@@ -1,24 +1,24 @@
 package com.springboot.shopping.service;
 
 import java.util.List;
-import java.util.Optional;
 
-import com.springboot.shopping.model.Book;
+import com.springboot.shopping.dto.book.BookRequest;
+import com.springboot.shopping.dto.book.BookResponse;
 
 public interface BookService {
 
-	Optional<Book> findBookById(Long bookId);
+	BookResponse findBookById(Long bookId);
 
-	List<Book> findAllBooks();
+	List<BookResponse> findAllBooks();
 	
-	List<Book> findBooksByCategory(String categoryName);
+	List<BookResponse> findBooksByCategory(String categoryName);
 	
-	String addCategoryToBook(String findByTitle, String categoryName);
+	String addCategoryToBook(String bookTitle, String categoryName);
 
-	Book createBook(Book book);
+	BookResponse createBook(BookRequest bookRequest);
 
-	Book updateBook(Long bookId, Book book);
+	BookResponse updateBook(Long bookId, BookRequest bookRequest);
 
-	List<Book> deleteBook(Long bookId);
+	List<BookResponse> deleteBook(Long bookId);
 
 }
