@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.springboot.shopping.dto.book.AddCategoryToBookForm;
 import com.springboot.shopping.dto.book.BookRequest;
 import com.springboot.shopping.dto.book.BookResponse;
 import com.springboot.shopping.dto.order.OrderResponse;
@@ -63,7 +64,7 @@ public class AdminController {
 	}
 
 	@PostMapping("/users/role/addtouser")
-	public ResponseEntity<?> addRoleToUser(@RequestBody AddRoleToUserForm addRoleToUserForm) {
+	public ResponseEntity<String> addRoleToUser(@RequestBody AddRoleToUserForm addRoleToUserForm) {
 		userMapper.addRoleToUser(addRoleToUserForm.getUsername(), addRoleToUserForm.getRolename());
 		return ResponseEntity.ok().build();
 	}
@@ -72,6 +73,12 @@ public class AdminController {
 	@PostMapping("/books/create")
 	public ResponseEntity<BookResponse> saveBook(@RequestBody BookRequest bookRequest) {
 		return ResponseEntity.ok(bookMapper.createBook(bookRequest));
+	}
+	
+	@PostMapping("/books/category/addtobook")
+	public ResponseEntity<String> addCategoryToBook(@RequestBody AddCategoryToBookForm addCategoryToBookForm) {
+		bookMapper.addCategoryToBook(addCategoryToBookForm.getBookTitle(), addCategoryToBookForm.getCategoryName());
+		return ResponseEntity.ok().build();
 	}
 
 	// Update an existing book
