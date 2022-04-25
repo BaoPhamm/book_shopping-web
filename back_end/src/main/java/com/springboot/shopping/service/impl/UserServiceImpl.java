@@ -16,14 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import com.springboot.shopping.dto.PasswordResetRequest;
-import com.springboot.shopping.dto.role.RoleRequest;
-import com.springboot.shopping.dto.role.RoleResponse;
 import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
 import com.springboot.shopping.exception.ApiRequestException;
 import com.springboot.shopping.exception.InputFieldException;
 import com.springboot.shopping.exception.PasswordConfirmationException;
-import com.springboot.shopping.exception.RoleExistException;
 import com.springboot.shopping.exception.UserNotFoundException;
 import com.springboot.shopping.exception.UserRoleExistException;
 import com.springboot.shopping.mapper.CommonMapper;
@@ -99,7 +96,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public List<UserResponse> deleteUser(Long userId) {
-		UserEntity userFromDb = userRepository.findById(userId)
+		userRepository.findById(userId)
 				.orElseThrow(() -> new ApiRequestException("User not found!", HttpStatus.NOT_FOUND));
 		userRepository.deleteById(userId);
 
