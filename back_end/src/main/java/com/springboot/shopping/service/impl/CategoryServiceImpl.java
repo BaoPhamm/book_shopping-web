@@ -6,7 +6,10 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.springboot.shopping.dto.category.CategoryRequest;
+import com.springboot.shopping.dto.category.CategoryResponse;
 import com.springboot.shopping.exception.ApiRequestException;
+import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Category;
 import com.springboot.shopping.repository.CategoryRepository;
 import com.springboot.shopping.service.CategoryService;
@@ -18,41 +21,51 @@ import lombok.RequiredArgsConstructor;
 public class CategoryServiceImpl implements CategoryService {
 
 	private final CategoryRepository categoryRepository;
+	private final CommonMapper commonMapper;
 
 	@Override
-	public Optional<Category> findCategoryById(Long categoryId) {
-		return categoryRepository.findById(categoryId);
+	public CategoryResponse findCategoryById(Long categoryId) {
+		return commonMapper.convertToResponse(categoryRepository.findById(categoryId).get(), CategoryResponse.class);
 	}
 
 	@Override
-	public Optional<Category> findCategoryByName(String categoryName) {
-		return categoryRepository.findByName(categoryName);
+	public CategoryResponse findCategoryByName(String categoryName) {
+		return commonMapper.convertToResponse(categoryRepository.findByName(categoryName).get(),
+				CategoryResponse.class);
 	}
 
 	@Override
-	public List<Category> findAllCategories() {
-		return categoryRepository.findAll();
+	public List<CategoryResponse> findAllCategories() {
+		return commonMapper.convertToResponseList(categoryRepository.findAll(), CategoryResponse.class);
 	}
 
 	@Override
-	public Category createCategory(Category category) {
-		return categoryRepository.save(category);
+	public CategoryResponse createCategory(CategoryRequest categoryRequest) {
+		Category newCategory = commonMapper.convertToEntity(categoryRequest, Category.class);
+		return commonMapper.convertToResponse(categoryRepository.save(newCategory), CategoryResponse.class);
 	}
 
 	@Override
-	public Category updateCategory(Long categoryId, Category category) {
-		categoryRepository.findById(categoryId)
-				.orElseThrow(() -> new ApiRequestException("Category not found!", HttpStatus.NOT_FOUND));
-		category.setId(categoryId);
-		return categoryRepository.save(category);
+	public CategoryResponse updateCategory(Long categoryId, CategoryRequest categoryRequest) {
+
+		Category newCategoryInfo = commonMapper.convertToEntity(categoryRequest, Category.class);
+		Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
+		if (categoryFromDb.isEmpty()) {
+			throw new ApiRequestException("Category not found!", HttpStatus.NOT_FOUND);
+		}
+		newCategoryInfo.setId(categoryId);
+		return commonMapper.convertToResponse(categoryRepository.save(newCategoryInfo), CategoryResponse.class);
 	}
 
 	@Override
-	public List<Category> deleteCategory(Long categoryId) {
-		categoryRepository.findById(categoryId)
-				.orElseThrow(() -> new ApiRequestException("Category not found!", HttpStatus.NOT_FOUND));
+	public List<CategoryResponse> deleteCategory(Long categoryId) {
+
+		Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
+		if (categoryFromDb.isEmpty()) {
+			throw new ApiRequestException("Category not found!", HttpStatus.NOT_FOUND);
+		}
 		categoryRepository.deleteById(categoryId);
-		return categoryRepository.findAll();
+		return commonMapper.convertToResponseList(categoryRepository.findAll(), CategoryResponse.class);
 	}
 
 }

@@ -22,8 +22,8 @@ import com.springboot.shopping.dto.order.OrderResponse;
 import com.springboot.shopping.dto.role.RoleResponse;
 import com.springboot.shopping.dto.user.AddRoleToUserForm;
 import com.springboot.shopping.dto.user.UserResponse;
-import com.springboot.shopping.mapper.CategoryMapper;
 import com.springboot.shopping.service.BookService;
+import com.springboot.shopping.service.CategoryService;
 import com.springboot.shopping.service.OrderService;
 import com.springboot.shopping.service.RoleService;
 import com.springboot.shopping.service.UserService;
@@ -39,7 +39,7 @@ public class AdminController {
 	private final RoleService roleService;
 	private final BookService bookService;
 	private final OrderService orderService;
-	private final CategoryMapper categoryMapper;
+	private final CategoryService categoryService;
 
 	@Value("${jwt.secret}")
 	private String secretKey;
@@ -116,20 +116,20 @@ public class AdminController {
 	// Create a new category
 	@PostMapping("/category/create")
 	public ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest categoryRequest) {
-		return ResponseEntity.ok(categoryMapper.createCategory(categoryRequest));
+		return ResponseEntity.ok(categoryService.createCategory(categoryRequest));
 	}
 
 	// Update an existing category
 	@PutMapping("/category/update/{id}")
 	public ResponseEntity<CategoryResponse> updateCategory(@PathVariable("id") Long categoryId,
 			@RequestBody CategoryRequest categoryRequest) {
-		return ResponseEntity.ok(categoryMapper.updateCategory(categoryId, categoryRequest));
+		return ResponseEntity.ok(categoryService.updateCategory(categoryId, categoryRequest));
 	}
 
 	// Delete an existing category by ID
 	@DeleteMapping("/category/delete/{id}")
 	public ResponseEntity<List<CategoryResponse>> deleteCategory(@PathVariable("id") Long categoryId) {
-		return ResponseEntity.ok(categoryMapper.deleteCategory(categoryId));
+		return ResponseEntity.ok(categoryService.deleteCategory(categoryId));
 	}
 
 }

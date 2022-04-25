@@ -1,22 +1,22 @@
 package com.springboot.shopping.service;
 
 import java.util.List;
-import java.util.Optional;
 
-import com.springboot.shopping.model.Category;
+import com.springboot.shopping.dto.category.CategoryRequest;
+import com.springboot.shopping.dto.category.CategoryResponse;
 
 public interface CategoryService {
-	
-	Optional<Category> findCategoryById(Long categoryId);
-	
-	Optional<Category> findCategoryByName(String categoryName);
 
-	List<Category> findAllCategories();
-	
-	Category createCategory(Category category);
+	CategoryResponse findCategoryById(Long categoryId);
 
-	Category updateCategory(Long categoryId, Category category);
+	CategoryResponse findCategoryByName(String categoryName);
 
-	List<Category> deleteCategory(Long categoryId);
+	List<CategoryResponse> findAllCategories();
+
+	CategoryResponse createCategory(CategoryRequest categoryRequest);
+
+	CategoryResponse updateCategory(Long categoryId, CategoryRequest categoryRequest);
+
+	List<CategoryResponse> deleteCategory(Long categoryId);
 
 }
