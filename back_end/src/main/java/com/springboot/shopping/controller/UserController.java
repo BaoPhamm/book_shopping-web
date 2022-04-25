@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,12 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.shopping.dto.PasswordResetRequest;
-import com.springboot.shopping.dto.order.OrderRequest;
-import com.springboot.shopping.dto.order.OrderResponse;
 import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
 import com.springboot.shopping.exception.InputFieldException;
-import com.springboot.shopping.mapper.OrderMapper;
 import com.springboot.shopping.model.Role;
 import com.springboot.shopping.model.UserEntity;
 import com.springboot.shopping.security.JwtProvider;
@@ -45,7 +41,6 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
 	private final UserService userService;
-	private final OrderMapper orderMapper;
 	private final JwtProvider jwtProvider;
 
 	@GetMapping("/info")
@@ -108,18 +103,6 @@ public class UserController {
 		} else {
 			throw new RuntimeException("Refesh token is missing!");
 		}
-	}
-
-	@GetMapping("/orders")
-	public ResponseEntity<List<OrderResponse>> getUserOrders() {
-		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return ResponseEntity.ok(orderMapper.findOrderByUsername(username));
-	}
-
-	@PostMapping("/order")
-	public ResponseEntity<OrderResponse> postOrder(@Valid @RequestBody OrderRequest order,
-			BindingResult bindingResult) {
-		return ResponseEntity.ok(orderMapper.postOrder(order, bindingResult));
 	}
 
 }

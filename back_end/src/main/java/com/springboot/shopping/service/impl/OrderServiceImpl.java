@@ -3,11 +3,17 @@ package com.springboot.shopping.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
+import com.springboot.shopping.dto.order.OrderRequest;
+import com.springboot.shopping.dto.order.OrderResponse;
 import com.springboot.shopping.exception.ApiRequestException;
+import com.springboot.shopping.exception.InputFieldException;
+import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Book;
 import com.springboot.shopping.model.Order;
 import com.springboot.shopping.model.OrderItem;
@@ -25,19 +31,28 @@ public class OrderServiceImpl implements OrderService {
 	private final OrderRepository orderRepository;
 	private final OrderItemRepository orderItemRepository;
 	private final BookRepository bookRepository;
+	private final CommonMapper commonMapper;
 
 	@Override
-	public List<Order> findAll() {
-		return orderRepository.findAllByOrderByIdAsc();
+	public List<OrderResponse> findAllOrders() {
+		return commonMapper.convertToResponseList(orderRepository.findAllByOrderByIdAsc(), OrderResponse.class);
 	}
 
 	@Override
-	public List<Order> findOrderByUsername(String username) {
-		return orderRepository.findOrderByUsername(username);
+	public List<OrderResponse> findOrderByUsername(String username) {
+		return commonMapper.convertToResponseList(orderRepository.findOrderByUsername(username), OrderResponse.class);
 	}
 
 	@Override
-	public Order postOrder(Order validOrder, Map<Long, Long> booksId) {
+	public OrderResponse postOrder(OrderRequest orderRequest, BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			throw new InputFieldException(bindingResult);
+		}
+
+		Order validOrder = commonMapper.convertToEntity(orderRequest, Order.class);
+		Map<Long, Long> booksId = orderRequest.getBooksId();
+
 		Order order = new Order();
 		List<OrderItem> orderItemList = new ArrayList<>();
 
@@ -57,16 +72,19 @@ public class OrderServiceImpl implements OrderService {
 		order.setAddress(validOrder.getAddress());
 		order.setPhoneNumber(validOrder.getPhoneNumber());
 		orderRepository.save(order);
-		return order;
+		return commonMapper.convertToResponse(order, OrderResponse.class);
 	}
 
 	@Override
-	public List<Order> deleteOrder(Long orderId) {
-		Order order = orderRepository.findById(orderId)
-				.orElseThrow(() -> new ApiRequestException("Order not found.", HttpStatus.NOT_FOUND)); // TODO add test
-		order.getOrderItems().forEach(orderItem -> orderItemRepository.deleteById(orderItem.getId()));
-		orderRepository.delete(order);
-		return orderRepository.findAllByOrderByIdAsc();
+	public List<OrderResponse> deleteOrder(Long orderId) {
+
+		Optional<Order> orderFromDb = orderRepository.findById(orderId);
+		if (orderFromDb.isEmpty()) {
+			throw new ApiRequestException("Order not found.", HttpStatus.NOT_FOUND);
+		}
+		orderFromDb.get().getOrderItems().forEach(orderItem -> orderItemRepository.deleteById(orderItem.getId()));
+		orderRepository.delete(orderFromDb.get());
+		return commonMapper.convertToResponseList(orderRepository.findAllByOrderByIdAsc(), OrderResponse.class);
 	}
 
 }

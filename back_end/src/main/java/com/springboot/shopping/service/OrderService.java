@@ -1,17 +1,19 @@
 package com.springboot.shopping.service;
 
 import java.util.List;
-import java.util.Map;
 
-import com.springboot.shopping.model.Order;
+import org.springframework.validation.BindingResult;
+
+import com.springboot.shopping.dto.order.OrderRequest;
+import com.springboot.shopping.dto.order.OrderResponse;
 
 public interface OrderService {
 
-	List<Order> findAll();
+	List<OrderResponse> findAllOrders();
 
-	List<Order> findOrderByUsername(String username);
+	List<OrderResponse> findOrderByUsername(String username);
 
-	Order postOrder(Order validOrder, Map<Long, Long> booksId);
+	OrderResponse postOrder(OrderRequest orderRequest, BindingResult bindingResult);
 
-	List<Order> deleteOrder(Long orderId);
+	List<OrderResponse> deleteOrder(Long orderId);
 }

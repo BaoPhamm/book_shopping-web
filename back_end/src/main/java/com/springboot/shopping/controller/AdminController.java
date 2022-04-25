@@ -23,8 +23,8 @@ import com.springboot.shopping.dto.role.RoleResponse;
 import com.springboot.shopping.dto.user.AddRoleToUserForm;
 import com.springboot.shopping.dto.user.UserResponse;
 import com.springboot.shopping.mapper.CategoryMapper;
-import com.springboot.shopping.mapper.OrderMapper;
 import com.springboot.shopping.service.BookService;
+import com.springboot.shopping.service.OrderService;
 import com.springboot.shopping.service.RoleService;
 import com.springboot.shopping.service.UserService;
 
@@ -38,7 +38,7 @@ public class AdminController {
 	private final UserService userService;
 	private final RoleService roleService;
 	private final BookService bookService;
-	private final OrderMapper orderMapper;
+	private final OrderService orderService;
 	private final CategoryMapper categoryMapper;
 
 	@Value("${jwt.secret}")
@@ -100,17 +100,17 @@ public class AdminController {
 
 	@GetMapping("/orders")
 	public ResponseEntity<List<OrderResponse>> getAllOrders() {
-		return ResponseEntity.ok(orderMapper.findAllOrders());
+		return ResponseEntity.ok(orderService.findAllOrders());
 	}
 
 	@PostMapping("/order")
 	public ResponseEntity<List<OrderResponse>> getUserOrdersByUsername(@RequestBody String userName) {
-		return ResponseEntity.ok(orderMapper.findOrderByUsername(userName));
+		return ResponseEntity.ok(orderService.findOrderByUsername(userName));
 	}
 
 	@DeleteMapping("/order/delete/{orderId}")
 	public ResponseEntity<List<OrderResponse>> deleteOrder(@PathVariable("orderId") Long orderId) {
-		return ResponseEntity.ok(orderMapper.deleteOrder(orderId));
+		return ResponseEntity.ok(orderService.deleteOrder(orderId));
 	}
 
 	// Create a new category
