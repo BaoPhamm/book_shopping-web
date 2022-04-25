@@ -8,6 +8,8 @@ import com.springboot.shopping.model.Category;
 public interface CategoryService {
 	
 	Optional<Category> findCategoryById(Long categoryId);
+	
+	Optional<Category> findCategoryByName(String categoryName);
 
 	List<Category> findAllCategories();
 	
