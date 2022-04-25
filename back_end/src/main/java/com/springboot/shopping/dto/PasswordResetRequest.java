@@ -11,5 +11,5 @@ public class PasswordResetRequest {
     private String password;
 
     @Size(min = 4, max = 16, message = "The password confirmation must be between 4 and 16 characters long")
-    private String password2;
+    private String passwordRepeat;
 }

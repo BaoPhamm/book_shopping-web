@@ -16,15 +16,15 @@ public class CommonMapper {
 		this.modelMapper = modelMapper;
 	}
 
-	<T, S> S convertToEntity(T data, Class<S> type) {
+	public <T, S> S convertToEntity(T data, Class<S> type) {
 		return modelMapper.map(data, type);
 	}
 
-	<T, S> S convertToResponse(T data, Class<S> type) {
+	public <T, S> S convertToResponse(T data, Class<S> type) {
 		return modelMapper.map(data, type);
 	}
 
-	<T, S> List<S> convertToResponseList(List<T> lists, Class<S> type) {
+	public <T, S> List<S> convertToResponseList(List<T> lists, Class<S> type) {
 		return lists.stream().map(list -> convertToResponse(list, type)).collect(Collectors.toList());
 	}
 

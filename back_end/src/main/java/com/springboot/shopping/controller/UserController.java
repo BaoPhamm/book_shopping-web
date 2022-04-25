@@ -36,6 +36,7 @@ import com.springboot.shopping.mapper.UserMapper;
 import com.springboot.shopping.model.Role;
 import com.springboot.shopping.model.UserEntity;
 import com.springboot.shopping.security.JwtProvider;
+import com.springboot.shopping.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -44,7 +45,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 
-	private final UserMapper userMapper;
+	private final UserService userService;
 	private final OrderMapper orderMapper;
 	private final JwtProvider jwtProvider;
 
@@ -52,14 +53,14 @@ public class UserController {
 	public ResponseEntity<UserResponse> getUserInfo() {
 		// Get username from SecurityContextHolder
 		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return ResponseEntity.ok(userMapper.findUserByUsername(username));
+		return ResponseEntity.ok(userService.findUserByUsername(username));
 	}
 
 	@PutMapping("/edit/info")
 	public ResponseEntity<UserResponse> updateUserInfo(@Valid @RequestBody UserRequest request,
 			BindingResult bindingResult) {
 		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return ResponseEntity.ok(userMapper.updateProfile(username, request, bindingResult));
+		return ResponseEntity.ok(userService.updateProfile(username, request, bindingResult));
 	}
 
 	@PutMapping("/edit/password")
@@ -72,7 +73,7 @@ public class UserController {
 		if (bindingResult.hasErrors()) {
 			throw new InputFieldException(bindingResult);
 		} else {
-			return ResponseEntity.ok(userMapper.passwordReset(username, passwordReset));
+			return ResponseEntity.ok(userService.passwordReset(username, passwordReset));
 		}
 	}
 
@@ -84,7 +85,7 @@ public class UserController {
 				// Get username from header
 				String username = jwtProvider.getUsername(authorizationHeader);
 				// Get User entity from DB
-				UserEntity user = userMapper.findUserByUsernameReturnObject(username);
+				UserEntity user = userService.findUserByUsernameReturnUserEntity(username);
 				// Get User roles
 				List<String> userRoles = user.getRoles().stream().map(Role::getName).collect(Collectors.toList());
 				// Create new accessToken

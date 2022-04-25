@@ -27,6 +27,8 @@ import com.springboot.shopping.mapper.BookMapper;
 import com.springboot.shopping.mapper.CategoryMapper;
 import com.springboot.shopping.mapper.OrderMapper;
 import com.springboot.shopping.mapper.UserMapper;
+import com.springboot.shopping.service.RoleService;
+import com.springboot.shopping.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +37,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminController {
 
-	private final UserMapper userMapper;
+	private final UserService userService;
+	private final RoleService roleService;
 	private final BookMapper bookMapper;
 	private final OrderMapper orderMapper;
 	private final CategoryMapper categoryMapper;
@@ -46,29 +49,29 @@ public class AdminController {
 	// Get user by ID
 	@GetMapping("/users/{id}")
 	public ResponseEntity<UserResponse> getUserById(@PathVariable("id") Long UserId) {
-		return ResponseEntity.ok(userMapper.findUserById(UserId));
+		return ResponseEntity.ok(userService.findUserById(UserId));
 	}
 
 	// Get All users
 	@GetMapping("/users")
 	public ResponseEntity<List<UserResponse>> getAllUsers() {
-		return ResponseEntity.ok(userMapper.findAllUsers());
+		return ResponseEntity.ok(userService.findAllUsers());
 	}
 
 	// Delete an existing user by ID
 	@DeleteMapping("/users/delete/{id}")
 	public ResponseEntity<List<UserResponse>> deleteUser(@PathVariable("id") Long UserId) {
-		return ResponseEntity.ok(userMapper.deleteUser(UserId));
+		return ResponseEntity.ok(userService.deleteUser(UserId));
 	}
 
-	@PostMapping("/users/create/role")
-	public ResponseEntity<RoleResponse> createRole(@RequestBody RoleRequest roleRequest) {
-		return ResponseEntity.ok(userMapper.createRole(roleRequest));
+	@PostMapping("/role/create")
+	public ResponseEntity<RoleResponse> createRole(@RequestBody String roleName) {
+		return ResponseEntity.ok(roleService.createRole(roleName));
 	}
 
 	@PostMapping("/users/role/addtouser")
 	public ResponseEntity<String> addRoleToUser(@RequestBody AddRoleToUserForm addRoleToUserForm) {
-		userMapper.addRoleToUser(addRoleToUserForm.getUsername(), addRoleToUserForm.getRolename());
+		userService.addRoleToUser(addRoleToUserForm.getUsername(), addRoleToUserForm.getRolename());
 		return ResponseEntity.ok().build();
 	}
 

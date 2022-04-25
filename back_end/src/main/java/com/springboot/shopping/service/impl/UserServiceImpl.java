@@ -13,12 +13,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
+import com.springboot.shopping.dto.PasswordResetRequest;
+import com.springboot.shopping.dto.role.RoleRequest;
+import com.springboot.shopping.dto.role.RoleResponse;
+import com.springboot.shopping.dto.user.UserRequest;
+import com.springboot.shopping.dto.user.UserResponse;
 import com.springboot.shopping.exception.ApiRequestException;
+import com.springboot.shopping.exception.InputFieldException;
 import com.springboot.shopping.exception.PasswordConfirmationException;
 import com.springboot.shopping.exception.RoleExistException;
 import com.springboot.shopping.exception.UserNotFoundException;
 import com.springboot.shopping.exception.UserRoleExistException;
+import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Role;
 import com.springboot.shopping.model.UserEntity;
 import com.springboot.shopping.repository.RoleRepository;
@@ -34,6 +42,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final CommonMapper commonMapper;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -47,46 +56,54 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public Optional<UserEntity> findUserById(Long userId) {
-		return userRepository.findById(userId);
-	}
-
-	@Override
-	public Optional<UserEntity> findUserByUsername(String username) {
-		return userRepository.findByUsername(username);
-	}
-
-	@Override
-	public List<UserEntity> findAllUsers() {
-		return userRepository.findAll();
-	}
-
-	@Override
-	public Role createRole(Role role) {
-		Optional<Role> roleFromDb = roleRepository.findByname(role.getName());
-		if (roleFromDb.isPresent()) {
-			throw new RoleExistException("Role is already exist.");
-		}
-		return roleRepository.save(role);
-	}
-
-	@Override
-	public UserEntity updateProfileUser(Long userId, UserEntity user) {
-		UserEntity userFromDb = userRepository.findById(userId)
+	public UserResponse findUserById(Long userId) {
+		UserEntity userFromDB = userRepository.findById(userId)
 				.orElseThrow(() -> new ApiRequestException("User not found!", HttpStatus.NOT_FOUND));
-		userFromDb.setFirstName(user.getFirstName());
-		userFromDb.setLastName(user.getLastName());
-		userFromDb.setPhoneNumber(user.getPhoneNumber());
-		userFromDb.setAddress(user.getAddress());
-		return userRepository.save(userFromDb);
+		return commonMapper.convertToResponse(userFromDB, UserResponse.class);
 	}
 
 	@Override
-	public List<UserEntity> deleteUser(Long userId) {
+	public UserResponse findUserByUsername(String username) {
+		UserEntity userFromDB = userRepository.findByUsername(username)
+				.orElseThrow(() -> new ApiRequestException("User not found!", HttpStatus.NOT_FOUND));
+		return commonMapper.convertToResponse(userFromDB, UserResponse.class);
+	}
+
+	@Override
+	public UserEntity findUserByUsernameReturnUserEntity(String username) {
+		UserEntity userFromDB = userRepository.findByUsername(username)
+				.orElseThrow(() -> new ApiRequestException("User not found!", HttpStatus.NOT_FOUND));
+		return userFromDB;
+	}
+
+	@Override
+	public List<UserResponse> findAllUsers() {
+		return commonMapper.convertToResponseList(userRepository.findAll(), UserResponse.class);
+	}
+
+	@Override
+	public UserResponse updateProfile(String username, UserRequest userRequest, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			throw new InputFieldException(bindingResult);
+		}
+		UserEntity newUserInfo = commonMapper.convertToEntity(userRequest, UserEntity.class);
+		UserEntity userFromDb = userRepository.findByUsername(username)
+				.orElseThrow(() -> new ApiRequestException("Username not found.", HttpStatus.NOT_FOUND));
+		userFromDb.setFirstName(newUserInfo.getFirstName());
+		userFromDb.setLastName(newUserInfo.getLastName());
+		userFromDb.setAddress(newUserInfo.getAddress());
+		userFromDb.setPhoneNumber(newUserInfo.getPhoneNumber());
+
+		return commonMapper.convertToResponse(userRepository.save(userFromDb), UserResponse.class);
+	}
+
+	@Override
+	public List<UserResponse> deleteUser(Long userId) {
 		UserEntity userFromDb = userRepository.findById(userId)
 				.orElseThrow(() -> new ApiRequestException("User not found!", HttpStatus.NOT_FOUND));
 		userRepository.deleteById(userId);
-		return userRepository.findAll();
+
+		return commonMapper.convertToResponseList(userRepository.findAll(), UserResponse.class);
 	}
 
 	@Override
@@ -104,29 +121,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public UserEntity updateProfile(String username, UserEntity user) {
-		UserEntity userFromDb = userRepository.findByUsername(username)
-				.orElseThrow(() -> new ApiRequestException("Username not found.", HttpStatus.NOT_FOUND));
-		userFromDb.setFirstName(user.getFirstName());
-		userFromDb.setLastName(user.getLastName());
-		userFromDb.setAddress(user.getAddress());
-		userFromDb.setPhoneNumber(user.getPhoneNumber());
-		userRepository.save(userFromDb);
-		return userFromDb;
-	}
+	public String passwordReset(String username, PasswordResetRequest passwordResetRequest) {
 
-	@Override
-	public String passwordReset(String username, String password, String password2) {
-		if (password2.isBlank()) {
+		String password = passwordResetRequest.getPassword();
+		String passwordRepeat = passwordResetRequest.getPasswordRepeat();
+
+		if (passwordRepeat.isBlank()) {
 			throw new PasswordConfirmationException("Password confirmation cannot be blank.");
 		}
-		if (password != null && !password.equals(password2)) {
+		if (password != null && !password.equals(passwordRepeat)) {
 			throw new PasswordConfirmationException("Passwords do not match.");
 		}
-		UserEntity user = userRepository.findByUsername(username)
+		UserEntity userFromDb = userRepository.findByUsername(username)
 				.orElseThrow(() -> new ApiRequestException("User not found.", HttpStatus.NOT_FOUND));
-		user.setPassword(passwordEncoder.encode(password));
-		userRepository.save(user);
+		userFromDb.setPassword(passwordEncoder.encode(password));
+		userRepository.save(userFromDb);
 		return "Password successfully changed!";
 
 	}
