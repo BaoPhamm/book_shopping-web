@@ -19,7 +19,6 @@ import com.springboot.shopping.dto.PasswordResetRequest;
 import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
 import com.springboot.shopping.exception.InputFieldException;
-import com.springboot.shopping.security.JwtProvider;
 import com.springboot.shopping.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
 	private final UserService userService;
-	private final JwtProvider jwtProvider;
 
 	@GetMapping("/info")
 	public ResponseEntity<UserResponse> getUserInfo() {
