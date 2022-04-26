@@ -22,6 +22,7 @@ import com.springboot.shopping.exception.auth.PasswordConfirmationException;
 import com.springboot.shopping.exception.role.RoleNotFoundException;
 import com.springboot.shopping.exception.user.UserNotFoundException;
 import com.springboot.shopping.exception.user.UserRoleExistException;
+import com.springboot.shopping.exception.user.UserRoleNotFoundException;
 import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Role;
 import com.springboot.shopping.model.UserEntity;
@@ -97,23 +98,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		userFromDb.get().setLastName(newUserInfo.getLastName());
 		userFromDb.get().setAddress(newUserInfo.getAddress());
 		userFromDb.get().setPhoneNumber(newUserInfo.getPhoneNumber());
-
 		return commonMapper.convertToResponse(userRepository.save(userFromDb.get()), UserResponse.class);
 	}
 
 	@Override
 	public List<UserResponse> deleteUser(Long userId) {
+
 		Optional<UserEntity> userFromDb = userRepository.findById(userId);
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
 		}
 		userRepository.deleteById(userId);
-
 		return commonMapper.convertToResponseList(userRepository.findAll(), UserResponse.class);
 	}
 
 	@Override
 	public String addRoleToUser(String username, String roleName) {
+
 		Optional<UserEntity> userFromDb = userRepository.findByUsername(username);
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
@@ -128,6 +129,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		userFromDb.get().getRoles().add(roleFromDb.get());
 		userRepository.save(userFromDb.get());
 		return "Role successfully added.";
+	}
+
+	@Override
+	public String removeRoleFromUser(String username, String roleName) {
+
+		Optional<UserEntity> userFromDb = userRepository.findByUsername(username);
+		if (userFromDb.isEmpty()) {
+			throw new UserNotFoundException();
+		}
+		Optional<Role> roleFromDb = roleRepository.findByname(roleName);
+		if (roleFromDb.isEmpty()) {
+			throw new RoleNotFoundException();
+		}
+		if (userFromDb.get().getRoles().contains(roleFromDb.get())) {
+			throw new UserRoleNotFoundException();
+		}
+		userFromDb.get().getRoles().remove(roleFromDb.get());
+		userRepository.save(userFromDb.get());
+		return "Role successfully removed.";
 	}
 
 	@Override

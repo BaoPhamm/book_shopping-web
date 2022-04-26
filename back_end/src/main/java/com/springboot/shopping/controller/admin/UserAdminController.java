@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.shopping.dto.role.RoleResponse;
 import com.springboot.shopping.dto.user.AddRoleToUserForm;
+import com.springboot.shopping.dto.user.RemoveRoleFromUserForm;
 import com.springboot.shopping.dto.user.UserResponse;
 import com.springboot.shopping.service.RoleService;
 import com.springboot.shopping.service.UserService;
@@ -54,9 +55,15 @@ public class UserAdminController {
 		return ResponseEntity.ok(roleService.createRole(roleName));
 	}
 
-	@PostMapping("/users/role/addtouser")
+	@PostMapping("/users/role/add-to-user")
 	public ResponseEntity<String> addRoleToUser(@RequestBody AddRoleToUserForm addRoleToUserForm) {
 		userService.addRoleToUser(addRoleToUserForm.getUsername(), addRoleToUserForm.getRolename());
+		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping("/users/role/remove-from-user")
+	public ResponseEntity<String> removeRoleFromUser(@RequestBody RemoveRoleFromUserForm removeRoleFromUserForm) {
+		userService.removeRoleFromUser(removeRoleFromUserForm.getUsername(), removeRoleFromUserForm.getRolename());
 		return ResponseEntity.ok().build();
 	}
 }

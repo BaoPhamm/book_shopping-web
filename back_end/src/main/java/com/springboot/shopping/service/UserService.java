@@ -24,6 +24,8 @@ public interface UserService {
 	List<UserResponse> findAllUsers();
 
 	String addRoleToUser(String username, String roleName);
+	
+	String removeRoleFromUser(String username, String roleName);
 
 	List<UserResponse> deleteUser(Long userId);
 	

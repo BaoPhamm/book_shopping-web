@@ -11,6 +11,6 @@ public class UserRoleExistException extends RuntimeException {
 
 	public UserRoleExistException() {
 		super("User already has this role!");
-		this.status = HttpStatus.NOT_FOUND;
+		this.status = HttpStatus.BAD_REQUEST;
 	}
 }
