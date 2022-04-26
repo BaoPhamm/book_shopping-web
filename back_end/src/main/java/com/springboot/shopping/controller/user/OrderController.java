@@ -1,4 +1,4 @@
-package com.springboot.shopping.controller;
+package com.springboot.shopping.controller.user;
 
 import java.util.List;
 

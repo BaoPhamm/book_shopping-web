@@ -1,4 +1,4 @@
-package com.springboot.shopping.controller;
+package com.springboot.shopping.controller.user;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 

@@ -1,4 +1,4 @@
-package com.springboot.shopping.controller;
+package com.springboot.shopping.controller.user;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

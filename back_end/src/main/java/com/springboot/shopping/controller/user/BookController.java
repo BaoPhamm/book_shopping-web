@@ -1,4 +1,4 @@
-package com.springboot.shopping.controller;
+package com.springboot.shopping.controller.user;
 
 import java.util.List;
 
@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.shopping.dto.book.BookResponse;
@@ -28,15 +29,15 @@ public class BookController {
 		return ResponseEntity.ok(bookService.findBookById(BookId));
 	}
 
-	// Get All books
+	// Get all books
 	@GetMapping()
 	public ResponseEntity<List<BookResponse>> getAllBooks() {
 		return ResponseEntity.ok(bookService.findAllBooks());
 	}
 
-	// Get All books
-	@PostMapping("/category")
-	public ResponseEntity<List<BookResponse>> getBooksByCategory(@RequestBody String categoryName) {
+	// Get books by category
+	@GetMapping("/category")
+	public ResponseEntity<List<BookResponse>> getBooksByCategory(@RequestParam String categoryName) {
 		return ResponseEntity.ok(bookService.findBooksByCategory(categoryName));
 	}
 
