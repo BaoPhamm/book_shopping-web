@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
 		}
-		return commonMapper.convertToResponse(userFromDb, UserResponse.class);
+		return commonMapper.convertToResponse(userFromDb.get(), UserResponse.class);
 	}
 
 	@Override

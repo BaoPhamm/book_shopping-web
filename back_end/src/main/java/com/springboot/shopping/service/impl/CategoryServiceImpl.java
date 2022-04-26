@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.springboot.shopping.dto.category.CategoryRequest;
 import com.springboot.shopping.dto.category.CategoryResponse;
+import com.springboot.shopping.exception.category.CategoryExistException;
 import com.springboot.shopping.exception.category.CategoryNotFoundException;
 import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Category;
@@ -41,6 +42,10 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public CategoryResponse createCategory(CategoryRequest categoryRequest) {
 		Category newCategory = commonMapper.convertToEntity(categoryRequest, Category.class);
+		Optional<Category> categoryFromDb = categoryRepository.findByName(categoryRequest.getName());
+		if (categoryFromDb.isPresent()) {
+			throw new CategoryExistException();
+		}
 		return commonMapper.convertToResponse(categoryRepository.save(newCategory), CategoryResponse.class);
 	}
 
@@ -52,8 +57,8 @@ public class CategoryServiceImpl implements CategoryService {
 		if (categoryFromDb.isEmpty()) {
 			throw new CategoryNotFoundException();
 		}
-		newCategoryInfo.setId(categoryId);
-		return commonMapper.convertToResponse(categoryRepository.save(newCategoryInfo), CategoryResponse.class);
+		categoryFromDb.get().setName(newCategoryInfo.getName());
+		return commonMapper.convertToResponse(categoryRepository.save(categoryFromDb.get()), CategoryResponse.class);
 	}
 
 	@Override
