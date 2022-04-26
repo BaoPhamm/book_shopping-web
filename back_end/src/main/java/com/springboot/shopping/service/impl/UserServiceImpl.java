@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		if (roleFromDb.isEmpty()) {
 			throw new RoleNotFoundException();
 		}
-		if (userFromDb.get().getRoles().contains(roleFromDb.get())) {
+		if (!userFromDb.get().getRoles().contains(roleFromDb.get())) {
 			throw new UserRoleNotFoundException();
 		}
 		userFromDb.get().getRoles().remove(roleFromDb.get());
