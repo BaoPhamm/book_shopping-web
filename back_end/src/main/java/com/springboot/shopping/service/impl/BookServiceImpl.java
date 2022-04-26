@@ -10,7 +10,9 @@ import com.springboot.shopping.dto.book.BookRequest;
 import com.springboot.shopping.dto.book.BookResponse;
 import com.springboot.shopping.exception.book.BookExistException;
 import com.springboot.shopping.exception.book.BookNotFoundException;
+import com.springboot.shopping.exception.category.CategoryExistException;
 import com.springboot.shopping.exception.category.CategoryNotFoundException;
+import com.springboot.shopping.exception.category.CategoryNotFoundInBookException;
 import com.springboot.shopping.exception.user.UserRoleExistException;
 import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Book;
@@ -62,11 +64,29 @@ public class BookServiceImpl implements BookService {
 			throw new CategoryNotFoundException();
 		}
 		if (bookFromDb.get().getCategories().contains(categoryFromDb.get())) {
-			throw new UserRoleExistException();
+			throw new CategoryExistException();
 		}
 		bookFromDb.get().getCategories().add(categoryFromDb.get());
 		bookRepository.save(bookFromDb.get());
 		return "Category successfully added.";
+	}
+
+	@Override
+	public String removeCategoryFromBook(String bookTitle, String categoryName) {
+		Optional<Book> bookFromDb = bookRepository.findByTitle(bookTitle);
+		if (bookFromDb.isEmpty()) {
+			throw new BookNotFoundException();
+		}
+		Optional<Category> categoryFromDb = categoryRepository.findByName(categoryName);
+		if (categoryFromDb.isEmpty()) {
+			throw new CategoryNotFoundException();
+		}
+		if (!bookFromDb.get().getCategories().contains(categoryFromDb.get())) {
+			throw new CategoryNotFoundInBookException();
+		}
+		bookFromDb.get().getCategories().remove(categoryFromDb.get());
+		bookRepository.save(bookFromDb.get());
+		return "Category successfully removed.";
 	}
 
 	@Override

@@ -14,6 +14,8 @@ public interface BookService {
 	List<BookResponse> findBooksByCategory(String categoryName);
 	
 	String addCategoryToBook(String bookTitle, String categoryName);
+	
+	String removeCategoryFromBook(String bookTitle, String categoryName);
 
 	BookResponse createBook(BookRequest bookRequest);
 

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springboot.shopping.dto.book.AddCategoryToBookForm;
 import com.springboot.shopping.dto.book.BookRequest;
 import com.springboot.shopping.dto.book.BookResponse;
+import com.springboot.shopping.dto.book.RemoveCategoryFromBookForm;
 import com.springboot.shopping.service.BookService;
 
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,12 @@ public class BookAdminController {
 	public ResponseEntity<String> addCategoryToBook(@RequestBody AddCategoryToBookForm addCategoryToBookForm) {
 		return ResponseEntity.ok(bookService.addCategoryToBook(addCategoryToBookForm.getBookTitle(),
 				addCategoryToBookForm.getCategoryName()));
+	}
+	
+	@PostMapping("/books/category/remove-from-book")
+	public ResponseEntity<String> removeCategoryFromBook(@RequestBody RemoveCategoryFromBookForm removeCategoryFromBookForm) {
+		return ResponseEntity.ok(bookService.removeCategoryFromBook(removeCategoryFromBookForm.getBookTitle(),
+				removeCategoryFromBookForm.getCategoryName()));
 	}
 
 	// Update an existing book
