@@ -3,15 +3,15 @@ package com.springboot.shopping.service.impl;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.springboot.shopping.dto.book.BookRequest;
 import com.springboot.shopping.dto.book.BookResponse;
-import com.springboot.shopping.exception.ApiRequestException;
-import com.springboot.shopping.exception.BookExistException;
-import com.springboot.shopping.exception.UserRoleExistException;
+import com.springboot.shopping.exception.book.BookExistException;
+import com.springboot.shopping.exception.book.BookNotFoundException;
+import com.springboot.shopping.exception.category.CategoryNotFoundException;
+import com.springboot.shopping.exception.user.UserRoleExistException;
 import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Book;
 import com.springboot.shopping.model.Category;
@@ -45,7 +45,7 @@ public class BookServiceImpl implements BookService {
 		Book newBook = commonMapper.convertToEntity(bookRequest, Book.class);
 		Optional<Book> bookFromDb = bookRepository.findByTitle(bookRequest.getTitle());
 		if (bookFromDb.isPresent()) {
-			throw new BookExistException("Book is already existed");
+			throw new BookExistException();
 		}
 		return commonMapper.convertToResponse(bookRepository.save(newBook), BookResponse.class);
 	}
@@ -55,14 +55,14 @@ public class BookServiceImpl implements BookService {
 
 		Optional<Book> bookFromDb = bookRepository.findByTitle(bookTitle);
 		if (bookFromDb.isEmpty()) {
-			throw new ApiRequestException("Book not found!", HttpStatus.NOT_FOUND);
+			throw new BookNotFoundException();
 		}
 		Optional<Category> categoryFromDb = categoryRepository.findByName(categoryName);
 		if (categoryFromDb.isEmpty()) {
-			throw new ApiRequestException("Category not found!", HttpStatus.NOT_FOUND);
+			throw new CategoryNotFoundException();
 		}
 		if (bookFromDb.get().getCategories().contains(categoryFromDb.get())) {
-			throw new UserRoleExistException("Book already has this category !");
+			throw new UserRoleExistException();
 		}
 		bookFromDb.get().getCategories().add(categoryFromDb.get());
 		bookRepository.save(bookFromDb.get());
@@ -74,7 +74,7 @@ public class BookServiceImpl implements BookService {
 
 		Optional<Book> bookFromDb = bookRepository.findById(bookId);
 		if (bookFromDb.isEmpty()) {
-			throw new ApiRequestException("Book not found!", HttpStatus.NOT_FOUND);
+			throw new BookNotFoundException();
 		}
 		bookFromDb.get().setId(bookId);
 		return commonMapper.convertToResponse(bookRepository.save(bookFromDb.get()), BookResponse.class);
@@ -86,7 +86,7 @@ public class BookServiceImpl implements BookService {
 
 		Optional<Book> bookFromDb = bookRepository.findById(bookId);
 		if (bookFromDb.isEmpty()) {
-			throw new ApiRequestException("Book not found!", HttpStatus.NOT_FOUND);
+			throw new BookNotFoundException();
 		}
 		bookRepository.deleteById(bookId);
 		return commonMapper.convertToResponseList(bookRepository.findAll(), BookResponse.class);
@@ -97,7 +97,7 @@ public class BookServiceImpl implements BookService {
 
 		Optional<Category> categoryFromDb = categoryRepository.findByName(categoryName);
 		if (categoryFromDb.isEmpty()) {
-			throw new ApiRequestException("Category not found!", HttpStatus.NOT_FOUND);
+			throw new CategoryNotFoundException();
 		}
 		return commonMapper.convertToResponseList(bookRepository.findByCategory(categoryName), BookResponse.class);
 

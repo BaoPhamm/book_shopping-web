@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,10 +20,11 @@ import org.springframework.validation.BindingResult;
 import com.springboot.shopping.dto.RegistrationRequest;
 import com.springboot.shopping.dto.auth.AuthenticationRequest;
 import com.springboot.shopping.dto.auth.AuthenticationResponse;
-import com.springboot.shopping.exception.ApiRequestException;
 import com.springboot.shopping.exception.InputFieldException;
-import com.springboot.shopping.exception.PasswordConfirmationException;
-import com.springboot.shopping.exception.UserExistException;
+import com.springboot.shopping.exception.auth.PasswordConfirmationException;
+import com.springboot.shopping.exception.auth.UserAuthenticationException;
+import com.springboot.shopping.exception.user.PhoneNumberExistException;
+import com.springboot.shopping.exception.user.UsernameExistException;
 import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Role;
 import com.springboot.shopping.model.UserEntity;
@@ -65,12 +65,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 		Optional<UserEntity> userFromDb = userRepository.findByUsername(newUser.getUsername());
 		if (userFromDb.isPresent()) {
-			throw new UserExistException("UserName is already used.");
+			throw new UsernameExistException();
 		}
 
 		Optional<UserEntity> checkUserPhoneNumFromDb = userRepository.findByUsername(newUser.getPhoneNumber());
 		if (checkUserPhoneNumFromDb.isPresent()) {
-			throw new UserExistException("Phone number is already used.");
+			throw new PhoneNumberExistException();
 		}
 
 		newUser.getRoles().add(role.get());
@@ -115,7 +115,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			return response;
 
 		} catch (AuthenticationException e) {
-			throw new ApiRequestException("Incorrect password or email", HttpStatus.FORBIDDEN);
+			throw new UserAuthenticationException();
 		}
 	}
 

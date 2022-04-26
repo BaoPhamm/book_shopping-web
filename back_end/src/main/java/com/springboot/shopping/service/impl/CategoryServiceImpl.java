@@ -3,12 +3,11 @@ package com.springboot.shopping.service.impl;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.springboot.shopping.dto.category.CategoryRequest;
 import com.springboot.shopping.dto.category.CategoryResponse;
-import com.springboot.shopping.exception.ApiRequestException;
+import com.springboot.shopping.exception.category.CategoryNotFoundException;
 import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Category;
 import com.springboot.shopping.repository.CategoryRepository;
@@ -51,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
 		Category newCategoryInfo = commonMapper.convertToEntity(categoryRequest, Category.class);
 		Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
 		if (categoryFromDb.isEmpty()) {
-			throw new ApiRequestException("Category not found!", HttpStatus.NOT_FOUND);
+			throw new CategoryNotFoundException();
 		}
 		newCategoryInfo.setId(categoryId);
 		return commonMapper.convertToResponse(categoryRepository.save(newCategoryInfo), CategoryResponse.class);
@@ -62,7 +61,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 		Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
 		if (categoryFromDb.isEmpty()) {
-			throw new ApiRequestException("Category not found!", HttpStatus.NOT_FOUND);
+			throw new CategoryNotFoundException();
 		}
 		categoryRepository.deleteById(categoryId);
 		return commonMapper.convertToResponseList(categoryRepository.findAll(), CategoryResponse.class);

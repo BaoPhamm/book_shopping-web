@@ -5,14 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import com.springboot.shopping.dto.order.OrderRequest;
 import com.springboot.shopping.dto.order.OrderResponse;
-import com.springboot.shopping.exception.ApiRequestException;
 import com.springboot.shopping.exception.InputFieldException;
+import com.springboot.shopping.exception.OrderNotFoundException;
 import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Book;
 import com.springboot.shopping.model.Order;
@@ -80,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
 
 		Optional<Order> orderFromDb = orderRepository.findById(orderId);
 		if (orderFromDb.isEmpty()) {
-			throw new ApiRequestException("Order not found.", HttpStatus.NOT_FOUND);
+			throw new OrderNotFoundException();
 		}
 		orderFromDb.get().getOrderItems().forEach(orderItem -> orderItemRepository.deleteById(orderItem.getId()));
 		orderRepository.delete(orderFromDb.get());

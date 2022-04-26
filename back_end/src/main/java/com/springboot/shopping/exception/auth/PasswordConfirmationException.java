@@ -1,15 +1,11 @@
-package com.springboot.shopping.exception;
+package com.springboot.shopping.exception.auth;
 
 import lombok.Getter;
 
 @Getter
 public class PasswordConfirmationException extends RuntimeException {
 
-	private final String passwordTwoError;
-
 	public PasswordConfirmationException(String passwordTwoError) {
-		super();
-		this.passwordTwoError = passwordTwoError;
+		super(passwordTwoError);
 	}
-
 }
