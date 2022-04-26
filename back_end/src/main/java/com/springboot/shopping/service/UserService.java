@@ -1,7 +1,11 @@
 package com.springboot.shopping.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.validation.BindingResult;
 
@@ -18,19 +22,21 @@ public interface UserService {
 	UserResponse findUserById(Long userId);
 
 	UserResponse findUserByUsername(String username);
-	
+
 	UserEntity findUserByUsernameReturnUserEntity(String username);
 
 	List<UserResponse> findAllUsers();
 
 	String addRoleToUser(String username, String roleName);
-	
+
 	String removeRoleFromUser(String username, String roleName);
 
 	List<UserResponse> deleteUser(Long userId);
-	
+
 	UserResponse updateProfile(String username, UserRequest userRequest, BindingResult bindingResult);
-	
+
 	String passwordReset(String username, PasswordResetRequest passwordReset);
+
+	void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
 }

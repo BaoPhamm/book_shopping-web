@@ -118,5 +118,4 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			throw new UserAuthenticationException();
 		}
 	}
-
 }
