@@ -29,13 +29,15 @@ public class OrderController {
 	@GetMapping("/orders")
 	public ResponseEntity<List<OrderResponse>> getUserOrders() {
 		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return ResponseEntity.ok(orderService.findOrderByUsername(username));
+		List<OrderResponse> orderList = orderService.findOrderByUsername(username);
+		return ResponseEntity.ok(orderList);
 	}
 
 	@PostMapping("/order")
 	public ResponseEntity<OrderResponse> postOrder(@Valid @RequestBody OrderRequest order,
 			BindingResult bindingResult) {
-		return ResponseEntity.ok(orderService.postOrder(order, bindingResult));
+		OrderResponse orderResponse = orderService.postOrder(order, bindingResult);
+		return ResponseEntity.ok(orderResponse);
 	}
 
 }

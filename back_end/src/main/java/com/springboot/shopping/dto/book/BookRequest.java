@@ -1,15 +1,11 @@
 package com.springboot.shopping.dto.book;
 
-import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Set;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
-
-import com.springboot.shopping.model.Category;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +17,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookRequest {
+
+	@NotNull(message = "Fill in the input field")
+	private long id;
 
 	@NotBlank(message = "Fill in the input field")
 	@Length(max = 255)

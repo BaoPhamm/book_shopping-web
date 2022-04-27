@@ -27,20 +27,23 @@ public class CategoryAdminController {
 	// Create a new category
 	@PostMapping("/category/create")
 	public ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest categoryRequest) {
-		return ResponseEntity.ok(categoryService.createCategory(categoryRequest));
+		CategoryResponse createdCategory = categoryService.createCategory(categoryRequest);
+		return ResponseEntity.ok(createdCategory);
 	}
 
 	// Update an existing category
 	@PutMapping("/category/update/{id}")
 	public ResponseEntity<CategoryResponse> updateCategory(@PathVariable("id") Long categoryId,
 			@RequestBody CategoryRequest categoryRequest) {
-		return ResponseEntity.ok(categoryService.updateCategory(categoryId, categoryRequest));
+		CategoryResponse updatedCategory = categoryService.updateCategory(categoryId, categoryRequest);
+		return ResponseEntity.ok(updatedCategory);
 	}
 
 	// Delete an existing category by ID
 	@DeleteMapping("/category/delete/{id}")
 	public ResponseEntity<List<CategoryResponse>> deleteCategory(@PathVariable("id") Long categoryId) {
-		return ResponseEntity.ok(categoryService.deleteCategory(categoryId));
+		List<CategoryResponse> newCategoryList = categoryService.deleteCategory(categoryId);
+		return ResponseEntity.ok(newCategoryList);
 	}
 
 }

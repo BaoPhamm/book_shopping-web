@@ -13,4 +13,9 @@ public class CategoryNotFoundInBookException extends RuntimeException {
 		super("Category is not found in this book!");
 		this.status = HttpStatus.NOT_FOUND;
 	}
+	
+	public CategoryNotFoundInBookException(String categoryName) {
+		super("Category: " + categoryName + " is not found in this book!");
+		this.status = HttpStatus.NOT_FOUND;
+	}
 }

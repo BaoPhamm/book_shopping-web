@@ -34,12 +34,14 @@ public class UserController {
 	public ResponseEntity<UserResponse> getUserInfo() {
 		// Get username from SecurityContextHolder
 		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return ResponseEntity.ok(userService.findUserByUsername(username));
+		UserResponse user = userService.findUserByUsername(username);
+		return ResponseEntity.ok(user);
 	}
 
 	@PutMapping("/edit/info")
 	public ResponseEntity<UserResponse> updateUserInfo(@Valid @RequestBody UserRequest request,
 			BindingResult bindingResult) {
+		// Get username from SecurityContextHolder
 		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return ResponseEntity.ok(userService.updateProfile(username, request, bindingResult));
 	}
@@ -47,14 +49,14 @@ public class UserController {
 	@PutMapping("/edit/password")
 	public ResponseEntity<String> updateUserPassword(@Valid @RequestBody PasswordResetRequest passwordReset,
 			BindingResult bindingResult) {
-
 		// Get username from SecurityContextHolder
 		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		if (bindingResult.hasErrors()) {
 			throw new InputFieldException(bindingResult);
 		} else {
-			return ResponseEntity.ok(userService.passwordReset(username, passwordReset));
+			String message = userService.passwordReset(username, passwordReset);
+			return ResponseEntity.ok(message);
 		}
 	}
 

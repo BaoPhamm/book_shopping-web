@@ -24,7 +24,8 @@ public class RegistrationController {
 	@PostMapping
 	public ResponseEntity<String> registration(@Valid @RequestBody RegistrationRequest registrationRequest,
 			BindingResult bindingResult) {
-		return ResponseEntity.ok(authenticationService.registerUser(registrationRequest, bindingResult));
+		String message = authenticationService.registerUser(registrationRequest, bindingResult);
+		return ResponseEntity.ok(message);
 	}
 
 }

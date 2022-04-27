@@ -25,17 +25,20 @@ public class OrderAdminController {
 
 	@GetMapping("/orders")
 	public ResponseEntity<List<OrderResponse>> getAllOrders() {
-		return ResponseEntity.ok(orderService.findAllOrders());
+		List<OrderResponse> allOrders = orderService.findAllOrders();
+		return ResponseEntity.ok(allOrders);
 	}
 
 	@PostMapping("/order")
 	public ResponseEntity<List<OrderResponse>> getUserOrdersByUsername(@RequestBody String userName) {
-		return ResponseEntity.ok(orderService.findOrderByUsername(userName));
+		List<OrderResponse> orderList = orderService.findOrderByUsername(userName);
+		return ResponseEntity.ok(orderList);
 	}
 
 	@DeleteMapping("/order/delete/{orderId}")
 	public ResponseEntity<List<OrderResponse>> deleteOrder(@PathVariable("orderId") Long orderId) {
-		return ResponseEntity.ok(orderService.deleteOrder(orderId));
+		List<OrderResponse> newOrderList = orderService.deleteOrder(orderId);
+		return ResponseEntity.ok(newOrderList);
 	}
 
 }

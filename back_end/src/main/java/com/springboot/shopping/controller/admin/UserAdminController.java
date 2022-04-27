@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.springboot.shopping.dto.role.RoleResponse;
 import com.springboot.shopping.dto.user.AddRoleToUserForm;
 import com.springboot.shopping.dto.user.RemoveRoleFromUserForm;
 import com.springboot.shopping.dto.user.UserResponse;
-import com.springboot.shopping.service.RoleService;
 import com.springboot.shopping.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 public class UserAdminController {
 
 	private final UserService userService;
-	private final RoleService roleService;
 
 	@Value("${jwt.secret}")
 	private String secretKey;
@@ -35,35 +32,34 @@ public class UserAdminController {
 	// Get user by ID
 	@GetMapping("/users/{id}")
 	public ResponseEntity<UserResponse> getUserById(@PathVariable("id") Long UserId) {
-		return ResponseEntity.ok(userService.findUserById(UserId));
+		UserResponse userResponse = userService.findUserById(UserId);
+		return ResponseEntity.ok(userResponse);
 	}
 
 	// Get All users
 	@GetMapping("/users")
 	public ResponseEntity<List<UserResponse>> getAllUsers() {
-		return ResponseEntity.ok(userService.findAllUsers());
+		List<UserResponse> allUsers = userService.findAllUsers();
+		return ResponseEntity.ok(allUsers);
 	}
 
 	// Delete an existing user by ID
 	@DeleteMapping("/users/delete/{id}")
 	public ResponseEntity<List<UserResponse>> deleteUser(@PathVariable("id") Long UserId) {
-		return ResponseEntity.ok(userService.deleteUser(UserId));
-	}
-
-	@PostMapping("/role/create")
-	public ResponseEntity<RoleResponse> createRole(@RequestBody String roleName) {
-		return ResponseEntity.ok(roleService.createRole(roleName));
+		List<UserResponse> newUserList = userService.deleteUser(UserId);
+		return ResponseEntity.ok(newUserList);
 	}
 
 	@PostMapping("/users/role/add-to-user")
 	public ResponseEntity<String> addRoleToUser(@RequestBody AddRoleToUserForm addRoleToUserForm) {
-		return ResponseEntity
-				.ok(userService.addRoleToUser(addRoleToUserForm.getUsername(), addRoleToUserForm.getRolename()));
+		String message = userService.addRoleToUser(addRoleToUserForm.getUsername(), addRoleToUserForm.getRolename());
+		return ResponseEntity.ok(message);
 	}
 
 	@PostMapping("/users/role/remove-from-user")
 	public ResponseEntity<String> removeRoleFromUser(@RequestBody RemoveRoleFromUserForm removeRoleFromUserForm) {
-		return ResponseEntity.ok(userService.removeRoleFromUser(removeRoleFromUserForm.getUsername(),
-				removeRoleFromUserForm.getRolename()));
+		String message = userService.removeRoleFromUser(removeRoleFromUserForm.getUsername(),
+				removeRoleFromUserForm.getRolename());
+		return ResponseEntity.ok(message);
 	}
 }

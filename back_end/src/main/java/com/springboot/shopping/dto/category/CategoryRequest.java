@@ -1,6 +1,7 @@
 package com.springboot.shopping.dto.category;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -12,6 +13,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryRequest {
+
+	@NotNull(message = "Fill in the input field")
+	private long id;
 
 	@NotBlank(message = "Fill in the input field")
 	@Length(max = 255)

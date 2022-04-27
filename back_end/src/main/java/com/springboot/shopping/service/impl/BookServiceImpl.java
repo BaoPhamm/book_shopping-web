@@ -1,5 +1,7 @@
 package com.springboot.shopping.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +34,8 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public List<BookResponse> findAllBooks() {
-		return commonMapper.convertToResponseList(bookRepository.findAll(), BookResponse.class);
+		List<Book> bookList = bookRepository.findAll();
+		return commonMapper.convertToResponseList(bookList, BookResponse.class);
 	}
 
 	@Override
@@ -47,68 +50,79 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public BookResponse createBook(BookRequest bookRequest) {
 
-		Optional<Book> bookFromDb = bookRepository.findByTitle(bookRequest.getTitle());
+		Optional<Book> bookFromDb = bookRepository.findById(bookRequest.getId());
 		if (bookFromDb.isPresent()) {
 			throw new BookExistException();
 		}
 		Book newBook = commonMapper.convertToEntity(bookRequest, Book.class);
-		return commonMapper.convertToResponse(bookRepository.save(newBook), BookResponse.class);
+		Book savedBook = bookRepository.save(newBook);
+		return commonMapper.convertToResponse(savedBook, BookResponse.class);
 	}
 
 	@Override
-	public String addCategoryToBook(String bookTitle, String categoryName) {
+	public String addCategoriesToBook(Long bookId, List<Long> categoriesId) {
 
-		Optional<Book> bookFromDb = bookRepository.findByTitle(bookTitle);
+		Collection<Category> validCategories = new ArrayList<>();
+		Optional<Book> bookFromDb = bookRepository.findById(bookId);
 		if (bookFromDb.isEmpty()) {
 			throw new BookNotFoundException();
 		}
-		Optional<Category> categoryFromDb = categoryRepository.findByName(categoryName);
-		if (categoryFromDb.isEmpty()) {
-			throw new CategoryNotFoundException();
-		}
-		if (bookFromDb.get().getCategories().contains(categoryFromDb.get())) {
-			throw new CategoryExistException();
-		}
-		bookFromDb.get().getCategories().add(categoryFromDb.get());
+		categoriesId.forEach(categoryId -> {
+			Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
+			if (categoryFromDb.isEmpty()) {
+				throw new CategoryNotFoundException(categoryFromDb.get().getName());
+			}
+			if (bookFromDb.get().getCategories().contains(categoryFromDb.get())) {
+				throw new CategoryExistException(categoryFromDb.get().getName());
+			}
+			validCategories.add(categoryFromDb.get());
+		});
+
+		validCategories.forEach(validCategory -> {
+			bookFromDb.get().getCategories().add(validCategory);
+		});
 		bookRepository.save(bookFromDb.get());
 		return "Category successfully added.";
 	}
 
 	@Override
-	public String removeCategoryFromBook(String bookTitle, String categoryName) {
-		Optional<Book> bookFromDb = bookRepository.findByTitle(bookTitle);
-		if (bookFromDb.isEmpty()) {
-			throw new BookNotFoundException();
-		}
-		Optional<Category> categoryFromDb = categoryRepository.findByName(categoryName);
-		if (categoryFromDb.isEmpty()) {
-			throw new CategoryNotFoundException();
-		}
-		if (!bookFromDb.get().getCategories().contains(categoryFromDb.get())) {
-			throw new CategoryNotFoundInBookException();
-		}
-		bookFromDb.get().getCategories().remove(categoryFromDb.get());
-		bookRepository.save(bookFromDb.get());
-		return "Category successfully removed.";
-	}
-
-	@Override
-	public BookResponse updateBook(Long bookId, BookRequest bookRequest) {
+	public String removeCategoriesFromBook(Long bookId, List<Long> categoriesId) {
+		Collection<Category> validCategoriesToRemove = new ArrayList<>();
 
 		Optional<Book> bookFromDb = bookRepository.findById(bookId);
 		if (bookFromDb.isEmpty()) {
 			throw new BookNotFoundException();
 		}
-		bookFromDb.get().setTitle(bookRequest.getTitle());
-		bookFromDb.get().setAuthor(bookRequest.getAuthor());
-		bookFromDb.get().setTotalPages(bookRequest.getTotalPages());
-		bookFromDb.get().setRequiredAge(bookRequest.getRequiredAge());
-		bookFromDb.get().setReleaseDate(bookRequest.getReleaseDate());
-		bookFromDb.get().setPrice(bookRequest.getPrice());
-		bookFromDb.get().setImgSrc(bookRequest.getImgSrc());
-		bookFromDb.get().setDescription(bookRequest.getDescription());
 
-		return commonMapper.convertToResponse(bookRepository.save(bookFromDb.get()), BookResponse.class);
+		categoriesId.forEach(categoryId -> {
+			Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
+			if (categoryFromDb.isEmpty()) {
+				throw new CategoryNotFoundException(categoryFromDb.get().getName());
+			}
+			if (!bookFromDb.get().getCategories().contains(categoryFromDb.get())) {
+				throw new CategoryNotFoundInBookException(categoryFromDb.get().getName());
+			}
+			validCategoriesToRemove.add(categoryFromDb.get());
+		});
+
+		validCategoriesToRemove.forEach(validCategory -> {
+			bookFromDb.get().getCategories().remove(validCategory);
+		});
+		bookRepository.save(bookFromDb.get());
+		return "Category successfully removed.";
+	}
+
+	@Override
+	public BookResponse updateBook(BookRequest bookRequest) {
+
+		Optional<Book> bookFromDb = bookRepository.findById(bookRequest.getId());
+		if (bookFromDb.isEmpty()) {
+			throw new BookNotFoundException();
+		}
+		Book newBookInfo = commonMapper.convertToEntity(bookRequest, Book.class);
+		newBookInfo.setCategories(bookFromDb.get().getCategories());
+		Book updatedBook = bookRepository.save(newBookInfo);
+		return commonMapper.convertToResponse(updatedBook, BookResponse.class);
 	}
 
 	@Override

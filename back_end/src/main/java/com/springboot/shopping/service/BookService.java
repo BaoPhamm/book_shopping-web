@@ -13,13 +13,13 @@ public interface BookService {
 	
 	List<BookResponse> findBooksByCategory(String categoryName);
 	
-	String addCategoryToBook(String bookTitle, String categoryName);
+	String addCategoriesToBook(Long bookId, List<Long> categoriesId);
 	
-	String removeCategoryFromBook(String bookTitle, String categoryName);
+	String removeCategoriesFromBook(Long bookId, List<Long> categoriesId);
 
 	BookResponse createBook(BookRequest bookRequest);
 
-	BookResponse updateBook(Long bookId, BookRequest bookRequest);
+	BookResponse updateBook(BookRequest bookRequest);
 
 	List<BookResponse> deleteBook(Long bookId);
 

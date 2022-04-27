@@ -13,4 +13,9 @@ public class CategoryExistException extends RuntimeException {
 		super("Category is already existed!");
 		this.status = HttpStatus.BAD_REQUEST;
 	}
+	
+	public CategoryExistException(String categoryName) {
+		super("Category: "+categoryName+" is already existed in this book!");
+		this.status = HttpStatus.BAD_REQUEST;
+	}
 }

@@ -29,32 +29,37 @@ public class BookAdminController {
 	// Create a new book
 	@PostMapping("/books/create")
 	public ResponseEntity<BookResponse> saveBook(@RequestBody BookRequest bookRequest) {
-		return ResponseEntity.ok(bookService.createBook(bookRequest));
+		BookResponse createdBook = bookService.createBook(bookRequest);
+		return ResponseEntity.ok(createdBook);
 	}
 
 	@PostMapping("/books/category/add-to-book")
-	public ResponseEntity<String> addCategoryToBook(@RequestBody AddCategoryToBookForm addCategoryToBookForm) {
-		return ResponseEntity.ok(bookService.addCategoryToBook(addCategoryToBookForm.getBookTitle(),
-				addCategoryToBookForm.getCategoryName()));
+	public ResponseEntity<String> addCategoriesToBook(@RequestBody AddCategoryToBookForm addCategoryToBookForm) {
+		String message = bookService.addCategoriesToBook(addCategoryToBookForm.getBookId(),
+				addCategoryToBookForm.getCategoriesId());
+		return ResponseEntity.ok(message);
 	}
-	
+
 	@PostMapping("/books/category/remove-from-book")
-	public ResponseEntity<String> removeCategoryFromBook(@RequestBody RemoveCategoryFromBookForm removeCategoryFromBookForm) {
-		return ResponseEntity.ok(bookService.removeCategoryFromBook(removeCategoryFromBookForm.getBookTitle(),
-				removeCategoryFromBookForm.getCategoryName()));
+	public ResponseEntity<String> removeCategoriesFromBook(
+			@RequestBody RemoveCategoryFromBookForm removeCategoryFromBookForm) {
+		String message = bookService.removeCategoriesFromBook(removeCategoryFromBookForm.getBookId(),
+				removeCategoryFromBookForm.getCategoriesId());
+		return ResponseEntity.ok(message);
 	}
 
 	// Update an existing book
-	@PutMapping("/books/update/{id}")
-	public ResponseEntity<BookResponse> updateBook(@PathVariable("id") Long BookId,
-			@RequestBody BookRequest bookRequest) {
-		return ResponseEntity.ok(bookService.updateBook(BookId, bookRequest));
+	@PutMapping("/books/update")
+	public ResponseEntity<BookResponse> updateBook(@RequestBody BookRequest bookRequest) {
+		BookResponse updatedBook = bookService.updateBook(bookRequest);
+		return ResponseEntity.ok(updatedBook);
 	}
 
 	// Delete an existing book by ID
 	@DeleteMapping("/books/delete/{id}")
 	public ResponseEntity<List<BookResponse>> deleteBook(@PathVariable("id") Long BookId) {
-		return ResponseEntity.ok(bookService.deleteBook(BookId));
+		List<BookResponse> newBookList = bookService.deleteBook(BookId);
+		return ResponseEntity.ok(newBookList);
 	}
 
 }
