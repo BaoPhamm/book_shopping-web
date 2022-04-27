@@ -1,16 +1,22 @@
 package com.springboot.shopping.dto.book;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.util.Set;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.springboot.shopping.model.Category;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,10 +38,10 @@ public class BookRequest {
 
 	@NotBlank(message = "Fill in the input field")
 	@Length(max = 255)
-	private Date releaseDate;
+	private LocalDate releaseDate;
 
 	@NotNull(message = "Fill in the input field")
-	private Double price;
+	private Integer price;
 
 	@NotBlank(message = "Fill in the input field")
 	@Length(max = 255)
