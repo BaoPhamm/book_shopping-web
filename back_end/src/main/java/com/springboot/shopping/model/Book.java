@@ -42,7 +42,7 @@ public class Book {
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<Category> categories = new ArrayList<>();
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -52,16 +52,16 @@ public class Book {
 		if (getClass() != obj.getClass())
 			return false;
 		Book other = (Book) obj;
-		return Objects.equals(author, other.author) && Objects.equals(description, other.description) && id == other.id
+		return Objects.equals(author, other.author) && Objects.equals(categories, other.categories)
+				&& Objects.equals(description, other.description) && id == other.id
 				&& Objects.equals(imgSrc, other.imgSrc) && Objects.equals(price, other.price)
 				&& Objects.equals(releaseDate, other.releaseDate) && requiredAge == other.requiredAge
 				&& Objects.equals(title, other.title) && totalPages == other.totalPages;
 	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(author, description, id, imgSrc, price, releaseDate, requiredAge, title, totalPages);
+		return Objects.hash(author, categories, description, id, imgSrc, price, releaseDate, requiredAge, title,
+				totalPages);
 	}
-
-
-
 }
