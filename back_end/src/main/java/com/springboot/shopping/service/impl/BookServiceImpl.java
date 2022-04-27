@@ -13,7 +13,6 @@ import com.springboot.shopping.exception.book.BookNotFoundException;
 import com.springboot.shopping.exception.category.CategoryExistException;
 import com.springboot.shopping.exception.category.CategoryNotFoundException;
 import com.springboot.shopping.exception.category.CategoryNotFoundInBookException;
-import com.springboot.shopping.exception.user.UserRoleExistException;
 import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Book;
 import com.springboot.shopping.model.Category;
@@ -38,17 +37,21 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public BookResponse findBookById(Long bookId) {
-		return commonMapper.convertToResponse(bookRepository.findById(bookId), BookResponse.class);
+		Optional<Book> bookFromDb = bookRepository.findById(bookId);
+		if (bookFromDb.isEmpty()) {
+			throw new BookNotFoundException();
+		}
+		return commonMapper.convertToResponse(bookFromDb.get(), BookResponse.class);
 	}
 
 	@Override
 	public BookResponse createBook(BookRequest bookRequest) {
 
-		Book newBook = commonMapper.convertToEntity(bookRequest, Book.class);
 		Optional<Book> bookFromDb = bookRepository.findByTitle(bookRequest.getTitle());
 		if (bookFromDb.isPresent()) {
 			throw new BookExistException();
 		}
+		Book newBook = commonMapper.convertToEntity(bookRequest, Book.class);
 		return commonMapper.convertToResponse(bookRepository.save(newBook), BookResponse.class);
 	}
 
@@ -96,7 +99,15 @@ public class BookServiceImpl implements BookService {
 		if (bookFromDb.isEmpty()) {
 			throw new BookNotFoundException();
 		}
-		bookFromDb.get().setId(bookId);
+		bookFromDb.get().setTitle(bookRequest.getTitle());
+		bookFromDb.get().setAuthor(bookRequest.getAuthor());
+		bookFromDb.get().setTotalPages(bookRequest.getTotalPages());
+		bookFromDb.get().setRequiredAge(bookRequest.getRequiredAge());
+		bookFromDb.get().setReleaseDate(bookRequest.getReleaseDate());
+		bookFromDb.get().setPrice(bookRequest.getPrice());
+		bookFromDb.get().setImgSrc(bookRequest.getImgSrc());
+		bookFromDb.get().setDescription(bookRequest.getDescription());
+
 		return commonMapper.convertToResponse(bookRepository.save(bookFromDb.get()), BookResponse.class);
 	}
 
@@ -120,7 +131,6 @@ public class BookServiceImpl implements BookService {
 			throw new CategoryNotFoundException();
 		}
 		return commonMapper.convertToResponseList(bookRepository.findByCategory(categoryName), BookResponse.class);
-
 	}
 
 }
