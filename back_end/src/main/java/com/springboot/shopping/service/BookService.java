@@ -11,7 +11,7 @@ public interface BookService {
 
 	List<BookResponse> findAllBooks();
 	
-	List<BookResponse> findBooksByCategory(String categoryName);
+	List<BookResponse> findBooksByCategory(Long categoryId);
 	
 	String addCategoriesToBook(Long bookId, List<Long> categoriesId);
 	

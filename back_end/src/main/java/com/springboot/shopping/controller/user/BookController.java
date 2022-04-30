@@ -37,8 +37,8 @@ public class BookController {
 
 	// Get books by category
 	@GetMapping("/category")
-	public ResponseEntity<List<BookResponse>> getBooksByCategory(@RequestParam String categoryName) {
-		List<BookResponse> bookList = bookService.findBooksByCategory(categoryName);
+	public ResponseEntity<List<BookResponse>> getBooksByCategory(@RequestParam Long categoryId) {
+		List<BookResponse> bookList = bookService.findBooksByCategory(categoryId);
 		return ResponseEntity.ok(bookList);
 	}
 }

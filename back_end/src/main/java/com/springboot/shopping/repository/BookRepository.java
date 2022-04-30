@@ -14,9 +14,13 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
 	@Query(value = "select * from books b "
 			+ "inner join books_categories bc on b.id = bc.book_id "
-			+ "inner join categories c on c.id = bc.categories_id "
-			+ "where c.name = :categoryName" ,nativeQuery = true)
-	List<Book> findByCategory(String categoryName);
+			+ "where bc.categories_id = :categoryId" ,nativeQuery = true)
+	List<Book> findByCategory(Long categoryId);
+	
+	@Query(value = "select bc.categories_id from books b "
+			+ "inner join books_categories bc on b.id = bc.book_id "
+			+ "where bc.book_id = :bookId" ,nativeQuery = true)
+	List<Long> findAllIdsOfCategories(Long bookId);
 
 	Optional<Book> findByTitle(String bookTitle);
 

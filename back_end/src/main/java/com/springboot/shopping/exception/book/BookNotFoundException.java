@@ -13,4 +13,9 @@ public class BookNotFoundException extends RuntimeException {
 		super("Book is not found!");
 		this.status = HttpStatus.NOT_FOUND;
 	}
+
+	public BookNotFoundException(Long bookId) {
+		super("Book with id: " + bookId + " is not found!");
+		this.status = HttpStatus.NOT_FOUND;
+	}
 }

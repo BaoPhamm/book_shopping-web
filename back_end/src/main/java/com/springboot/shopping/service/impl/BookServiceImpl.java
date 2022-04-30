@@ -14,7 +14,6 @@ import com.springboot.shopping.exception.book.BookExistException;
 import com.springboot.shopping.exception.book.BookNotFoundException;
 import com.springboot.shopping.exception.category.CategoryExistException;
 import com.springboot.shopping.exception.category.CategoryNotFoundException;
-import com.springboot.shopping.exception.category.CategoryNotFoundInBookException;
 import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Book;
 import com.springboot.shopping.model.Category;
@@ -59,6 +58,15 @@ public class BookServiceImpl implements BookService {
 		return commonMapper.convertToResponse(savedBook, BookResponse.class);
 	}
 
+	private Category findCategoryExist(List<Category> allCategories, Long categoryId) {
+		for (Category category : allCategories) {
+			if (category.getId() == categoryId) {
+				return category;
+			}
+		}
+		throw new CategoryNotFoundException(categoryId);
+	}
+
 	@Override
 	public String addCategoriesToBook(Long bookId, List<Long> categoriesId) {
 
@@ -67,47 +75,42 @@ public class BookServiceImpl implements BookService {
 		if (bookFromDb.isEmpty()) {
 			throw new BookNotFoundException();
 		}
+		List<Long> bookCategoriesId = bookRepository.findAllIdsOfCategories(bookId);
+		List<Category> allCategories = categoryRepository.findAll();
+
 		categoriesId.forEach(categoryId -> {
-			Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
-			if (categoryFromDb.isEmpty()) {
-				throw new CategoryNotFoundException(categoryFromDb.get().getName());
+			if (bookCategoriesId.contains(categoryId)) {
+				throw new CategoryExistException(categoryId);
 			}
-			if (bookFromDb.get().getCategories().contains(categoryFromDb.get())) {
-				throw new CategoryExistException(categoryFromDb.get().getName());
-			}
-			validCategories.add(categoryFromDb.get());
+			Category validCategory = findCategoryExist(allCategories, categoryId);
+			validCategories.add(validCategory);
 		});
 
-		validCategories.forEach(validCategory -> {
-			bookFromDb.get().getCategories().add(validCategory);
-		});
+		bookFromDb.get().getCategories().addAll(validCategories);
 		bookRepository.save(bookFromDb.get());
 		return "Category successfully added.";
 	}
 
 	@Override
 	public String removeCategoriesFromBook(Long bookId, List<Long> categoriesId) {
-		Collection<Category> validCategoriesToRemove = new ArrayList<>();
 
+		Collection<Category> validCategoriesToRemove = new ArrayList<>();
 		Optional<Book> bookFromDb = bookRepository.findById(bookId);
 		if (bookFromDb.isEmpty()) {
 			throw new BookNotFoundException();
 		}
+		List<Long> bookCategoriesId = bookRepository.findAllIdsOfCategories(bookId);
+		List<Category> allCategories = categoryRepository.findAll();
 
 		categoriesId.forEach(categoryId -> {
-			Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
-			if (categoryFromDb.isEmpty()) {
-				throw new CategoryNotFoundException(categoryFromDb.get().getName());
+			if (!bookCategoriesId.contains(categoryId)) {
+				throw new CategoryNotFoundException(categoryId);
 			}
-			if (!bookFromDb.get().getCategories().contains(categoryFromDb.get())) {
-				throw new CategoryNotFoundInBookException(categoryFromDb.get().getName());
-			}
-			validCategoriesToRemove.add(categoryFromDb.get());
+			Category validCategory = findCategoryExist(allCategories, categoryId);
+			validCategoriesToRemove.add(validCategory);
 		});
 
-		validCategoriesToRemove.forEach(validCategory -> {
-			bookFromDb.get().getCategories().remove(validCategory);
-		});
+		bookFromDb.get().getCategories().removeAll(validCategoriesToRemove);
 		bookRepository.save(bookFromDb.get());
 		return "Category successfully removed.";
 	}
@@ -138,13 +141,13 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public List<BookResponse> findBooksByCategory(String categoryName) {
+	public List<BookResponse> findBooksByCategory(Long categoryId) {
 
-		Optional<Category> categoryFromDb = categoryRepository.findByName(categoryName);
+		Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
 		if (categoryFromDb.isEmpty()) {
 			throw new CategoryNotFoundException();
 		}
-		return commonMapper.convertToResponseList(bookRepository.findByCategory(categoryName), BookResponse.class);
+		return commonMapper.convertToResponseList(bookRepository.findByCategory(categoryId), BookResponse.class);
 	}
 
 }

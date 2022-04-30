@@ -13,8 +13,9 @@ public class CategoryNotFoundException extends RuntimeException {
 		super("Category is not found!");
 		this.status = HttpStatus.NOT_FOUND;
 	}
-	public CategoryNotFoundException(String categoryName) {
-		super("Category: "+categoryName+ " is not found!");
+
+	public CategoryNotFoundException(Long categoryId) {
+		super("Category with id: "+categoryId+ " is not found!");
 		this.status = HttpStatus.NOT_FOUND;
 	}
 }
