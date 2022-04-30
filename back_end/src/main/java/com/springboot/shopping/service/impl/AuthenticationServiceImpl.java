@@ -57,12 +57,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 		UserEntity newUser = commonMapper.convertToEntity(registrationRequest, UserEntity.class);
 
-		// Create default role is "USER"
-		Optional<Role> role = roleRepository.findByname("USER");
-
-		if (newUser.getPassword() != null && !newUser.getPassword().equals(registrationRequest.getPasswordRepeat())) {
-			throw new PasswordConfirmationException("Passwords do not match.");
-		}
 		Optional<UserEntity> userFromDb = userRepository.findByUsername(newUser.getUsername());
 		if (userFromDb.isPresent()) {
 			throw new UsernameExistException();
@@ -72,6 +66,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		if (checkUserPhoneNumFromDb.isPresent()) {
 			throw new PhoneNumberExistException();
 		}
+
+		if (newUser.getPassword() != null && !newUser.getPassword().equals(registrationRequest.getPasswordRepeat())) {
+			throw new PasswordConfirmationException("Passwords do not match.");
+		}
+
+		// Create default role is "USER"
+		Optional<Role> role = roleRepository.findByname("USER");
 
 		newUser.getRoles().add(role.get());
 		newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
