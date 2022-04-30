@@ -12,13 +12,13 @@ import com.springboot.shopping.service.RoleService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/v1/admin/role")
 @RequiredArgsConstructor
 public class RoleAdminController {
 
 	private final RoleService roleService;
 
-	@PostMapping("/role/create")
+	@PostMapping()
 	public ResponseEntity<RoleResponse> createRole(@RequestBody String roleName) {
 		RoleResponse createdRole = roleService.createRole(roleName);
 		return ResponseEntity.ok(createdRole);

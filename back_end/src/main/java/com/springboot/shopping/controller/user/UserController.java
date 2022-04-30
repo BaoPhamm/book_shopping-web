@@ -38,7 +38,7 @@ public class UserController {
 		return ResponseEntity.ok(user);
 	}
 
-	@PutMapping("/edit/info")
+	@PutMapping("/info")
 	public ResponseEntity<UserResponse> updateUserInfo(@Valid @RequestBody UserRequest request,
 			BindingResult bindingResult) {
 		// Get username from SecurityContextHolder
@@ -46,7 +46,7 @@ public class UserController {
 		return ResponseEntity.ok(userService.updateProfile(username, request, bindingResult));
 	}
 
-	@PutMapping("/edit/password")
+	@PutMapping("/password")
 	public ResponseEntity<String> updateUserPassword(@Valid @RequestBody PasswordResetRequest passwordReset,
 			BindingResult bindingResult) {
 		// Get username from SecurityContextHolder

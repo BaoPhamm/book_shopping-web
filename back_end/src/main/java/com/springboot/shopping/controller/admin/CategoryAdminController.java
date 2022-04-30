@@ -18,21 +18,21 @@ import com.springboot.shopping.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/v1/admin/category")
 @RequiredArgsConstructor
 public class CategoryAdminController {
 
 	private final CategoryService categoryService;
 
 	// Create a new category
-	@PostMapping("/category/create")
+	@PostMapping()
 	public ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest categoryRequest) {
 		CategoryResponse createdCategory = categoryService.createCategory(categoryRequest);
 		return ResponseEntity.ok(createdCategory);
 	}
 
 	// Update an existing category
-	@PutMapping("/category/update/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<CategoryResponse> updateCategory(@PathVariable("id") Long categoryId,
 			@RequestBody CategoryRequest categoryRequest) {
 		CategoryResponse updatedCategory = categoryService.updateCategory(categoryId, categoryRequest);
@@ -40,7 +40,7 @@ public class CategoryAdminController {
 	}
 
 	// Delete an existing category by ID
-	@DeleteMapping("/category/delete/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<List<CategoryResponse>> deleteCategory(@PathVariable("id") Long categoryId) {
 		List<CategoryResponse> newCategoryList = categoryService.deleteCategory(categoryId);
 		return ResponseEntity.ok(newCategoryList);

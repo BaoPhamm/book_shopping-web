@@ -20,7 +20,7 @@ import com.springboot.shopping.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/v1/admin/users")
 @RequiredArgsConstructor
 public class UserAdminController {
 
@@ -30,33 +30,33 @@ public class UserAdminController {
 	private String secretKey;
 
 	// Get user by ID
-	@GetMapping("/users/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<UserResponse> getUserById(@PathVariable("id") Long UserId) {
 		UserResponse userResponse = userService.findUserById(UserId);
 		return ResponseEntity.ok(userResponse);
 	}
 
 	// Get All users
-	@GetMapping("/users")
+	@GetMapping()
 	public ResponseEntity<List<UserResponse>> getAllUsers() {
 		List<UserResponse> allUsers = userService.findAllUsers();
 		return ResponseEntity.ok(allUsers);
 	}
 
 	// Delete an existing user by ID
-	@DeleteMapping("/users/delete/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<List<UserResponse>> deleteUser(@PathVariable("id") Long UserId) {
 		List<UserResponse> newUserList = userService.deleteUser(UserId);
 		return ResponseEntity.ok(newUserList);
 	}
 
-	@PostMapping("/users/role/add-to-user")
+	@PostMapping("/role/add-to-user")
 	public ResponseEntity<String> addRoleToUser(@RequestBody AddRoleToUserForm addRoleToUserForm) {
 		String message = userService.addRoleToUser(addRoleToUserForm.getUsername(), addRoleToUserForm.getRolename());
 		return ResponseEntity.ok(message);
 	}
 
-	@PostMapping("/users/role/remove-from-user")
+	@PostMapping("/role/remove-from-user")
 	public ResponseEntity<String> removeRoleFromUser(@RequestBody RemoveRoleFromUserForm removeRoleFromUserForm) {
 		String message = userService.removeRoleFromUser(removeRoleFromUserForm.getUsername(),
 				removeRoleFromUserForm.getRolename());

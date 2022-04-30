@@ -20,20 +20,20 @@ import com.springboot.shopping.service.OrderService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/user/orders")
 @RequiredArgsConstructor
 public class OrderController {
 
 	private final OrderService orderService;
 
-	@GetMapping("/orders")
+	@GetMapping()
 	public ResponseEntity<List<OrderResponse>> getUserOrders() {
 		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		List<OrderResponse> orderList = orderService.findOrderByUsername(username);
 		return ResponseEntity.ok(orderList);
 	}
 
-	@PostMapping("/order")
+	@PostMapping()
 	public ResponseEntity<OrderResponse> postOrder(@Valid @RequestBody OrderRequest order,
 			BindingResult bindingResult) {
 		OrderResponse orderResponse = orderService.postOrder(order, bindingResult);
