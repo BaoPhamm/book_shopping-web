@@ -21,7 +21,7 @@ import com.springboot.shopping.dto.RegistrationRequest;
 import com.springboot.shopping.dto.auth.AuthenticationRequest;
 import com.springboot.shopping.dto.auth.AuthenticationResponse;
 import com.springboot.shopping.exception.InputFieldException;
-import com.springboot.shopping.exception.auth.PasswordConfirmationException;
+import com.springboot.shopping.exception.auth.PasswordException;
 import com.springboot.shopping.exception.auth.UserAuthenticationException;
 import com.springboot.shopping.exception.user.PhoneNumberExistException;
 import com.springboot.shopping.exception.user.UsernameExistException;
@@ -68,7 +68,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		}
 
 		if (newUser.getPassword() != null && !newUser.getPassword().equals(registrationRequest.getPasswordRepeat())) {
-			throw new PasswordConfirmationException("Passwords do not match.");
+			throw new PasswordException("Passwords do not match.");
 		}
 
 		// Create default role is "USER"

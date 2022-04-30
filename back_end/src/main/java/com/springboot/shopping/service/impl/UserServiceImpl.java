@@ -30,7 +30,7 @@ import com.springboot.shopping.dto.PasswordResetRequest;
 import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
 import com.springboot.shopping.exception.InputFieldException;
-import com.springboot.shopping.exception.auth.PasswordConfirmationException;
+import com.springboot.shopping.exception.auth.PasswordException;
 import com.springboot.shopping.exception.role.RoleNotFoundException;
 import com.springboot.shopping.exception.user.UserNotFoundException;
 import com.springboot.shopping.exception.user.UserRoleExistException;
@@ -167,20 +167,27 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	@Override
 	public String passwordReset(String username, PasswordResetRequest passwordResetRequest) {
 
-		String password = passwordResetRequest.getPassword();
-		String passwordRepeat = passwordResetRequest.getPasswordRepeat();
-
-		if (passwordRepeat.isBlank()) {
-			throw new PasswordConfirmationException("Password confirmation cannot be blank.");
-		}
-		if (password != null && !password.equals(passwordRepeat)) {
-			throw new PasswordConfirmationException("Passwords do not match.");
-		}
 		Optional<UserEntity> userFromDb = userRepository.findByUsername(username);
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
 		}
-		userFromDb.get().setPassword(passwordEncoder.encode(password));
+		String currentPassword = passwordResetRequest.getCurrentPassword();
+		String newPassword = passwordResetRequest.getNewPassword();
+		String newPasswordRepeat = passwordResetRequest.getNewPasswordRepeat();
+
+		if (currentPassword.isBlank() || newPassword.isBlank() || newPasswordRepeat.isBlank()) {
+			throw new PasswordException("Current password and new password cannot be blank.");
+		}
+
+		if (!passwordEncoder.matches(currentPassword, userFromDb.get().getPassword())) {
+			throw new PasswordException("Current password is wrong.");
+		}
+
+		if (!newPassword.equals(newPasswordRepeat)) {
+			throw new PasswordException("Passwords do not match.");
+		}
+
+		userFromDb.get().setPassword(passwordEncoder.encode(newPassword));
 		userRepository.save(userFromDb.get());
 		return "Password successfully changed!";
 	}
