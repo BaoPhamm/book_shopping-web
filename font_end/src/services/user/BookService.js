@@ -3,8 +3,12 @@ import axios from "axios";
 const BOOK_API_BASE_URL = "http://localhost:8080/api/v1/books";
 
 class BookService {
-  getBooks() {
+  getAllBooks() {
     return axios.get(BOOK_API_BASE_URL);
+  }
+
+  getBookById(Id) {
+    return axios.get(BOOK_API_BASE_URL + "/" + Id);
   }
 
   //   createEmployee(employee) {
