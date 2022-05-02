@@ -23,8 +23,8 @@ public class BookController {
 
 	// Get book by ID
 	@GetMapping("/{id}")
-	public ResponseEntity<BookResponse> getBookById(@PathVariable("id") Long BookId) {
-		BookResponse bookResponse = bookService.findBookById(BookId);
+	public ResponseEntity<BookResponse> getBookById(@PathVariable("id") Long bookId) {
+		BookResponse bookResponse = bookService.findBookById(bookId);
 		return ResponseEntity.ok(bookResponse);
 	}
 
@@ -36,8 +36,8 @@ public class BookController {
 	}
 
 	// Get books by category
-	@GetMapping("/category")
-	public ResponseEntity<List<BookResponse>> getBooksByCategory(@RequestParam Long categoryId) {
+	@GetMapping("/category/{categoryId}")
+	public ResponseEntity<List<BookResponse>> getBooksByCategory(@PathVariable("categoryId") Long categoryId) {
 		List<BookResponse> bookList = bookService.findBooksByCategory(categoryId);
 		return ResponseEntity.ok(bookList);
 	}
