@@ -3,29 +3,44 @@ import axios from "axios";
 const BOOK_API_BASE_URL = "http://localhost:8080/api/v1/books";
 
 class BookService {
-  getAllBooks() {
-    return axios.get(BOOK_API_BASE_URL);
+  async getBookById(bookId) {
+    const response = await axios
+      .get(BOOK_API_BASE_URL + "/" + bookId)
+      .then(function (response) {
+        console.log(response);
+        return response;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    return response;
   }
 
-  getBookById(Id) {
-    return axios.get(BOOK_API_BASE_URL + "/" + Id);
+  async getAllBooks() {
+    const response = await axios
+      .get(BOOK_API_BASE_URL)
+      .then(function (response) {
+        console.log(response);
+        return response;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    return response;
   }
 
-  //   createEmployee(employee) {
-  //     return axios.post(EMPLOYEE_API_BASE_URL, employee);
-  //   }
-
-  //   getEmployeeById(employeeId) {
-  //     return axios.get(EMPLOYEE_API_BASE_URL + "/" + employeeId);
-  //   }
-
-  //   updateEmployee(employee, employeeId) {
-  //     return axios.put(EMPLOYEE_API_BASE_URL + "/" + employeeId, employee);
-  //   }
-
-  //   deleteEmployee(employeeId) {
-  //     return axios.delete(EMPLOYEE_API_BASE_URL + "/" + employeeId);
-  //   }
+  async getBooksByCategory(categoryId) {
+    const response = await axios
+      .get(BOOK_API_BASE_URL + "/category/" + categoryId)
+      .then(function (response) {
+        console.log(response);
+        return response;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    return response;
+  }
 }
 
 export default new BookService();

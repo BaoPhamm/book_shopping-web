@@ -50,7 +50,7 @@ const loginReducer = loginSlice.reducer;
 export const loginSelector = (state) => state.loginReducer.loginInfo;
 
 // Action Export
-export const { loginAction } = loginSlice.actions;
+export const { loginAction, logoutAction } = loginSlice.actions;
 
 // Export reducer
 export default loginReducer;
