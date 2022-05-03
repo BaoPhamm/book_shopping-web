@@ -68,6 +68,12 @@ const TextLink = styled.a`
   text-decoration: underline;
   cursor: pointer;
 `;
+const TextLinkNoneUnderLine = styled.p`
+  margin: 0.5rem;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+`;
 
 const Login = () => {
   const [formUsername, setUsername] = useState("");
@@ -122,9 +128,10 @@ const Login = () => {
             onChange={changeFormPassword}
           />
           <Button>LOGIN</Button>
+          <TextLinkNoneUnderLine>DON'T HAVE AN ACCOUNT?</TextLinkNoneUnderLine>
           <TextLink>
             <Link to="/register" style={{ color: "black" }}>
-              DON'T HAVE AN ACCOUNT? CREATE A NEW ACCOUNT
+              CREATE A NEW ACCOUNT
             </Link>
           </TextLink>
         </Form>

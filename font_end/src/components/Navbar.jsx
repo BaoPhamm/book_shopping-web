@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Badge } from "@material-ui/core";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { Search, ShoppingCartOutlined } from "@material-ui/icons";
 import styled from "styled-components";
 import { mobile } from "../responsive";
@@ -36,12 +37,25 @@ const Language = styled.span`
   ${mobile({ display: "none" })}
 `;
 
+const LogoutText = styled.span`
+  font-size: 12px;
+  cursor: pointer;
+  margin-right: 0.4rem;
+`;
+
 const SearchContainer = styled.div`
   border: 0.5px solid lightgray;
   display: flex;
   align-items: center;
   margin-left: 25px;
   padding: 5px;
+`;
+
+const LogoutContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 0.8rem;
+  padding: 0.8rem;
 `;
 
 const Input = styled.input`
@@ -58,6 +72,7 @@ const Logo = styled.h1`
   font-weight: bold;
   ${mobile({ fontSize: "24px" })}
 `;
+
 const Right = styled.div`
   flex: 1;
   display: flex;
@@ -69,30 +84,20 @@ const Right = styled.div`
 const MenuItem = styled.div`
   font-size: 14px;
   cursor: pointer;
-  margin-left: 25px;
-  textdecoration: "none";
-  ${mobile({ fontSize: "12px", marginLeft: "10px" })}
-`;
-const LogoutButton = styled.button`
-  width: 30%;
-  border: none;
-  padding: 0.5rem;
-  background-color: #e6fff9;
-  color: black;
-  cursor: pointer;
   margin-left: 1rem;
+  textdecoration: "none";
+  ${mobile({ fontSize: "12px", marginLeft: "0.8rem" })}
 `;
 
 const Navbar = () => {
   const dispatch = useDispatch();
-
   const loginInfo = useSelector(loginSelector);
 
   useEffect(() => {
     const userLoginInfo = JSON.parse(localStorage.getItem("userLoginInfo"));
     if (userLoginInfo && userLoginInfo.token) {
       UserService.getUserInfo().then(async (res) => {
-        console.log(res.status);
+        // console.log(res.status);
         if (res.status === 403) {
           UserService.logout();
           dispatch(logoutAction());
@@ -104,7 +109,6 @@ const Navbar = () => {
         userRoles: userLoginInfo.userRoles,
         username: userLoginInfo.username,
       };
-
       dispatch(loginAction(loginInfo));
     }
   }, []);
@@ -112,6 +116,49 @@ const Navbar = () => {
   const OnclickLogoutHandle = () => {
     UserService.logout();
     dispatch(logoutAction());
+  };
+
+  const RightContent = () => {
+    return (
+      <Right>
+        <MenuItem>
+          {loginInfo.isLogged ? (
+            <Link
+              to="/profile"
+              style={{
+                fontSize: "16px",
+                textDecoration: "none",
+                color: "black",
+              }}
+            >
+              {"Hi " + loginInfo.username}
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              LOG IN
+            </Link>
+          )}
+        </MenuItem>
+        {loginInfo.isLogged ? (
+          <LogoutContainer>
+            <LogoutText onClick={OnclickLogoutHandle}>LOG OUT</LogoutText>
+            <LogoutIcon style={{ color: "gray", fontSize: 16 }} />
+          </LogoutContainer>
+        ) : (
+          ""
+        )}
+        <MenuItem>
+          <Link to="/cart" style={{ textDecoration: "none", color: "black" }}>
+            <Badge badgeContent={0} color="primary">
+              <ShoppingCartOutlined />
+            </Badge>
+          </Link>
+        </MenuItem>
+      </Right>
+    );
   };
 
   return (
@@ -131,37 +178,7 @@ const Navbar = () => {
             </Link>
           </Logo>
         </Center>
-        <Right>
-          <MenuItem>
-            {loginInfo.isLogged ? (
-              <Link
-                to="/profile"
-                style={{ textDecoration: "none", color: "black" }}
-              >
-                {"Hi " + loginInfo.username}
-              </Link>
-            ) : (
-              <Link
-                to="/login"
-                style={{ textDecoration: "none", color: "black" }}
-              >
-                LOG IN
-              </Link>
-            )}
-          </MenuItem>
-          {loginInfo.isLogged ? (
-            <LogoutButton onClick={OnclickLogoutHandle}>LOG OUT</LogoutButton>
-          ) : (
-            ""
-          )}
-          <MenuItem>
-            <Link to="/cart" style={{ textDecoration: "none", color: "black" }}>
-              <Badge badgeContent={0} color="primary">
-                <ShoppingCartOutlined />
-              </Badge>
-            </Link>
-          </MenuItem>
-        </Right>
+        <RightContent />
       </Wrapper>
     </Container>
   );

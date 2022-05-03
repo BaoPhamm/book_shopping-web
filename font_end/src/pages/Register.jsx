@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { mobile } from "../responsive";
-import { Link, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import RegistrationService from "../services/user/RegistrationService";
 import { useSelector } from "react-redux";
 import { loginAction } from "../store/reducers/loginSlice";

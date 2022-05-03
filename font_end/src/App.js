@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Error from "./pages/Error";
 import UserInformation from "./pages/UserInformation";
+import ProductList from "./pages/ProductList";
 
 import { Provider } from "react-redux";
 import store from "./store";
@@ -21,6 +22,8 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<UserInformation />} />
+          <Route path="/products" element={<ProductList />} />
+          <Route path="/products/:someString" element={<ProductList />} />
           <Route path="/:someString" element={<Error />} />
           <Route path="/products/:someString" element={<Error />} />
         </Routes>

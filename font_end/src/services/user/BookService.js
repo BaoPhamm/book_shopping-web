@@ -7,7 +7,6 @@ class BookService {
     const response = await axios
       .get(BOOK_API_BASE_URL + "/" + bookId)
       .then(function (response) {
-        console.log(response);
         return response;
       })
       .catch(function (error) {
@@ -20,8 +19,7 @@ class BookService {
     const response = await axios
       .get(BOOK_API_BASE_URL)
       .then(function (response) {
-        console.log(response);
-        return response;
+        return response.data;
       })
       .catch(function (error) {
         console.log(error);
@@ -33,7 +31,6 @@ class BookService {
     const response = await axios
       .get(BOOK_API_BASE_URL + "/category/" + categoryId)
       .then(function (response) {
-        console.log(response);
         return response;
       })
       .catch(function (error) {
