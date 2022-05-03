@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BookRequest {
 
-	@NotNull(message = "Fill in the input field")
 	private long id;
 
 	@NotBlank(message = "Fill in the input field")
