@@ -13,7 +13,7 @@ const Container = styled.div`
 
 const Products = () => {
   const [allProducts, setAllProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     console.log("useEffect");
@@ -21,35 +21,27 @@ const Products = () => {
   }, []);
 
   const GetAllBooks = async () => {
-    await setIsLoading(1);
+    await setIsLoading(true);
     BookService.getAllBooks().then(async (res) => {
       console.log(res);
       await setAllProducts([...res]);
       console.log("AAAAA");
-      await setIsLoading(0);
+      await setIsLoading(false);
     });
-  };
-
-  const AllBooks = () => {
-    {
-      if (isLoading === 0) {
-        return allProducts.map((item) => (
-          <div>
-            <Link to={"/products/" + item.id}>
-              <Product productItem={item} key={item.id} />
-            </Link>
-          </div>
-        ));
-      } else {
-        return "";
-      }
-    }
   };
 
   return (
     <Container>
       {console.log("DOM RENDER")}
-      <AllBooks />
+      {!isLoading
+        ? allProducts.map((item) => (
+            <div>
+              <Link to={"/products/" + item.id}>
+                <Product productItem={item} key={item.id} />
+              </Link>
+            </div>
+          ))
+        : ""}
     </Container>
   );
 };

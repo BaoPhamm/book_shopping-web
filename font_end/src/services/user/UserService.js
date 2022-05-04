@@ -10,7 +10,6 @@ class UserService {
         headers: AuthHeader(),
       })
       .then(function (response) {
-        // console.log(response);
         return response;
       })
       .catch(function (error) {
@@ -41,16 +40,12 @@ class UserService {
         headers: { AuthHeader },
       })
       .then(function (response) {
-        console.log(response);
         return response;
       })
       .catch(function (error) {
         console.log(error);
       });
     return response;
-  }
-  logout() {
-    localStorage.removeItem("userLoginInfo");
   }
 }
 

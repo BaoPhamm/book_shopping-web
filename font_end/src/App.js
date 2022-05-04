@@ -8,7 +8,7 @@ import Login from "./pages/Login";
 import Error from "./pages/Error";
 import UserInformation from "./pages/UserInformation";
 import ProductList from "./pages/ProductList";
-
+import Product from "./pages/Product";
 import { Provider } from "react-redux";
 import store from "./store";
 
@@ -23,7 +23,8 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<UserInformation />} />
           <Route path="/products" element={<ProductList />} />
-          <Route path="/products/:someString" element={<ProductList />} />
+          <Route path={"/products/:id"} element={<Product />} />
+          <Route path={"/products/not-found"} element={<Error />} />
           <Route path="/:someString" element={<Error />} />
           <Route path="/products/:someString" element={<Error />} />
         </Routes>

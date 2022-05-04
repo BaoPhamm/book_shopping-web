@@ -5,11 +5,9 @@ import { Search, ShoppingCartOutlined } from "@material-ui/icons";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { loginSelector } from "../store/reducers/loginSlice";
-import { loginAction } from "../store/reducers/loginSlice";
-import { logoutAction } from "../store/reducers/loginSlice";
-import { useDispatch } from "react-redux";
+import { loginAction, logoutAction } from "../store/reducers/loginSlice";
 import UserService from "../services/user/UserService";
 
 const Container = styled.div`
@@ -37,10 +35,10 @@ const Language = styled.span`
   ${mobile({ display: "none" })}
 `;
 
-const LogoutText = styled.span`
-  font-size: 12px;
-  cursor: pointer;
+const LogoutText = styled.p`
+  font-size: 14px;
   margin-right: 0.4rem;
+  cursor: pointer;
 `;
 
 const SearchContainer = styled.div`
@@ -55,7 +53,6 @@ const LogoutContainer = styled.div`
   display: flex;
   align-items: center;
   margin-left: 0.8rem;
-  padding: 0.8rem;
 `;
 
 const Input = styled.input`
@@ -94,27 +91,31 @@ const Navbar = () => {
   const loginInfo = useSelector(loginSelector);
 
   useEffect(() => {
-    const userLoginInfo = JSON.parse(localStorage.getItem("userLoginInfo"));
-    if (userLoginInfo && userLoginInfo.token) {
-      UserService.getUserInfo().then(async (res) => {
-        // console.log(res.status);
-        if (res.status === 403) {
-          UserService.logout();
-          dispatch(logoutAction());
-        }
-      });
-      let loginInfo = {
-        token: userLoginInfo.token,
-        refreshToken: userLoginInfo.refreshToken,
-        userRoles: userLoginInfo.userRoles,
-        username: userLoginInfo.username,
-      };
-      dispatch(loginAction(loginInfo));
+    function fetchData() {
+      const userLoginInfo = JSON.parse(localStorage.getItem("userLoginInfo"));
+      if (userLoginInfo && userLoginInfo.token) {
+        UserService.getUserInfo().then(async (res) => {
+          console.log(res.status);
+          if (res.status === 403) {
+            dispatch(logoutAction());
+          } else if (res.status === 200) {
+            let loginInfo = {
+              token: userLoginInfo.token,
+              refreshToken: userLoginInfo.refreshToken,
+              userRoles: userLoginInfo.userRoles,
+              username: userLoginInfo.username,
+            };
+            dispatch(loginAction(loginInfo));
+          }
+        });
+      } else {
+        dispatch(logoutAction());
+      }
     }
+    fetchData();
   }, []);
 
   const OnclickLogoutHandle = () => {
-    UserService.logout();
     dispatch(logoutAction());
   };
 
@@ -144,8 +145,12 @@ const Navbar = () => {
         </MenuItem>
         {loginInfo.isLogged ? (
           <LogoutContainer>
-            <LogoutText onClick={OnclickLogoutHandle}>LOG OUT</LogoutText>
-            <LogoutIcon style={{ color: "gray", fontSize: 16 }} />
+            <LogoutText onClick={OnclickLogoutHandle}>Log out</LogoutText>
+            <LogoutIcon
+              cursor="pointer"
+              onClick={OnclickLogoutHandle}
+              style={{ color: "black", fontSize: 16 }}
+            />
           </LogoutContainer>
         ) : (
           ""

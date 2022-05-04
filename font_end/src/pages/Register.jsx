@@ -142,75 +142,145 @@ const Register = () => {
     });
   };
 
-  if (loginInfo.isLogged) {
-    return <Navigate to="/" />;
-  }
-  return (
-    <Container>
-      <Wrapper>
-        <Title>CREATE AN ACCOUNT</Title>
-        <Form onSubmit={handleRegisterSubmit}>
-          <Input
-            type="text"
-            value={formUsername}
-            placeholder="username"
-            onChange={changeFormUsername}
-            minLength="6"
-            maxLength="16"
-          />
-          <Input
-            type="text"
-            value={formFirstName}
-            placeholder="first name"
-            onChange={changeFormFirstName}
-          />
-          <Input
-            type="text"
-            value={formLastName}
-            placeholder="last name"
-            onChange={changeFormLastName}
-            minLength="1"
-          />
-          <Input
-            type="text"
-            value={formAddress}
-            placeholder="address"
-            onChange={changeFormAddress}
-            minLength="1"
-          />
-          <Input
-            type="text"
-            value={formPhoneNumber}
-            placeholder="phone number"
-            onChange={changeFormPhoneNumber}
-            minLength="10"
-            maxLength="11"
-          />
-          <Input
-            type="password"
-            value={formPassword}
-            placeholder="password"
-            onChange={changeFormPassword}
-            minLength="6"
-            maxLength="16"
-          />
-          <Input
-            type="password"
-            value={formPasswordRepeat}
-            placeholder="confirm password"
-            onChange={changeFormPasswordRepeat}
-            minLength="6"
-            maxLength="16"
-          />
-          <Agreement>
-            By creating an account, I consent to the processing of my personal
-            data in accordance with the <b>PRIVACY POLICY</b>
-          </Agreement>
-          <Button>CREATE</Button>
-        </Form>
-      </Wrapper>
-    </Container>
+  return !loginInfo.isLoading ? (
+    !loginInfo.isLogged ? (
+      <Container>
+        <Wrapper>
+          <Title>CREATE AN ACCOUNT</Title>
+          <Form onSubmit={handleRegisterSubmit}>
+            <Input
+              type="text"
+              value={formUsername}
+              placeholder="username"
+              onChange={changeFormUsername}
+              minLength="6"
+              maxLength="16"
+            />
+            <Input
+              type="text"
+              value={formFirstName}
+              placeholder="first name"
+              onChange={changeFormFirstName}
+            />
+            <Input
+              type="text"
+              value={formLastName}
+              placeholder="last name"
+              onChange={changeFormLastName}
+              minLength="1"
+            />
+            <Input
+              type="text"
+              value={formAddress}
+              placeholder="address"
+              onChange={changeFormAddress}
+              minLength="1"
+            />
+            <Input
+              type="text"
+              value={formPhoneNumber}
+              placeholder="phone number"
+              onChange={changeFormPhoneNumber}
+              minLength="10"
+              maxLength="11"
+            />
+            <Input
+              type="password"
+              value={formPassword}
+              placeholder="password"
+              onChange={changeFormPassword}
+              minLength="6"
+              maxLength="16"
+            />
+            <Input
+              type="password"
+              value={formPasswordRepeat}
+              placeholder="confirm password"
+              onChange={changeFormPasswordRepeat}
+              minLength="6"
+              maxLength="16"
+            />
+            <Agreement>
+              By creating an account, I consent to the processing of my personal
+              data in accordance with the <b>PRIVACY POLICY</b>
+            </Agreement>
+            <Button>CREATE</Button>
+          </Form>
+        </Wrapper>
+      </Container>
+    ) : (
+      <Navigate to="/" />
+    )
+  ) : (
+    ""
   );
+
+  // return (
+  //   <Container>
+  //     <Wrapper>
+  //       <Title>CREATE AN ACCOUNT</Title>
+  //       <Form onSubmit={handleRegisterSubmit}>
+  //         <Input
+  //           type="text"
+  //           value={formUsername}
+  //           placeholder="username"
+  //           onChange={changeFormUsername}
+  //           minLength="6"
+  //           maxLength="16"
+  //         />
+  //         <Input
+  //           type="text"
+  //           value={formFirstName}
+  //           placeholder="first name"
+  //           onChange={changeFormFirstName}
+  //         />
+  //         <Input
+  //           type="text"
+  //           value={formLastName}
+  //           placeholder="last name"
+  //           onChange={changeFormLastName}
+  //           minLength="1"
+  //         />
+  //         <Input
+  //           type="text"
+  //           value={formAddress}
+  //           placeholder="address"
+  //           onChange={changeFormAddress}
+  //           minLength="1"
+  //         />
+  //         <Input
+  //           type="text"
+  //           value={formPhoneNumber}
+  //           placeholder="phone number"
+  //           onChange={changeFormPhoneNumber}
+  //           minLength="10"
+  //           maxLength="11"
+  //         />
+  //         <Input
+  //           type="password"
+  //           value={formPassword}
+  //           placeholder="password"
+  //           onChange={changeFormPassword}
+  //           minLength="6"
+  //           maxLength="16"
+  //         />
+  //         <Input
+  //           type="password"
+  //           value={formPasswordRepeat}
+  //           placeholder="confirm password"
+  //           onChange={changeFormPasswordRepeat}
+  //           minLength="6"
+  //           maxLength="16"
+  //         />
+  //         <Agreement>
+  //           By creating an account, I consent to the processing of my personal
+  //           data in accordance with the <b>PRIVACY POLICY</b>
+  //         </Agreement>
+  //         <Button>CREATE</Button>
+  //       </Form>
+  //     </Wrapper>
+  //   </Container>
+  // );
 };
 
 export default Register;

@@ -1,21 +1,16 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import UserService from "../services/user/UserService";
 import { useSelector } from "react-redux";
 import { loginSelector } from "../store/reducers/loginSlice";
-// import { useDispatch } from "react-redux";
 
 const UserInfo = () => {
   const [userInformation, setUserInformation] = useState("");
 
-  //   const dispatch = useDispatch();
   const loginInfo = useSelector(loginSelector);
 
   useEffect(() => {
     if (loginInfo.isLogged) {
       UserService.getUserInfo(loginInfo.token).then(async (res) => {
-        console.log(res.data);
         await setUserInformation(res.data);
       });
     }
@@ -41,7 +36,6 @@ const UserInfo = () => {
             <td> {userInformation.username}</td>
             <td> {userInformation.phoneNumber}</td>
             <td> {userInformation.address}</td>
-            {/* <td> {userInformation.roles}</td> */}
           </tr>
         </tbody>
       </table>

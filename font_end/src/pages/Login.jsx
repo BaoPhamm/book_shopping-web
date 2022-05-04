@@ -3,10 +3,9 @@ import styled from "styled-components";
 import { mobile } from "../responsive";
 import { Link, Navigate } from "react-router-dom";
 import AuthService from "../services/user/AuthService";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { loginAction } from "../store/reducers/loginSlice";
 import { loginSelector } from "../store/reducers/loginSlice";
-import { useDispatch } from "react-redux";
 
 const Container = styled.div`
   width: 98vw;
@@ -89,7 +88,7 @@ const Login = () => {
     setPassword(event.target.value);
   };
 
-  const handleLoginSubmit = async (event) => {
+  const handleLoginSubmit = (event) => {
     event.preventDefault();
 
     const authenticationRequest = JSON.stringify({
@@ -97,7 +96,7 @@ const Login = () => {
       password: formPassword,
     });
 
-    AuthService.login(authenticationRequest).then(async (res) => {
+    AuthService.login(authenticationRequest).then((res) => {
       let loginResponse = {
         token: res.data.token,
         refreshToken: res.data.refreshToken,
@@ -107,36 +106,42 @@ const Login = () => {
       dispatch(loginAction(loginResponse));
     });
   };
-  if (loginInfo.isLogged) {
-    return <Navigate to="/" />;
-  }
-  return (
-    <Container>
-      <Wrapper>
-        <Title>SIGN IN</Title>
-        <Form onSubmit={handleLoginSubmit}>
-          <Input
-            type="text"
-            value={formUsername}
-            placeholder="username"
-            onChange={changeFormUsername}
-          />
-          <Input
-            type="password"
-            placeholder="password"
-            value={formPassword}
-            onChange={changeFormPassword}
-          />
-          <Button>LOGIN</Button>
-          <TextLinkNoneUnderLine>DON'T HAVE AN ACCOUNT?</TextLinkNoneUnderLine>
-          <TextLink>
-            <Link to="/register" style={{ color: "black" }}>
-              CREATE A NEW ACCOUNT
-            </Link>
-          </TextLink>
-        </Form>
-      </Wrapper>
-    </Container>
+
+  return !loginInfo.isLoading ? (
+    !loginInfo.isLogged ? (
+      <Container>
+        <Wrapper>
+          <Title>SIGN IN</Title>
+          <Form onSubmit={handleLoginSubmit}>
+            <Input
+              type="text"
+              value={formUsername}
+              placeholder="username"
+              onChange={changeFormUsername}
+            />
+            <Input
+              type="password"
+              placeholder="password"
+              value={formPassword}
+              onChange={changeFormPassword}
+            />
+            <Button>LOGIN</Button>
+            <TextLinkNoneUnderLine>
+              DON'T HAVE AN ACCOUNT?
+            </TextLinkNoneUnderLine>
+            <TextLink>
+              <Link to="/register" style={{ color: "black" }}>
+                CREATE A NEW ACCOUNT
+              </Link>
+            </TextLink>
+          </Form>
+        </Wrapper>
+      </Container>
+    ) : (
+      <Navigate to="/" />
+    )
+  ) : (
+    ""
   );
 };
 
