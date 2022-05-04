@@ -25,13 +25,20 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategoryResponse findCategoryById(Long categoryId) {
-		return commonMapper.convertToResponse(categoryRepository.findById(categoryId).get(), CategoryResponse.class);
+		Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
+		if (categoryFromDb.isEmpty()) {
+			throw new CategoryNotFoundException();
+		}
+		return commonMapper.convertToResponse(categoryFromDb.get(), CategoryResponse.class);
 	}
 
 	@Override
 	public CategoryResponse findCategoryByName(String categoryName) {
-		return commonMapper.convertToResponse(categoryRepository.findByName(categoryName).get(),
-				CategoryResponse.class);
+		Optional<Category> categoryFromDb = categoryRepository.findByName(categoryName);
+		if (categoryFromDb.isEmpty()) {
+			throw new CategoryNotFoundException();
+		}
+		return commonMapper.convertToResponse(categoryFromDb.get(), CategoryResponse.class);
 	}
 
 	@Override

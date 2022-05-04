@@ -25,7 +25,7 @@ public class BookResponse {
 	private Integer price;
 	private String imgSrc;
 	private String description;
-	private Set<Category> Categories;
+	private Set<Category> categories;
 	
 	@Override
 	public boolean equals(Object obj) {
