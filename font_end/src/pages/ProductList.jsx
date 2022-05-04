@@ -1,7 +1,8 @@
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Products from "../components/Products";
 import { mobile } from "../responsive";
-import React from "react";
+import CategoryService from "../services/user/CategoryService";
 
 const Container = styled.div``;
 
@@ -34,11 +35,52 @@ const Select = styled.select`
 const Option = styled.option``;
 
 const ProductList = () => {
-  return (
+  const [allCategories, setAllCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState(0);
+
+  useEffect(() => {
+    GetAllCategories();
+  }, []);
+
+  const GetAllCategories = async () => {
+    await setIsLoading(true);
+    CategoryService.getAllCategories().then(async (res) => {
+      await setAllCategories([...res]);
+      await setIsLoading(false);
+    });
+  };
+
+  const handleSelectChange = async (e) => {
+    await setSelectedCategory(e.target.value);
+  };
+
+  return !isLoading ? (
     <Container>
       <Title>Books</Title>
-      <Products />
+      <FilterContainer>
+        <Filter>
+          <FilterText>Filter category:</FilterText>
+          <Select defaultValue={0} onChange={handleSelectChange}>
+            <Option value={0}>All</Option>
+            {allCategories.map((item) => (
+              <Option value={item.id}>{item.name}</Option>
+            ))}
+          </Select>
+        </Filter>
+        <Filter>
+          <FilterText>Sort Products:</FilterText>
+          <Select defaultValue="Newest">
+            <Option>Newest</Option>
+            <Option>Price (asc)</Option>
+            <Option>Price (desc)</Option>
+          </Select>
+        </Filter>
+      </FilterContainer>
+      <Products selectedCategory={selectedCategory} />
     </Container>
+  ) : (
+    ""
   );
 };
 

@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const BOOK_API_BASE_URL = "http://localhost:8080/api/v1/books";
+const CATEGORY_API_BASE_URL = "http://localhost:8080/api/v1/category";
 
-class BookService {
-  async getBookById(bookId) {
+class CategoryService {
+  async getCategoryById(categoryId) {
     const response = await axios
-      .get(BOOK_API_BASE_URL + "/" + bookId)
+      .get(CATEGORY_API_BASE_URL + "/" + categoryId)
       .then(function (response) {
         return response;
       })
@@ -16,11 +16,11 @@ class BookService {
     return response;
   }
 
-  async getAllBooks() {
+  async getCategoryByName(categoryName) {
     const response = await axios
-      .get(BOOK_API_BASE_URL)
+      .get(CATEGORY_API_BASE_URL + "/" + categoryName)
       .then(function (response) {
-        return response.data;
+        return response;
       })
       .catch(function (error) {
         console.log(error);
@@ -29,9 +29,9 @@ class BookService {
     return response;
   }
 
-  async getBooksByCategory(categoryId) {
+  async getAllCategories() {
     const response = await axios
-      .get(BOOK_API_BASE_URL + "/category/" + categoryId)
+      .get(CATEGORY_API_BASE_URL)
       .then(function (response) {
         return response.data;
       })
@@ -43,4 +43,4 @@ class BookService {
   }
 }
 
-export default new BookService();
+export default new CategoryService();

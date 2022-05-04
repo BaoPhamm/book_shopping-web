@@ -11,28 +11,33 @@ const Container = styled.div`
   justify-content: start;
 `;
 
-const Products = () => {
+const Products = (props) => {
   const [allProducts, setAllProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log("useEffect");
     GetAllBooks();
-  }, []);
+  }, [props.selectedCategory]);
 
   const GetAllBooks = async () => {
     await setIsLoading(true);
-    BookService.getAllBooks().then(async (res) => {
-      console.log(res);
-      await setAllProducts([...res]);
-      console.log("AAAAA");
-      await setIsLoading(false);
-    });
+    if (props.selectedCategory == 0) {
+      BookService.getAllBooks().then(async (res) => {
+        await setAllProducts([...res]);
+        await setIsLoading(false);
+      });
+    } else {
+      BookService.getBooksByCategory(props.selectedCategory).then(
+        async (res) => {
+          await setAllProducts([...res]);
+          await setIsLoading(false);
+        }
+      );
+    }
   };
 
   return (
     <Container>
-      {console.log("DOM RENDER")}
       {!isLoading
         ? allProducts.map((item) => (
             <div>

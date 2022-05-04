@@ -154,7 +154,7 @@ const Product = () => {
               <th> requiredAge </th>
               <th> releaseDate </th>
               <th> price </th>
-              <th> Categories </th>
+              <th> categories </th>
             </tr>
           </thead>
           <tbody>
@@ -166,7 +166,7 @@ const Product = () => {
               <td> {book.requiredAge}</td>
               <td> {book.releaseDate}</td>
               <td> {book.price}</td>
-              <td> {JSON.stringify(book.Categories)}</td>
+              <td> {JSON.stringify(book.categories)}</td>
             </tr>
           </tbody>
         </table>
