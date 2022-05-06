@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { Navigate } from "react-router-dom";
@@ -8,6 +8,7 @@ import { loginAction } from "../store/reducers/loginSlice";
 import { loginSelector } from "../store/reducers/loginSlice";
 import { useDispatch } from "react-redux";
 import AuthService from "../services/user/AuthService";
+import UserService from "../services/user/UserService";
 
 const Container = styled.div`
   width: 98vw;
@@ -67,7 +68,7 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const Register = () => {
+const UpdateProfile = () => {
   const [formUsername, setUsername] = useState("");
   const [formFirstName, setFirstName] = useState("");
   const [formLastName, setLastName] = useState("");
@@ -75,9 +76,31 @@ const Register = () => {
   const [formPhoneNumber, setPhoneNumber] = useState("");
   const [formPassword, setPassword] = useState("");
   const [formPasswordRepeat, setPasswordRepeat] = useState("");
+  const [userInformation, setUserInformation] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const loginInfo = useSelector(loginSelector);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    fetchData();
+  }, [loginInfo.isLogged]);
+  // <tr key={userInformation.id}>
+  //   <td> {userInformation.firstName}</td>
+  //   <td> {userInformation.lastName}</td>
+  //   <td> {userInformation.username}</td>
+  //   <td> {userInformation.phoneNumber}</td>
+  //   <td> {userInformation.address}</td>
+  const fetchData = async () => {
+    await setIsLoading(true);
+    if (loginInfo.isLogged) {
+      UserService.getUserInfo(loginInfo.token).then(async (res) => {
+        await setUserInformation(res.data);
+      });
+      setUsername();
+    }
+    await setIsLoading(false);
+  };
 
   const changeFormUsername = (event) => {
     setUsername(event.target.value);
@@ -104,7 +127,8 @@ const Register = () => {
   const handleRegisterSubmit = async (event) => {
     event.preventDefault();
 
-    const registrationRequest = JSON.stringify({
+    const updateProfileRequest = JSON.stringify({
+      id: userInformation.id,
       username: formUsername,
       firstName: formFirstName,
       lastName: formLastName,
@@ -114,7 +138,7 @@ const Register = () => {
       passwordRepeat: formPasswordRepeat,
     });
 
-    RegistrationService.registration(registrationRequest).then(async (res) => {
+    RegistrationService.registration(updateProfileRequest).then(async (res) => {
       console.log(res);
       if (res.status === 500) {
         alert("All fields could not be blank!");
@@ -143,19 +167,11 @@ const Register = () => {
   };
 
   return !loginInfo.isLoading ? (
-    !loginInfo.isLogged ? (
+    loginInfo.isLogged ? (
       <Container>
         <Wrapper>
-          <Title>CREATE AN ACCOUNT</Title>
+          <Title>UPDATE PROFILE</Title>
           <Form onSubmit={handleRegisterSubmit}>
-            <Input
-              type="text"
-              value={formUsername}
-              placeholder="username"
-              onChange={changeFormUsername}
-              minLength="6"
-              maxLength="16"
-            />
             <Input
               type="text"
               value={formFirstName}
@@ -184,22 +200,6 @@ const Register = () => {
               minLength="10"
               maxLength="11"
             />
-            <Input
-              type="password"
-              value={formPassword}
-              placeholder="password"
-              onChange={changeFormPassword}
-              minLength="6"
-              maxLength="16"
-            />
-            <Input
-              type="password"
-              value={formPasswordRepeat}
-              placeholder="confirm password"
-              onChange={changeFormPasswordRepeat}
-              minLength="6"
-              maxLength="16"
-            />
             <Agreement>
               By creating an account, I consent to the processing of my personal
               data in accordance with the <b>PRIVACY POLICY</b>
@@ -216,4 +216,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default UpdateProfile;

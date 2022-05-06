@@ -112,14 +112,6 @@ const Footer = () => {
           </ListItem>
           <ListItem>
             <Link
-              to="/categories"
-              style={{ textDecoration: "none", color: "black" }}
-            >
-              Categories
-            </Link>
-          </ListItem>
-          <ListItem>
-            <Link
               to="/profile"
               style={{ textDecoration: "none", color: "black" }}
             >

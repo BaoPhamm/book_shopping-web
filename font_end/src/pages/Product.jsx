@@ -32,11 +32,13 @@ const InfoContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  font-weight: 200;
+  font-weight: 250;
+  font-size: 60px;
 `;
 
 const Desc = styled.p`
   margin: 20px 0px;
+  font-size: 20px;
 `;
 
 const Price = styled.span`
@@ -44,45 +46,12 @@ const Price = styled.span`
   font-size: 40px;
 `;
 
-const FilterContainer = styled.div`
-  width: 50%;
-  margin: 30px 0px;
-  display: flex;
-  justify-content: space-between;
-  ${mobile({ width: "100%" })}
-`;
-
-const Filter = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const FilterTitle = styled.span`
-  font-size: 20px;
-  font-weight: 200;
-`;
-
-const FilterColor = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: ${(props) => props.color};
-  margin: 0px 5px;
-  cursor: pointer;
-`;
-
-const FilterSize = styled.select`
-  margin-left: 10px;
-  padding: 5px;
-`;
-
-const FilterSizeOption = styled.option``;
-
 const AddContainer = styled.div`
   width: 50%;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 1rem;
   ${mobile({ width: "100%" })}
 `;
 
@@ -143,87 +112,32 @@ const Product = () => {
 
   return !isLoading ? (
     isBookExist ? (
-      <div>
-        <table className="Book-information">
-          <thead>
-            <tr>
-              <th> id </th>
-              <th> title </th>
-              <th> author </th>
-              <th> totalPages </th>
-              <th> requiredAge </th>
-              <th> releaseDate </th>
-              <th> price </th>
-              <th> categories </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr key={book.id}>
-              <td> {book.id}</td>
-              <td> {book.title}</td>
-              <td> {book.author}</td>
-              <td> {book.totalPages}</td>
-              <td> {book.requiredAge}</td>
-              <td> {book.releaseDate}</td>
-              <td> {book.price}</td>
-              <td> {JSON.stringify(book.categories)}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <Container>
+        <Wrapper>
+          <ImgContainer>
+            <Image src={book.imgSrc} />
+          </ImgContainer>
+          <InfoContainer>
+            <Title>{book.title}</Title>
+            <Desc>{book.description}</Desc>
+            <Price>{book.price + " VND"}</Price>
+            <AddContainer>
+              <AmountContainer>
+                <Remove />
+                <Amount>1</Amount>
+                <Add />
+              </AmountContainer>
+              <Button>ADD TO CART</Button>
+            </AddContainer>
+          </InfoContainer>
+        </Wrapper>
+      </Container>
     ) : (
       <Navigate to="/products/not-found" />
     )
   ) : (
     ""
   );
-
-  // return (
-  //   <Container>
-  //     <Wrapper>
-  //       <ImgContainer>
-  //         <Image src="https://i.ibb.co/S6qMxwr/jean.jpg" />
-  //       </ImgContainer>
-  //       <InfoContainer>
-  //         <Title>Denim Jumpsuit</Title>
-  //         <Desc>
-  //           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-  //           venenatis, dolor in finibus malesuada, lectus ipsum porta nunc, at
-  //           iaculis arcu nisi sed mauris. Nulla fermentum vestibulum ex, eget
-  //           tristique tortor pretium ut. Curabitur elit justo, consequat id
-  //           condimentum ac, volutpat ornare.
-  //         </Desc>
-  //         <Price>$ 20</Price>
-  //         <FilterContainer>
-  //           <Filter>
-  //             <FilterTitle>Color</FilterTitle>
-  //             <FilterColor color="black" />
-  //             <FilterColor color="darkblue" />
-  //             <FilterColor color="gray" />
-  //           </Filter>
-  //           <Filter>
-  //             <FilterTitle>Size</FilterTitle>
-  //             <FilterSize>
-  //               <FilterSizeOption>XS</FilterSizeOption>
-  //               <FilterSizeOption>S</FilterSizeOption>
-  //               <FilterSizeOption>M</FilterSizeOption>
-  //               <FilterSizeOption>L</FilterSizeOption>
-  //               <FilterSizeOption>XL</FilterSizeOption>
-  //             </FilterSize>
-  //           </Filter>
-  //         </FilterContainer>
-  //         <AddContainer>
-  //           <AmountContainer>
-  //             <Remove />
-  //             <Amount>1</Amount>
-  //             <Add />
-  //           </AmountContainer>
-  //           <Button>ADD TO CART</Button>
-  //         </AddContainer>
-  //       </InfoContainer>
-  //     </Wrapper>
-  //   </Container>
-  // );
 };
 
 export default Product;

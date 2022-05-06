@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Products from "../components/Products";
 import { mobile } from "../responsive";
 import CategoryService from "../services/user/CategoryService";
+import { useLocation } from "react-router-dom";
 
 const Container = styled.div``;
 
@@ -38,6 +39,7 @@ const ProductList = () => {
   const [allCategories, setAllCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(0);
+  const location = useLocation();
 
   useEffect(() => {
     GetAllCategories();
@@ -47,6 +49,9 @@ const ProductList = () => {
     await setIsLoading(true);
     CategoryService.getAllCategories().then(async (res) => {
       await setAllCategories([...res]);
+      if (location.state !== null) {
+        await setSelectedCategory(location.state.selectedCategory);
+      }
       await setIsLoading(false);
     });
   };
@@ -61,19 +66,11 @@ const ProductList = () => {
       <FilterContainer>
         <Filter>
           <FilterText>Filter category:</FilterText>
-          <Select defaultValue={0} onChange={handleSelectChange}>
+          <Select defaultValue={selectedCategory} onChange={handleSelectChange}>
             <Option value={0}>All</Option>
             {allCategories.map((item) => (
               <Option value={item.id}>{item.name}</Option>
             ))}
-          </Select>
-        </Filter>
-        <Filter>
-          <FilterText>Sort Products:</FilterText>
-          <Select defaultValue="Newest">
-            <Option>Newest</Option>
-            <Option>Price (asc)</Option>
-            <Option>Price (desc)</Option>
           </Select>
         </Filter>
       </FilterContainer>

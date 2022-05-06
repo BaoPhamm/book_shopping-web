@@ -36,8 +36,8 @@ const Language = styled.span`
 `;
 
 const LogoutText = styled.p`
-  font-size: 14px;
-  margin-right: 0.4rem;
+  font-size: 18px;
+  margin-right: 0.2rem;
   cursor: pointer;
 `;
 
@@ -52,7 +52,7 @@ const SearchContainer = styled.div`
 const LogoutContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 0.8rem;
+  margin-left: 1rem;
 `;
 
 const Input = styled.input`
@@ -127,9 +127,10 @@ const Navbar = () => {
             <Link
               to="/profile"
               style={{
-                fontSize: "16px",
+                fontSize: "20px",
                 textDecoration: "none",
                 color: "black",
+                fontWeight: "10",
               }}
             >
               {"Hi " + loginInfo.username}
@@ -149,7 +150,7 @@ const Navbar = () => {
             <LogoutIcon
               cursor="pointer"
               onClick={OnclickLogoutHandle}
-              style={{ color: "black", fontSize: 16 }}
+              style={{ color: "black", fontSize: 18 }}
             />
           </LogoutContainer>
         ) : (
