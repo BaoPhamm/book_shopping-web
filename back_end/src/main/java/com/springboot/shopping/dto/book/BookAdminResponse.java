@@ -1,21 +1,11 @@
-package com.springboot.shopping.model;
+package com.springboot.shopping.dto.book;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import com.springboot.shopping.model.Category;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,17 +13,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Builder(toBuilder = true)
-@Table(name = "books", uniqueConstraints = { @UniqueConstraint(columnNames = "title") })
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Book {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+public class BookAdminResponse {
 	private long id;
-
 	private String title;
 	private String author;
 	private long totalPages;
@@ -45,19 +29,7 @@ public class Book {
 	private Float ratingPoint;
 	private Date createDate;
 	private Date updateDate;
-
-	@PrePersist
-	protected void onCreate() {
-		createDate = new Date();
-	}
-
-	@PreUpdate
-	protected void onUpdate() {
-		updateDate = new Date();
-	}
-
-	@ManyToMany(fetch = FetchType.EAGER)
-	private Collection<Category> categories = new ArrayList<>();
+	private Set<Category> categories;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -67,7 +39,7 @@ public class Book {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Book other = (Book) obj;
+		BookAdminResponse other = (BookAdminResponse) obj;
 		return Objects.equals(author, other.author) && Objects.equals(categories, other.categories)
 				&& Objects.equals(description, other.description) && id == other.id
 				&& Objects.equals(imgSrc, other.imgSrc) && Objects.equals(price, other.price)

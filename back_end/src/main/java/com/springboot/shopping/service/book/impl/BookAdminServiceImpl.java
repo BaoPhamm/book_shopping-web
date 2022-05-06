@@ -1,4 +1,4 @@
-package com.springboot.shopping.service.impl;
+package com.springboot.shopping.service.book.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,8 +8,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.springboot.shopping.dto.book.BookAdminResponse;
 import com.springboot.shopping.dto.book.BookRequest;
-import com.springboot.shopping.dto.book.BookResponse;
 import com.springboot.shopping.exception.book.BookExistException;
 import com.springboot.shopping.exception.book.BookNotFoundException;
 import com.springboot.shopping.exception.category.CategoryExistException;
@@ -19,35 +19,35 @@ import com.springboot.shopping.model.Book;
 import com.springboot.shopping.model.Category;
 import com.springboot.shopping.repository.BookRepository;
 import com.springboot.shopping.repository.CategoryRepository;
-import com.springboot.shopping.service.BookService;
+import com.springboot.shopping.service.book.BookAdminService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class BookServiceImpl implements BookService {
+public class BookAdminServiceImpl implements BookAdminService {
 
 	private final BookRepository bookRepository;
 	private final CategoryRepository categoryRepository;
 	private final CommonMapper commonMapper;
 
 	@Override
-	public List<BookResponse> findAllBooks() {
+	public List<BookAdminResponse> findAllBooks() {
 		List<Book> bookList = bookRepository.findAll();
-		return commonMapper.convertToResponseList(bookList, BookResponse.class);
+		return commonMapper.convertToResponseList(bookList, BookAdminResponse.class);
 	}
 
 	@Override
-	public BookResponse findBookById(Long bookId) {
+	public BookAdminResponse findBookById(Long bookId) {
 		Optional<Book> bookFromDb = bookRepository.findById(bookId);
 		if (bookFromDb.isEmpty()) {
 			throw new BookNotFoundException();
 		}
-		return commonMapper.convertToResponse(bookFromDb.get(), BookResponse.class);
+		return commonMapper.convertToResponse(bookFromDb.get(), BookAdminResponse.class);
 	}
 
 	@Override
-	public BookResponse createBook(BookRequest bookRequest) {
+	public BookAdminResponse createBook(BookRequest bookRequest) {
 
 		Optional<Book> bookFromDb = bookRepository.findById(bookRequest.getId());
 		if (bookFromDb.isPresent()) {
@@ -55,7 +55,7 @@ public class BookServiceImpl implements BookService {
 		}
 		Book newBook = commonMapper.convertToEntity(bookRequest, Book.class);
 		Book savedBook = bookRepository.save(newBook);
-		return commonMapper.convertToResponse(savedBook, BookResponse.class);
+		return commonMapper.convertToResponse(savedBook, BookAdminResponse.class);
 	}
 
 	private Category findCategoryExist(List<Category> allCategories, Long categoryId) {
@@ -116,7 +116,7 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public BookResponse updateBook(BookRequest bookRequest) {
+	public BookAdminResponse updateBook(BookRequest bookRequest) {
 
 		Optional<Book> bookFromDb = bookRepository.findById(bookRequest.getId());
 		if (bookFromDb.isEmpty()) {
@@ -125,33 +125,43 @@ public class BookServiceImpl implements BookService {
 		Book newBookInfo = commonMapper.convertToEntity(bookRequest, Book.class);
 		newBookInfo.setCategories(bookFromDb.get().getCategories());
 		Book updatedBook = bookRepository.save(newBookInfo);
-		return commonMapper.convertToResponse(updatedBook, BookResponse.class);
+		return commonMapper.convertToResponse(updatedBook, BookAdminResponse.class);
 	}
 
 	@Override
 	@Transactional
-	public List<BookResponse> deleteBook(Long bookId) {
+	public List<BookAdminResponse> deleteBook(Long bookId) {
 
 		Optional<Book> bookFromDb = bookRepository.findById(bookId);
 		if (bookFromDb.isEmpty()) {
 			throw new BookNotFoundException();
 		}
 		bookRepository.deleteById(bookId);
-		return commonMapper.convertToResponseList(bookRepository.findAll(), BookResponse.class);
+		return commonMapper.convertToResponseList(bookRepository.findAll(), BookAdminResponse.class);
 	}
 
 	@Override
-	public List<BookResponse> findBooksByCategory(Long categoryId) {
+	public List<BookAdminResponse> findBooksByCategory(Long categoryId) {
 
 		Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
 		if (categoryFromDb.isEmpty()) {
 			throw new CategoryNotFoundException();
 		}
-		return commonMapper.convertToResponseList(bookRepository.findByCategory(categoryId), BookResponse.class);
+		return commonMapper.convertToResponseList(bookRepository.findByCategory(categoryId), BookAdminResponse.class);
 	}
 
 	@Override
-	public List<BookResponse> findThreeBooksBestSellers() {
-		return commonMapper.convertToResponseList(bookRepository.findThreeBooksBestSellers(), BookResponse.class);
+	public List<BookAdminResponse> findFeaturesBooks() {
+		return commonMapper.convertToResponseList(bookRepository.findFeaturesBooks(), BookAdminResponse.class);
+	}
+
+	@Override
+	public Float getBookRatingById(Long bookId) {
+		Optional<Book> bookFromDb = bookRepository.findById(bookId);
+		if (bookFromDb.isEmpty()) {
+			throw new BookNotFoundException();
+		}
+
+		return Float.valueOf(3.4F);
 	}
 }

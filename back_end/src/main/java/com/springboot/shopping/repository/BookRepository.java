@@ -23,9 +23,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 	List<Long> findAllIdsOfCategories(Long bookId);
 	
 	@Query(value = "select * from books b "
-			+ "inner join books_categories bc on b.id = bc.book_id "
-			+ "where bc.book_id = :bookId" ,nativeQuery = true)
-	List<Book> findThreeBooksBestSellers();
+			+ "limit 3 ",nativeQuery = true)
+	List<Book> findFeaturesBooks();
 
 	Optional<Book> findByTitle(String bookTitle);
 

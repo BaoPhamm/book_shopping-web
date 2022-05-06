@@ -42,7 +42,7 @@ public class BookRequest {
 	private Integer price;
 
 	@NotBlank(message = "Fill in the input field")
-	@Length(max = 255)
+	@Length(max = 510)
 	private String description;
 
 	@NotBlank(message = "Fill in the input field")
