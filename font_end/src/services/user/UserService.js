@@ -22,7 +22,7 @@ class UserService {
   async updateUserInfo(userRequest) {
     const response = await axios
       .put(USER_API_BASE_URL + "/info", userRequest, {
-        headers: { AuthHeader },
+        headers: AuthHeader(),
       })
       .then(function (response) {
         console.log(response);
@@ -30,6 +30,7 @@ class UserService {
       })
       .catch(function (error) {
         console.log(error);
+        return error.response;
       });
     return response;
   }
@@ -37,13 +38,14 @@ class UserService {
   async updateUserPassword(passwordResetRequest) {
     const response = await axios
       .put(USER_API_BASE_URL + "/password", passwordResetRequest, {
-        headers: { AuthHeader },
+        headers: AuthHeader(),
       })
       .then(function (response) {
         return response;
       })
       .catch(function (error) {
         console.log(error);
+        return error.response;
       });
     return response;
   }

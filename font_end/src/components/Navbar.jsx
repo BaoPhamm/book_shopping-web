@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Badge } from "@material-ui/core";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Search, ShoppingCartOutlined } from "@material-ui/icons";
@@ -7,7 +7,12 @@ import { mobile } from "../responsive";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { loginSelector } from "../store/reducers/loginSlice";
-import { loginAction, logoutAction } from "../store/reducers/loginSlice";
+import {
+  loginAction,
+  logoutAction,
+  startLoadingAction,
+  endLoadingAction,
+} from "../store/reducers/loginSlice";
 import UserService from "../services/user/UserService";
 
 const Container = styled.div`
@@ -89,34 +94,46 @@ const MenuItem = styled.div`
 const Navbar = () => {
   const dispatch = useDispatch();
   const loginInfo = useSelector(loginSelector);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    function fetchData() {
-      const userLoginInfo = JSON.parse(localStorage.getItem("userLoginInfo"));
-      if (userLoginInfo && userLoginInfo.token) {
-        UserService.getUserInfo().then(async (res) => {
-          console.log(res.status);
-          if (res.status === 403) {
-            dispatch(logoutAction());
-          } else if (res.status === 200) {
-            let loginInfo = {
-              token: userLoginInfo.token,
-              refreshToken: userLoginInfo.refreshToken,
-              userRoles: userLoginInfo.userRoles,
-              username: userLoginInfo.username,
-            };
-            dispatch(loginAction(loginInfo));
-          }
-        });
-      } else {
-        dispatch(logoutAction());
-      }
-    }
     fetchData();
-  }, []);
+  }, [loginInfo.isLogged]);
+
+  const fetchData = async () => {
+    dispatch(startLoadingAction());
+    await setIsLoading(true);
+    const userLoginInfo = JSON.parse(localStorage.getItem("userLoginInfo"));
+    if (userLoginInfo && userLoginInfo.token) {
+      await UserService.getUserInfo().then(async (res) => {
+        console.log(res.status);
+        if (res.status === 403) {
+          dispatch(logoutAction());
+        } else if (res.status === 200) {
+          let loginInfo = {
+            token: userLoginInfo.token,
+            refreshToken: userLoginInfo.refreshToken,
+            userRoles: userLoginInfo.userRoles,
+            username: userLoginInfo.username,
+            firstName: res.data.firstName,
+            lastName: res.data.lastName,
+            phoneNumber: res.data.phoneNumber,
+            address: res.data.address,
+          };
+          dispatch(loginAction(loginInfo));
+        }
+      });
+    } else {
+      dispatch(logoutAction());
+    }
+    await setIsLoading(false);
+    dispatch(endLoadingAction());
+  };
 
   const OnclickLogoutHandle = () => {
+    dispatch(startLoadingAction());
     dispatch(logoutAction());
+    dispatch(endLoadingAction());
   };
 
   const RightContent = () => {
@@ -167,7 +184,7 @@ const Navbar = () => {
     );
   };
 
-  return (
+  return !isLoading ? (
     <Container>
       <Wrapper>
         <Left>
@@ -187,6 +204,8 @@ const Navbar = () => {
         <RightContent />
       </Wrapper>
     </Container>
+  ) : (
+    ""
   );
 };
 

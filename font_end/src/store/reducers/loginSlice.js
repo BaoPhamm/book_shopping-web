@@ -7,6 +7,10 @@ const loginSlice = createSlice({
       token: "",
       refreshToken: "",
       username: "",
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      address: "",
       userRoles: "",
       isLogged: false,
       isLoading: true,
@@ -15,23 +19,33 @@ const loginSlice = createSlice({
 
   reducers: {
     loginAction: (state, action) => {
-      state.loginInfo.isLoading = true;
       state.loginInfo.token = action.payload.token;
       state.loginInfo.username = action.payload.username;
+      state.loginInfo.firstName = action.payload.firstName;
+      state.loginInfo.lastName = action.payload.lastName;
+      state.loginInfo.phoneNumber = action.payload.phoneNumber;
+      state.loginInfo.address = action.payload.address;
       state.loginInfo.refreshToken = action.payload.refreshToken;
       state.loginInfo.userRoles = action.payload.userRoles;
       state.loginInfo.isLogged = true;
+    },
+    startLoadingAction: (state) => {
+      state.loginInfo.isLoading = true;
+    },
+    endLoadingAction: (state) => {
       state.loginInfo.isLoading = false;
     },
 
-    logoutAction: (state, action) => {
-      state.loginInfo.isLoading = true;
+    logoutAction: (state) => {
       state.loginInfo.token = "";
       state.loginInfo.username = "";
+      state.loginInfo.firstName = "";
+      state.loginInfo.lastName = "";
+      state.loginInfo.phoneNumber = "";
+      state.loginInfo.address = "";
       state.loginInfo.refreshToken = "";
       state.loginInfo.userRoles = "";
       state.loginInfo.isLogged = false;
-      state.loginInfo.isLoading = false;
       localStorage.removeItem("userLoginInfo");
     },
   },
@@ -44,7 +58,12 @@ const loginReducer = loginSlice.reducer;
 export const loginSelector = (state) => state.loginReducer.loginInfo;
 
 // Action Export
-export const { loginAction, logoutAction } = loginSlice.actions;
+export const {
+  loginAction,
+  logoutAction,
+  startLoadingAction,
+  endLoadingAction,
+} = loginSlice.actions;
 
 // Export reducer
 export default loginReducer;

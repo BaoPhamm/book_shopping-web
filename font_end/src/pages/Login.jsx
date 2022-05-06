@@ -97,13 +97,20 @@ const Login = () => {
     });
 
     AuthService.login(authenticationRequest).then((res) => {
-      let loginResponse = {
-        token: res.data.token,
-        refreshToken: res.data.refreshToken,
-        userRoles: res.data.userRoles,
-        username: res.data.username,
-      };
-      dispatch(loginAction(loginResponse));
+      if (res.status === 400) {
+        alert("Username and password could not be blank!");
+      } else if (res.status === 403) {
+        alert("Wrong username and password.");
+      } else if (res.status === 200) {
+        let loginResponse = {
+          token: res.data.token,
+          refreshToken: res.data.refreshToken,
+          userRoles: res.data.userRoles,
+          username: res.data.username,
+        };
+        dispatch(loginAction(loginResponse));
+        alert("Login successfully");
+      }
     });
   };
 
