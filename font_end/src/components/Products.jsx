@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { mobile } from "../responsive";
 import Product from "./Product";
-import { Link } from "react-router-dom";
 import BookService from "../services/user/BookService";
 
 const Container = styled.div`
-  padding: 20px;
-  display: flex;
-  flex-wrap: wrap;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 31vw 31vw 31vw;
   justify-content: start;
+  ${mobile({ display: "none" })}
 `;
 
 const Products = (props) => {
@@ -41,9 +42,7 @@ const Products = (props) => {
       {!isLoading
         ? allProducts.map((item) => (
             <div>
-              <Link to={"/products/" + item.id}>
-                <Product productItem={item} key={item.id} />
-              </Link>
+              <Product productItem={item} key={item.id} />
             </div>
           ))
         : ""}

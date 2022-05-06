@@ -1,10 +1,9 @@
+import React, { useState, useEffect } from "react";
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@material-ui/icons";
-import { useState } from "react";
 import styled from "styled-components";
-import { sliderItems } from "../data";
-import { BookService } from "../services/user/BookService";
+import BookService from "../services/user/BookService";
 import { mobile } from "../responsive";
-import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   width: 100%;
@@ -84,6 +83,11 @@ const Button = styled.button`
 
 const Slider = () => {
   const [slideIndex, setSlideIndex] = useState(0);
+  const [featuresProducts, setFeaturesProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const backgroundColor = ["f5fafd", "fcf1ed", "fbf0f4"];
+  let navigate = useNavigate();
+
   const handleClick = (direction) => {
     if (direction === "left") {
       setSlideIndex(slideIndex > 0 ? slideIndex - 1 : 2);
@@ -92,21 +96,37 @@ const Slider = () => {
     }
   };
 
-  return (
+  useEffect(() => {
+    GetFeaturesBooks();
+  }, []);
+
+  const GetFeaturesBooks = async () => {
+    await setIsLoading(true);
+    BookService.getFeaturesBooks().then(async (res) => {
+      await setFeaturesProducts([...res]);
+      await setIsLoading(false);
+    });
+  };
+
+  const OnclickHandle = (id) => {
+    navigate("/products/" + id);
+  };
+
+  return !isLoading ? (
     <Container>
       <Arrow direction="left" onClick={() => handleClick("left")}>
         <ArrowLeftOutlined />
       </Arrow>
       <Wrapper slideIndex={slideIndex}>
-        {sliderItems.map((item) => (
-          <Slide bg={item.bg} key={item.id}>
+        {featuresProducts.map((item) => (
+          <Slide bg={backgroundColor[slideIndex]} key={item.id}>
             <ImgContainer>
-              <Image src={item.img} />
+              <Image src={item.imgSrc} />
             </ImgContainer>
             <InfoContainer>
               <Title>{item.title}</Title>
-              <Desc>{item.desc}</Desc>
-              <Button>SHOW NOW</Button>
+              <Desc>{item.description}</Desc>
+              <Button onClick={() => OnclickHandle(item.id)}>SHOW NOW</Button>
             </InfoContainer>
           </Slide>
         ))}
@@ -115,6 +135,8 @@ const Slider = () => {
         <ArrowRightOutlined />
       </Arrow>
     </Container>
+  ) : (
+    ""
   );
 };
 

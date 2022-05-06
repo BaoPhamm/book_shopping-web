@@ -3,7 +3,8 @@ import styled from "styled-components";
 import Products from "../components/Products";
 import { mobile } from "../responsive";
 import CategoryService from "../services/user/CategoryService";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { createBrowserHistory } from "history";
 
 const Container = styled.div``;
 
@@ -40,6 +41,7 @@ const ProductList = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(0);
   const location = useLocation();
+  const history = createBrowserHistory();
 
   useEffect(() => {
     GetAllCategories();
@@ -51,6 +53,7 @@ const ProductList = () => {
       await setAllCategories([...res]);
       if (location.state !== null) {
         await setSelectedCategory(location.state.selectedCategory);
+        history.replace({ state: {} });
       }
       await setIsLoading(false);
     });
@@ -58,6 +61,7 @@ const ProductList = () => {
 
   const handleSelectChange = async (e) => {
     await setSelectedCategory(e.target.value);
+    location.state = null;
   };
 
   return !isLoading ? (

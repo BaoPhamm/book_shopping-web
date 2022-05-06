@@ -1,78 +1,55 @@
-import { AddShoppingCartOutlined } from "@material-ui/icons";
 import styled from "styled-components";
-import React from "react";
-
-const Info = styled.div`
-  opacity: 0;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.2);
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.5s ease;
-  cursor: pointer;
-`;
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import Rating from "@material-ui/lab/Rating";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
 
 const Container = styled.div`
   flex: 1;
   margin: 5px;
-  min-width: 280px;
-  height: 350px;
-  display: flex;
+  min-width: 300px;
+  height: 400px;
+  display: grid-column;
   align-items: center;
-  justify-content: center;
   background-color: #f5fbfd;
   position: relative;
-
-  &:hover ${Info} {
-    opacity: 1;
-  }
+  text-align: center;
+  border-radius: 20px;
+  border: 1px solid #def2ff;
 `;
 
-const Circle = styled.div`
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background-color: white;
-  position: absolute;
+const Wrapper = styled.div`
+  width: 100%;
+  height: 90%;
+  display: grid-column;
+  align-items: center;
+  position: relative;
 `;
 
 const Image = styled.img`
-  height: 75%;
-  z-index: 2;
+  margin-top: 20px;
+  height: 80%;
 `;
 
-const Icon = styled.div`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 10px;
-  transition: all 0.5s ease;
-  &:hover {
-    background-color: #e9f5f5;
-    transform: scale(1.1);
-  }
+const Title = styled.p`
+  margin-top: 8px;
+  font-size: 20px;
 `;
 
 const Product = ({ productItem }) => {
   return (
     <Container>
-      <Circle />
-      <Image src={productItem.imgSrc} />
-      <Info>
-        <Icon>
-          <AddShoppingCartOutlined />
-        </Icon>
-      </Info>
+      <Wrapper>
+        <Link
+          to={"/products/" + productItem.id}
+          style={{ textDecoration: "none", color: "black" }}
+        >
+          <Image src={productItem.imgSrc} />
+          <Title>{productItem.title} </Title>
+        </Link>
+      </Wrapper>
+      <Rating name="Rating Label" value={4} disabled="true" />
     </Container>
   );
 };

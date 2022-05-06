@@ -5,6 +5,9 @@ import { mobile } from "../responsive";
 import { useParams } from "react-router-dom";
 import BookService from "../services/user/BookService";
 import { Navigate } from "react-router-dom";
+import Rating from "@material-ui/lab/Rating";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
 
 const Container = styled.div``;
 
@@ -61,6 +64,14 @@ const AmountContainer = styled.div`
   font-weight: 700;
 `;
 
+const RatingContainer = styled.div`
+  width: 50%;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+  text-align: center;
+`;
+
 const Amount = styled.span`
   width: 30px;
   height: 30px;
@@ -88,9 +99,9 @@ const Product = () => {
   const [book, setBook] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isBookExist, setIsBookExist] = useState(false);
+  const [ratingValue, setRatingValue] = useState(0);
 
   let { id } = useParams();
-  console.log(id);
 
   useEffect(() => {
     GetBook();
@@ -99,7 +110,6 @@ const Product = () => {
   const GetBook = async () => {
     await setIsLoading(true);
     BookService.getBookById(id).then(async (res) => {
-      console.log(res);
       if (res.status === 404) {
         await setIsBookExist(false);
       } else if (res.status === 200) {
@@ -119,6 +129,7 @@ const Product = () => {
           </ImgContainer>
           <InfoContainer>
             <Title>{book.title}</Title>
+            <Rating name="Rating Label" value={4} disabled={true} />
             <Desc>{book.description}</Desc>
             <Price>{book.price + " VND"}</Price>
             <AddContainer>
@@ -129,6 +140,21 @@ const Product = () => {
               </AmountContainer>
               <Button>ADD TO CART</Button>
             </AddContainer>
+            <RatingContainer>
+              <Box component="fieldset" mb={3} borderColor="transparent">
+                <Typography component="legend">
+                  Please Rate our book!
+                </Typography>
+                <Rating
+                  name="Rating book"
+                  value={ratingValue}
+                  size="large"
+                  onChange={(event, newValue) => {
+                    setRatingValue(newValue);
+                  }}
+                />
+              </Box>
+            </RatingContainer>
           </InfoContainer>
         </Wrapper>
       </Container>

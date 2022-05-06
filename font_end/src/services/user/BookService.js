@@ -29,6 +29,19 @@ class BookService {
     return response;
   }
 
+  async getFeaturesBooks() {
+    const response = await axios
+      .get(BOOK_API_BASE_URL + "/features")
+      .then(function (response) {
+        return response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+        return error.response;
+      });
+    return response;
+  }
+
   async getBooksByCategory(categoryId) {
     const response = await axios
       .get(BOOK_API_BASE_URL + "/category/" + categoryId)
