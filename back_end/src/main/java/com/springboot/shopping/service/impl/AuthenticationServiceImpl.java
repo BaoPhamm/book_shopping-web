@@ -15,12 +15,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 
 import com.springboot.shopping.dto.RegistrationRequest;
 import com.springboot.shopping.dto.auth.AuthenticationRequest;
 import com.springboot.shopping.dto.auth.AuthenticationResponse;
-import com.springboot.shopping.exception.InputFieldException;
 import com.springboot.shopping.exception.auth.PasswordException;
 import com.springboot.shopping.exception.auth.UserAuthenticationException;
 import com.springboot.shopping.exception.user.PhoneNumberExistException;
@@ -50,11 +48,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	private String secretKey;
 
 	@Override
-	public String registerUser(RegistrationRequest registrationRequest, BindingResult bindingResult) {
-
-		if (bindingResult.hasErrors()) {
-			throw new InputFieldException(bindingResult);
-		}
+	public String registerUser(RegistrationRequest registrationRequest) {
 		UserEntity newUser = commonMapper.convertToEntity(registrationRequest, UserEntity.class);
 
 		Optional<UserEntity> userFromDb = userRepository.findByUsername(newUser.getUsername());
@@ -62,7 +56,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			throw new UsernameExistException();
 		}
 
-		Optional<UserEntity> checkUserPhoneNumFromDb = userRepository.findByUsername(newUser.getPhoneNumber());
+		Optional<UserEntity> checkUserPhoneNumFromDb = userRepository.findByPhoneNumber(newUser.getPhoneNumber());
 		if (checkUserPhoneNumFromDb.isPresent()) {
 			throw new PhoneNumberExistException();
 		}

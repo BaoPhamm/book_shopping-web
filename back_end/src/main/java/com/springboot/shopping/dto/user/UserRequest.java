@@ -18,7 +18,7 @@ public class UserRequest {
 	@NotBlank(message = "Last name cannot be empty")
 	private String lastName;
 
-	@Size(min = 4, max = 11, message = "The phone number must be has atleast 4 characters long")
+	@Size(min = 10, max = 11, message = "The phone number must be has atleast 10 characters long")
 	private String phoneNumber;
 
 	@NotBlank(message = "The address cannot be empty")

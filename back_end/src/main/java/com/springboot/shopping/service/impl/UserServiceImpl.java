@@ -23,15 +23,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.shopping.dto.PasswordResetRequest;
 import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
-import com.springboot.shopping.exception.InputFieldException;
 import com.springboot.shopping.exception.auth.PasswordException;
 import com.springboot.shopping.exception.role.RoleNotFoundException;
+import com.springboot.shopping.exception.user.PhoneNumberExistException;
 import com.springboot.shopping.exception.user.UserNotFoundException;
 import com.springboot.shopping.exception.user.UserRoleExistException;
 import com.springboot.shopping.exception.user.UserRoleNotFoundException;
@@ -99,14 +98,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public UserResponse updateProfile(String username, UserRequest userRequest, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			throw new InputFieldException(bindingResult);
-		}
+	public UserResponse updateProfile(String username, UserRequest userRequest) {
 		UserEntity newUserInfo = commonMapper.convertToEntity(userRequest, UserEntity.class);
 		Optional<UserEntity> userFromDb = userRepository.findByUsername(username);
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
+		}
+		Optional<UserEntity> checkUserPhoneNumFromDb = userRepository.findByPhoneNumber(newUserInfo.getPhoneNumber());
+		if (!newUserInfo.getPhoneNumber().equals(userFromDb.get().getPhoneNumber()) && checkUserPhoneNumFromDb.isPresent()) {
+			throw new PhoneNumberExistException();
 		}
 		userFromDb.get().setFirstName(newUserInfo.getFirstName());
 		userFromDb.get().setLastName(newUserInfo.getLastName());

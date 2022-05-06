@@ -6,11 +6,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 
 import com.springboot.shopping.dto.order.OrderRequest;
 import com.springboot.shopping.dto.order.OrderResponse;
-import com.springboot.shopping.exception.InputFieldException;
 import com.springboot.shopping.exception.OrderNotFoundException;
 import com.springboot.shopping.exception.book.BookNotFoundException;
 import com.springboot.shopping.mapper.CommonMapper;
@@ -53,11 +51,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public OrderResponse postOrder(OrderRequest orderRequest, BindingResult bindingResult) {
-
-		if (bindingResult.hasErrors()) {
-			throw new InputFieldException(bindingResult);
-		}
+	public OrderResponse postOrder(OrderRequest orderRequest) {
 
 		Order validOrder = commonMapper.convertToEntity(orderRequest, Order.class);
 		Map<Long, Long> booksId = orderRequest.getBooksId();

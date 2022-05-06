@@ -8,7 +8,7 @@ import com.springboot.shopping.dto.auth.AuthenticationResponse;
 
 public interface AuthenticationService {
 
-	String registerUser(RegistrationRequest registrationRequest, BindingResult bindingResult);
+	String registerUser(RegistrationRequest registrationRequest);
 
 	AuthenticationResponse login(AuthenticationRequest request);
 

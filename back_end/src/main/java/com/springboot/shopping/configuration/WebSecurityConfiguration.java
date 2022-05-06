@@ -43,7 +43,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		// Without Authorization
 		http.authorizeRequests().antMatchers(
-				"/api/v1/auth/login/**",
+				"/api/v1/auth/login",
 				"/api/v1/registration",
 				"/api/v1/books/**",
 				"/api/v1/category/**",

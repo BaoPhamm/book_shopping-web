@@ -33,7 +33,7 @@ public interface UserService {
 
 	List<UserResponse> deleteUser(Long userId);
 
-	UserResponse updateProfile(String username, UserRequest userRequest, BindingResult bindingResult);
+	UserResponse updateProfile(String username, UserRequest userRequest);
 
 	String passwordReset(String username, PasswordResetRequest passwordReset);
 

@@ -1,6 +1,7 @@
 package com.springboot.shopping.controller.user;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ public class AuthenticationController {
 	private final AuthenticationService authenticationService;
 
 	@PostMapping("/login")
-	public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
+	public ResponseEntity<AuthenticationResponse> login(@Validated @RequestBody AuthenticationRequest request) {
 		AuthenticationResponse authenticationResponse = authenticationService.login(request);
 		return ResponseEntity.ok(authenticationResponse);
 	}

@@ -13,7 +13,7 @@ public interface OrderService {
 
 	List<OrderResponse> findOrderByUsername(String username);
 
-	OrderResponse postOrder(OrderRequest orderRequest, BindingResult bindingResult);
+	OrderResponse postOrder(OrderRequest orderRequest);
 
 	List<OrderResponse> deleteOrder(Long orderId);
 }
