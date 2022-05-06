@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -39,9 +40,12 @@ public class Book {
 	private Integer price;
 	private String imgSrc;
 	private String description;
-	
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<Category> categories = new ArrayList<>();
+
+//	@OneToMany(fetch = FetchType.EAGER)
+//	private Collection<BookRating> bookRatings = new ArrayList<>();
 
 	@Override
 	public boolean equals(Object obj) {

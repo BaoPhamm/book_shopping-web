@@ -13,6 +13,8 @@ public interface BookService {
 	
 	List<BookResponse> findBooksByCategory(Long categoryId);
 	
+	List<BookResponse> findThreeBooksBestSellers();
+	
 	String addCategoriesToBook(Long bookId, List<Long> categoriesId);
 	
 	String removeCategoriesFromBook(Long bookId, List<Long> categoriesId);

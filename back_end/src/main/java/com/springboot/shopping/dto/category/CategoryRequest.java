@@ -14,10 +14,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CategoryRequest {
 
-	@NotNull(message = "Fill in the input field")
 	private long id;
 
 	@NotBlank(message = "Fill in the input field")
 	@Length(max = 255)
 	private String name;
+
+	@NotBlank(message = "Fill in the input field")
+	@Length(max = 255)
+	private String imgSrc;
 }

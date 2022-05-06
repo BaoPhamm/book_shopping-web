@@ -150,4 +150,8 @@ public class BookServiceImpl implements BookService {
 		return commonMapper.convertToResponseList(bookRepository.findByCategory(categoryId), BookResponse.class);
 	}
 
+	@Override
+	public List<BookResponse> findThreeBooksBestSellers() {
+		return commonMapper.convertToResponseList(bookRepository.findThreeBooksBestSellers(), BookResponse.class);
+	}
 }
