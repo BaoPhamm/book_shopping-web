@@ -5,6 +5,7 @@ import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { loginSelector } from "../store/reducers/loginSlice";
 import UserService from "../services/user/UserService";
+import { PopupContainer } from "../components/PopupForm/Container/index";
 
 const Container = styled.div`
   width: 98vw;
@@ -66,8 +67,8 @@ const UpdateProfile = () => {
   const [formAddress, setAddress] = useState("");
   const [formPhoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-
   const loginInfo = useSelector(loginSelector);
+  const triggerText = "CHANGE PASSWORD";
 
   useEffect(() => {
     fetchData();
@@ -77,7 +78,6 @@ const UpdateProfile = () => {
     await setIsLoading(true);
     if (loginInfo.isLogged) {
       await setFirstName(loginInfo.firstName);
-      console.log(loginInfo.firstName);
       await setLastName(loginInfo.lastName);
       await setAddress(loginInfo.address);
       await setPhoneNumber(loginInfo.phoneNumber);
@@ -129,6 +129,50 @@ const UpdateProfile = () => {
     });
   };
 
+  const onChangePasswordSubmit = (event) => {
+    event.preventDefault(event);
+
+    console.log(event.target.currentPassword.value);
+    console.log(event.target.newPassword.value);
+    console.log(event.target.repeatNewPassword.value);
+
+    const changePasswordRequest = JSON.stringify({
+      currentPassword: event.target.currentPassword.value,
+      newPassword: event.target.newPassword.value,
+      newPasswordRepeat: event.target.repeatNewPassword.value,
+    });
+
+    UserService.updateUserPassword(changePasswordRequest).then(async (res) => {
+      console.log(res);
+      if (res.status === 400) {
+        if (
+          res.data.errorMessage ===
+          "The password must be between 4 and 16 characters long"
+        ) {
+          alert("The password must be between 4 and 16 characters long");
+        } else if (
+          res.data.errorMessage ===
+          "The password must be between 4 and 16 characters long"
+        ) {
+          alert("The password must be between 4 and 16 characters long");
+        } else if (
+          res.data.errorMessage ===
+          "The password confirmation must be between 4 and 16 characters long"
+        ) {
+          alert(
+            "The password confirmation must be between 4 and 16 characters long"
+          );
+        }
+      } else if (res.status === 406) {
+        if (res.data.message === "Passwords do not match.") {
+          alert("Passwords do not match.");
+        }
+      } else if (res.status === 200) {
+        alert("Password successfully changed!");
+      }
+    });
+  };
+
   return !loginInfo.isLoading ? (
     !isLoading ? (
       loginInfo.isLogged ? (
@@ -166,7 +210,10 @@ const UpdateProfile = () => {
               />
               <Button>UPDATE</Button>
             </Form>
-            <Button>CHANGE PASSWORD</Button>
+            <PopupContainer
+              triggerText={triggerText}
+              onSubmit={onChangePasswordSubmit}
+            />
           </Wrapper>
         </Container>
       ) : (

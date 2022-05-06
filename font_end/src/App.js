@@ -25,8 +25,8 @@ const App = () => {
           <Route path="/profile" element={<UpdateProfile />} />
           <Route path="/userInformation" element={<UserInformation />} />
           <Route path="/products" element={<ProductList />} />
-          <Route path={"/products/:id"} element={<Product />} />
-          <Route path={"/products/not-found"} element={<Error />} />
+          <Route path="/products/:id" element={<Product />} />
+          <Route path="/products/not-found" element={<Error />} />
           <Route path="/:someString" element={<Error />} />
           <Route path="/products/:someString" element={<Error />} />
         </Routes>

@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 90%;
@@ -15,9 +14,12 @@ const Input = styled.input`
   margin: 10px 0;
   padding: 10px;
 `;
-
+const Title = styled.h1`
+  font-size: 24px;
+  font-weight: 300;
+`;
 const Button = styled.button`
-  width: 40%;
+  width: 60%;
   border: none;
   padding: 15px 20px;
   background-color: teal;
@@ -27,32 +29,23 @@ const Button = styled.button`
   margin-top: 1rem;
 `;
 
-const TextLink = styled.a`
-  margin: 0.5rem;
-  font-size: 12px;
-  text-decoration: underline;
-  cursor: pointer;
-`;
-const TextLinkNoneUnderLine = styled.p`
-  margin: 0.5rem;
-  font-size: 12px;
-  text-decoration: none;
-  cursor: pointer;
-`;
-
 const SubmitForm = ({ onSubmit }) => {
   return (
     <Wrapper>
+      <Title>CHANGE PASSWORD</Title>
       <form onSubmit={onSubmit}>
-        <Input type="text" placeholder="username" />
-        <Input type="password" placeholder="password" />
-        <Button>LOGIN</Button>
-        <TextLinkNoneUnderLine>DON'T HAVE AN ACCOUNT?</TextLinkNoneUnderLine>
-        <TextLink>
-          <Link to="/register" style={{ color: "black" }}>
-            CREATE A NEW ACCOUNT
-          </Link>
-        </TextLink>
+        <Input
+          type="password"
+          name="currentPassword"
+          placeholder="current password"
+        />
+        <Input type="password" name="newPassword" placeholder="new password" />
+        <Input
+          type="password"
+          name="repeatNewPassword"
+          placeholder="repeat new password"
+        />
+        <Button>CHANGE</Button>
       </form>
     </Wrapper>
   );
