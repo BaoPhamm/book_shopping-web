@@ -48,11 +48,4 @@ public class BookController {
 		List<BookResponse> bookList = bookService.findBooksByCategory(categoryId);
 		return ResponseEntity.ok(bookList);
 	}
-	
-	// Get book rating by ID
-	@GetMapping("/{id}/rating")
-	public ResponseEntity<Float> getBookRatingById(@PathVariable("id") Long bookId) {
-		Float bookRating = bookService.getBookRatingById(bookId);
-		return ResponseEntity.ok(bookRating);
-	}
 }

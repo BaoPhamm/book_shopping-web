@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.springboot.shopping.dto.order.OrderRequest;
 import com.springboot.shopping.dto.order.OrderResponse;
@@ -84,6 +85,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
+	@Transactional
 	public List<OrderResponse> deleteOrder(Long orderId) {
 
 		Optional<Order> orderFromDb = orderRepository.findById(orderId);

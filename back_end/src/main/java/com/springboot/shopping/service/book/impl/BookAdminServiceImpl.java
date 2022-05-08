@@ -54,6 +54,7 @@ public class BookAdminServiceImpl implements BookAdminService {
 			throw new BookExistException();
 		}
 		Book newBook = commonMapper.convertToEntity(bookRequest, Book.class);
+		newBook.setRatingPoint(Float.valueOf(0));
 		Book savedBook = bookRepository.save(newBook);
 		return commonMapper.convertToResponse(savedBook, BookAdminResponse.class);
 	}
