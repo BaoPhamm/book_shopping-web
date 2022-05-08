@@ -1,7 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import SubmitForm from "./SubmitForm";
+import ChangePasswordForm from "./Forms/ChangePasswordForm";
+import UpdateBookForm from "./Forms/UpdateBookForm";
+import AddCategoryToBookForm from "./Forms/AddCategoryToBookForm";
+import RemoveCategoryFromBookForm from "./Forms/RemoveCategoryFromBookForm";
 import FocusTrap from "focus-trap-react";
+
 export const Modal = ({
   onClickOutside,
   onKeyDown,
@@ -9,7 +13,19 @@ export const Modal = ({
   buttonRef,
   closeModal,
   onSubmit,
+  typeSubmit,
 }) => {
+  const submitForm = () => {
+    if (typeSubmit === "changePassword") {
+      return <ChangePasswordForm onSubmit={onSubmit} />;
+    } else if (typeSubmit === "updateBook") {
+      return <UpdateBookForm onSubmit={onSubmit} />;
+    } else if (typeSubmit === "addCatToBook") {
+      return <AddCategoryToBookForm onSubmit={onSubmit} />;
+    } else if (typeSubmit === "removeCatFromBook") {
+      return <RemoveCategoryFromBookForm onSubmit={onSubmit} />;
+    }
+  };
   return ReactDOM.createPortal(
     <FocusTrap>
       <aside
@@ -36,9 +52,7 @@ export const Modal = ({
               <path d="M 10,10 L 30,30 M 30,10 L 10,30" />
             </svg>
           </button>
-          <div className="modal-body">
-            <SubmitForm onSubmit={onSubmit} />
-          </div>
+          <div className="modal-body">{submitForm()}</div>
         </div>
       </aside>
     </FocusTrap>,

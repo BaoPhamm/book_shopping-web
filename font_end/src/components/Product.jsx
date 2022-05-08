@@ -1,14 +1,12 @@
 import styled from "styled-components";
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import Rating from "@material-ui/lab/Rating";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
 
 const Container = styled.div`
   flex: 1;
   margin: 5px;
-  min-width: 300px;
+  width: 22vw;
   height: 400px;
   display: grid-column;
   align-items: center;
@@ -19,37 +17,79 @@ const Container = styled.div`
   border: 1px solid #def2ff;
 `;
 
-const Wrapper = styled.div`
+const WrapperImg = styled.div`
   width: 100%;
-  height: 90%;
-  display: grid-column;
+  height: 65%;
   align-items: center;
   position: relative;
 `;
 
+const WrapperTitle = styled.div`
+  width: 100%;
+  height: 15%;
+  align-items: center;
+  position: relative;
+`;
+
+const WrapperPrice = styled.div`
+  width: 100%;
+  height: 7%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  bottom: 5px;
+`;
+
+const WrapperRating = styled.div`
+  width: 100%;
+  height: 8%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  bottom: 5px;
+`;
+
 const Image = styled.img`
-  margin-top: 20px;
-  height: 80%;
+  margin-top: 12px;
+  height: 95%;
 `;
 
 const Title = styled.p`
-  margin-top: 8px;
-  font-size: 20px;
+  font-size: 19px;
+`;
+const Price = styled.p`
+  font-size: 17px;
 `;
 
 const Product = ({ productItem }) => {
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "VND",
+    minimumFractionDigits: 0,
+  });
+
   return (
     <Container>
-      <Wrapper>
-        <Link
-          to={"/products/" + productItem.id}
-          style={{ textDecoration: "none", color: "black" }}
-        >
+      <Link
+        to={"/products/" + productItem.id}
+        style={{ textDecoration: "none", color: "black" }}
+      >
+        <WrapperImg>
           <Image src={productItem.imgSrc} />
+        </WrapperImg>
+        <WrapperTitle>
           <Title>{productItem.title} </Title>
-        </Link>
-      </Wrapper>
-      <Rating name="Rating Label" value={4} disabled="true" />
+        </WrapperTitle>
+      </Link>
+      <WrapperPrice>
+        <Price>{formatter.format(productItem.price) + " VND"} </Price>
+      </WrapperPrice>
+
+      <WrapperRating>
+        <Rating name="Rating Label" value={4} disabled="true" />
+      </WrapperRating>
     </Container>
   );
 };

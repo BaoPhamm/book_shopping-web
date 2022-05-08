@@ -30,7 +30,7 @@
         top: 50%;
         height: auto;
         transform: translate(-50%, -50%);
-        max-width: 30em;
+        width: 40%;
         max-height: calc(100% - 1em);
     }
 }

@@ -11,11 +11,11 @@ const Button = styled.button`
   cursor: pointer;
   margin-top: 20px;
 `;
-const Trigger = ({ triggerText, buttonRef, showModal }) => {
+const ChangPasswordButton = ({ buttonRef, showModal }) => {
   return (
     <Button ref={buttonRef} onClick={showModal}>
-      {triggerText}
+      CHANGE PASSWORD
     </Button>
   );
 };
-export default Trigger;
+export default ChangPasswordButton;

@@ -43,11 +43,24 @@ const Form = styled.form`
   align-items: center;
 `;
 
+const RowWrapper = styled.div`
+  justify-content: start;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 18% 82%;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+const Text = styled.p`
+  font-size: 15px;
+  text-align: left;
+`;
+
 const Input = styled.input`
-  flex: 1;
-  min-width: 90%;
-  margin: 20px 0px 0px 0px;
-  padding: 10px;
+  min-width: 80%;
+  padding: 7px;
+  right: 0;
 `;
 
 const Button = styled.button`
@@ -68,7 +81,6 @@ const UpdateProfile = () => {
   const [formPhoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const loginInfo = useSelector(loginSelector);
-  const triggerText = "CHANGE PASSWORD";
 
   useEffect(() => {
     fetchData();
@@ -180,39 +192,51 @@ const UpdateProfile = () => {
           <Wrapper>
             <Title>UPDATE PROFILE</Title>
             <Form onSubmit={handleUpdateSubmit}>
-              <Input
-                type="text"
-                value={formFirstName}
-                placeholder="first name"
-                onChange={changeFormFirstName}
-              />
-              <Input
-                type="text"
-                value={formLastName}
-                placeholder="last name"
-                onChange={changeFormLastName}
-                minLength="1"
-              />
-              <Input
-                type="text"
-                value={formAddress}
-                placeholder="address"
-                onChange={changeFormAddress}
-                minLength="1"
-              />
-              <Input
-                type="text"
-                value={formPhoneNumber}
-                placeholder="phone number"
-                onChange={changeFormPhoneNumber}
-                minLength="10"
-                maxLength="11"
-              />
+              <RowWrapper>
+                <Text>First name:</Text>
+                <Input
+                  type="text"
+                  value={formFirstName}
+                  placeholder="first name"
+                  onChange={changeFormFirstName}
+                />
+              </RowWrapper>
+              <RowWrapper>
+                <Text>Last name:</Text>
+                <Input
+                  type="text"
+                  value={formLastName}
+                  placeholder="last name"
+                  onChange={changeFormLastName}
+                  minLength="1"
+                />
+              </RowWrapper>
+              <RowWrapper>
+                <Text>Address:</Text>
+                <Input
+                  type="text"
+                  value={formAddress}
+                  placeholder="address"
+                  onChange={changeFormAddress}
+                  minLength="1"
+                />
+              </RowWrapper>
+              <RowWrapper>
+                <Text>Phone number:</Text>
+                <Input
+                  type="text"
+                  value={formPhoneNumber}
+                  placeholder="phone number"
+                  onChange={changeFormPhoneNumber}
+                  minLength="10"
+                  maxLength="11"
+                />
+              </RowWrapper>
               <Button>UPDATE</Button>
             </Form>
             <PopupContainer
-              triggerText={triggerText}
               onSubmit={onChangePasswordSubmit}
+              typeSubmit="changePassword"
             />
           </Wrapper>
         </Container>

@@ -7,7 +7,7 @@ import BookService from "../services/user/BookService";
 const Container = styled.div`
   padding: 10px;
   display: grid;
-  grid-template-columns: 31vw 31vw 31vw;
+  grid-template-columns: 23vw 23vw 23vw 23vw;
   justify-content: start;
   ${mobile({ display: "none" })}
 `;

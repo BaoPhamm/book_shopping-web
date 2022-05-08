@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Modal } from "../Modal";
-import TriggerButton from "../TriggerButton";
+import ChangPasswordButton from "../Forms/buttons/ChangPasswordButton";
+import UpdateBookButton from "../Forms/buttons/UpdateBookButton";
+import AddCatToBookButton from "../Forms/buttons/AddCatToBookButton";
+import RemoveCatFromBookButton from "../Forms/buttons/RemoveCatFromBookButton";
 import "./index.css";
 
 export class PopupContainer extends Component {
@@ -21,22 +24,46 @@ export class PopupContainer extends Component {
       this.closeModal();
     }
   };
-  onClickOutside = (event) => {
-    if (this.modal && this.modal.contains(event.target)) return;
-    this.closeModal();
-  };
 
   toggleScrollLock = () => {
     document.querySelector("html").classList.toggle("scroll-lock");
   };
+  GetButton = () => {
+    if (this.props.typeSubmit === "changePassword") {
+      return (
+        <ChangPasswordButton
+          showModal={this.showModal}
+          buttonRef={(n) => (this.TriggerButton = n)}
+        />
+      );
+    } else if (this.props.typeSubmit === "updateBook") {
+      return (
+        <UpdateBookButton
+          showModal={this.showModal}
+          buttonRef={(n) => (this.TriggerButton = n)}
+        />
+      );
+    } else if (this.props.typeSubmit === "addCatToBook") {
+      return (
+        <AddCatToBookButton
+          showModal={this.showModal}
+          buttonRef={(n) => (this.TriggerButton = n)}
+        />
+      );
+    } else if (this.props.typeSubmit === "removeCatFromBook") {
+      return (
+        <RemoveCatFromBookButton
+          showModal={this.showModal}
+          buttonRef={(n) => (this.TriggerButton = n)}
+        />
+      );
+    }
+  };
+
   render() {
     return (
       <React.Fragment>
-        <TriggerButton
-          showModal={this.showModal}
-          buttonRef={(n) => (this.TriggerButton = n)}
-          triggerText={this.props.triggerText}
-        />
+        {this.GetButton()}
         {this.state.isShown ? (
           <Modal
             onSubmit={this.props.onSubmit}
@@ -44,7 +71,7 @@ export class PopupContainer extends Component {
             buttonRef={(n) => (this.closeButton = n)}
             closeModal={this.closeModal}
             onKeyDown={this.onKeyDown}
-            onClickOutside={this.onClickOutside}
+            typeSubmit={this.props.typeSubmit}
           />
         ) : null}
       </React.Fragment>

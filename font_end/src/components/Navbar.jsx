@@ -4,7 +4,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { Search, ShoppingCartOutlined } from "@material-ui/icons";
 import styled from "styled-components";
 import { mobile } from "../responsive";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { loginSelector } from "../store/reducers/loginSlice";
 import {
@@ -95,6 +95,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const loginInfo = useSelector(loginSelector);
   const [isLoading, setIsLoading] = useState(true);
+  let navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
@@ -109,6 +110,8 @@ const Navbar = () => {
         console.log(res.status);
         if (res.status === 403) {
           dispatch(logoutAction());
+          alert("Please login again!");
+          navigate("/login");
         } else if (res.status === 200) {
           let loginInfo = {
             token: userLoginInfo.token,

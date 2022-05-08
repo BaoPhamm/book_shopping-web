@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Products from "../components/Products";
 import { mobile } from "../responsive";
 import CategoryService from "../services/user/CategoryService";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { createBrowserHistory } from "history";
 
 const Container = styled.div``;

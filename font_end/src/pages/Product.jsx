@@ -120,6 +120,12 @@ const Product = () => {
     });
   };
 
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "VND",
+    minimumFractionDigits: 0,
+  });
+
   return !isLoading ? (
     isBookExist ? (
       <Container>
@@ -131,7 +137,7 @@ const Product = () => {
             <Title>{book.title}</Title>
             <Rating name="Rating Label" value={4} disabled={true} />
             <Desc>{book.description}</Desc>
-            <Price>{book.price + " VND"}</Price>
+            <Price>{formatter.format(book.price) + " VND"}</Price>
             <AddContainer>
               <AmountContainer>
                 <Remove />
