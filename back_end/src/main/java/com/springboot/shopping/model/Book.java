@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.PostPersist;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -46,7 +47,7 @@ public class Book {
 	private Date createDate;
 	private Date updateDate;
 
-	@PrePersist
+	@PostPersist
 	protected void onCreate() {
 		createDate = new Date();
 	}

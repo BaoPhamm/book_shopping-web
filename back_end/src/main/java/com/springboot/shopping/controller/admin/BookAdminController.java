@@ -87,9 +87,9 @@ public class BookAdminController {
 
 	// Delete an existing book by ID
 	@DeleteMapping("/{id}")
-	public ResponseEntity<List<BookAdminResponse>> deleteBook(@PathVariable("id") Long BookId) {
-		List<BookAdminResponse> newBookList = bookAdminService.deleteBook(BookId);
-		return ResponseEntity.ok(newBookList);
+	public ResponseEntity<String> deleteBook(@PathVariable("id") Long BookId) {
+		String message = bookAdminService.deleteBook(BookId);
+		return ResponseEntity.ok(message);
 	}
 
 }

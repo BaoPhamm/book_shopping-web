@@ -23,7 +23,7 @@ public interface BookAdminService {
 
 	BookAdminResponse updateBook(BookRequest bookRequest);
 
-	List<BookAdminResponse> deleteBook(Long bookId);
+	String deleteBook(Long bookId);
 	
 	Float getBookRatingById(Long bookId);
 

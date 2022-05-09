@@ -125,20 +125,22 @@ public class BookAdminServiceImpl implements BookAdminService {
 		}
 		Book newBookInfo = commonMapper.convertToEntity(bookRequest, Book.class);
 		newBookInfo.setCategories(bookFromDb.get().getCategories());
+		newBookInfo.setCreateDate(bookFromDb.get().getCreateDate());
+		newBookInfo.setRatingPoint(bookFromDb.get().getRatingPoint());
 		Book updatedBook = bookRepository.save(newBookInfo);
 		return commonMapper.convertToResponse(updatedBook, BookAdminResponse.class);
 	}
 
 	@Override
 	@Transactional
-	public List<BookAdminResponse> deleteBook(Long bookId) {
+	public String deleteBook(Long bookId) {
 
 		Optional<Book> bookFromDb = bookRepository.findById(bookId);
 		if (bookFromDb.isEmpty()) {
 			throw new BookNotFoundException();
 		}
 		bookRepository.deleteById(bookId);
-		return commonMapper.convertToResponseList(bookRepository.findAll(), BookAdminResponse.class);
+		return "Book successfully deleted.";
 	}
 
 	@Override
