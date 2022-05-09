@@ -47,8 +47,8 @@ const CategoryItem = ({ item }) => {
   let navigate = useNavigate();
 
   const OnclickHandle = (id) => {
-    let path = "/products";
-    navigate(path, { state: { selectedCategory: id } });
+    localStorage.setItem("FilterSelectedCategory", id);
+    navigate("/products");
   };
 
   return (

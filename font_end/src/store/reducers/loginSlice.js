@@ -13,6 +13,7 @@ const loginSlice = createSlice({
       address: "",
       userRoles: "",
       isLogged: false,
+      isAdmin: false,
       isLoading: true,
     },
   },
@@ -27,6 +28,7 @@ const loginSlice = createSlice({
       state.loginInfo.address = action.payload.address;
       state.loginInfo.refreshToken = action.payload.refreshToken;
       state.loginInfo.userRoles = action.payload.userRoles;
+      state.loginInfo.isAdmin = action.payload.userRoles.includes("ADMIN");
       state.loginInfo.isLogged = true;
     },
     startLoadingAction: (state) => {
@@ -46,6 +48,7 @@ const loginSlice = createSlice({
       state.loginInfo.refreshToken = "";
       state.loginInfo.userRoles = "";
       state.loginInfo.isLogged = false;
+      state.loginInfo.isAdmin = false;
       localStorage.removeItem("userLoginInfo");
     },
   },

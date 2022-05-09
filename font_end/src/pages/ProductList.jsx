@@ -3,32 +3,26 @@ import styled from "styled-components";
 import Products from "../components/Products";
 import { mobile } from "../responsive";
 import CategoryService from "../services/user/CategoryService";
-import { useLocation } from "react-router-dom";
-import { createBrowserHistory } from "history";
 
 const Container = styled.div``;
 
 const Title = styled.h1`
   margin: 20px;
 `;
-
 const FilterContainer = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-
 const Filter = styled.div`
   margin: 20px;
   ${mobile({ width: "0px 20px", display: "flex", flexDirection: "column" })}
 `;
-
 const FilterText = styled.span`
   font-size: 20px;
   font-weight: 600;
   margin-right: 20px;
   ${mobile({ marginRight: "0px" })}
 `;
-
 const Select = styled.select`
   padding: 10px;
   margin-right: 20px;
@@ -39,29 +33,23 @@ const Option = styled.option``;
 const ProductList = () => {
   const [allCategories, setAllCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState(0);
-  const location = useLocation();
-  const history = createBrowserHistory();
+  const [dataChange, toggleDataChange] = useState(false);
 
   useEffect(() => {
     GetAllCategories();
-  }, []);
+  }, [dataChange]);
 
   const GetAllCategories = async () => {
     await setIsLoading(true);
     CategoryService.getAllCategories().then(async (res) => {
       await setAllCategories([...res]);
-      if (location.state !== null) {
-        await setSelectedCategory(location.state.selectedCategory);
-        history.replace({ state: {} });
-      }
       await setIsLoading(false);
     });
   };
 
   const handleSelectChange = async (e) => {
-    await setSelectedCategory(e.target.value);
-    location.state = null;
+    localStorage.setItem("FilterSelectedCategory", e.target.value);
+    toggleDataChange(!dataChange);
   };
 
   return !isLoading ? (
@@ -70,7 +58,10 @@ const ProductList = () => {
       <FilterContainer>
         <Filter>
           <FilterText>Filter category:</FilterText>
-          <Select defaultValue={selectedCategory} onChange={handleSelectChange}>
+          <Select
+            defaultValue={localStorage.getItem("FilterSelectedCategory")}
+            onChange={handleSelectChange}
+          >
             <Option value={0}>All</Option>
             {allCategories.map((item) => (
               <Option value={item.id}>{item.name}</Option>
@@ -78,7 +69,9 @@ const ProductList = () => {
           </Select>
         </Filter>
       </FilterContainer>
-      <Products selectedCategory={selectedCategory} />
+      <Products
+        selectedCategory={localStorage.getItem("FilterSelectedCategory")}
+      />
     </Container>
   ) : (
     ""

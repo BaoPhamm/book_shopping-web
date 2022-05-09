@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
-  width: 95%;
+  width: 100%;
   background-color: white;
   text-align: center;
 `;
@@ -11,9 +11,9 @@ const RowWrapper = styled.div`
   justify-content: start;
   width: 100%;
   display: grid;
-  grid-template-columns: 30% 70%;
+  grid-template-columns: 14% 86%;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 2px;
 `;
 
 const Text = styled.p`
@@ -22,7 +22,17 @@ const Text = styled.p`
 `;
 
 const Input = styled.input`
+  font-size: 14px;
   min-width: 80%;
+  padding: 7px;
+  right: 0;
+`;
+const InputDescription = styled.textarea`
+  font-size: 14px;
+  font-family: "Arial";
+  min-width: 80%;
+  height: 3.2rem;
+  overflow-wrap: break-word;
   padding: 7px;
   right: 0;
 `;
@@ -31,7 +41,7 @@ const Title = styled.h1`
   font-weight: 300;
 `;
 const Button = styled.button`
-  width: 60%;
+  width: 40%;
   border: none;
   padding: 15px 20px;
   background-color: teal;
@@ -41,38 +51,144 @@ const Button = styled.button`
   margin-top: 1rem;
 `;
 
-const ChangePasswordForm = ({ onSubmit }) => {
+const UpdateBookForm = ({ onSubmit, productDetails }) => {
+  const getCategogiesString = () => {
+    let CategogiesString = "";
+    productDetails.categories.map(
+      (category) => (CategogiesString += category.name + " - ")
+    );
+    return CategogiesString.slice(0, -2);
+  };
   return (
     <Wrapper>
       <Title>UPDATE BOOK</Title>
       <form onSubmit={onSubmit}>
         <RowWrapper>
-          <Text>Current Password:</Text>
+          <Text>ID:</Text>
           <Input
-            type="password"
-            name="currentPassword"
-            placeholder="current password"
+            disabled="true"
+            type="number"
+            defaultValue={productDetails.id}
+            name="id"
+            placeholder="ID"
           />
         </RowWrapper>
         <RowWrapper>
-          <Text>New Password:</Text>
+          <Text>Title:</Text>
           <Input
-            type="password"
-            name="newPassword"
-            placeholder="new password"
+            type="text"
+            defaultValue={productDetails.title}
+            name="title"
+            placeholder="Title"
           />
         </RowWrapper>
         <RowWrapper>
-          <Text>Repeat New Password:</Text>
+          <Text>Author:</Text>
           <Input
-            type="password"
-            name="repeatNewPassword"
-            placeholder="repeat new password"
+            type="text"
+            defaultValue={productDetails.author}
+            name="author"
+            placeholder="Author"
           />
         </RowWrapper>
-        <Button>CHANGE</Button>
+        <RowWrapper>
+          <Text>Total pages:</Text>
+          <Input
+            type="number"
+            defaultValue={productDetails.totalPages}
+            name="totalPages"
+            placeholder="Total pages"
+          />
+        </RowWrapper>
+        <RowWrapper>
+          <Text>Required age:</Text>
+          <Input
+            type="number"
+            defaultValue={productDetails.requiredAge}
+            name="requiredAge"
+            placeholder="Required age"
+          />
+        </RowWrapper>
+        <RowWrapper>
+          <Text>Release date:</Text>
+          <Input
+            type="text"
+            defaultValue={productDetails.releaseDate}
+            name="releaseDate"
+            placeholder="Release date"
+          />
+        </RowWrapper>
+        <RowWrapper>
+          <Text>Price:</Text>
+          <Input
+            type="number"
+            defaultValue={productDetails.price}
+            name="price"
+            placeholder="Price"
+          />
+        </RowWrapper>
+        <RowWrapper>
+          <Text>Description:</Text>
+          <InputDescription
+            type="text"
+            defaultValue={productDetails.description}
+            name="description"
+            placeholder="Description"
+          />
+        </RowWrapper>
+        <RowWrapper>
+          <Text>Rating point:</Text>
+          <Input
+            disabled="true"
+            type="text"
+            defaultValue={productDetails.ratingPoint}
+            name="ratingPoint"
+            placeholder="Rating point"
+          />
+        </RowWrapper>
+        <RowWrapper>
+          <Text>Categories:</Text>
+          <Input
+            disabled="true"
+            type="text"
+            defaultValue={getCategogiesString()}
+            name="categories"
+            placeholder="Categories"
+          />
+        </RowWrapper>
+        <RowWrapper>
+          <Text>Create date:</Text>
+          <Input
+            disabled="true"
+            type="text"
+            defaultValue={productDetails.createDate}
+            name="createDate"
+            placeholder="Create date"
+          />
+        </RowWrapper>
+        <RowWrapper>
+          <Text>Update date:</Text>
+          <Input
+            disabled="true"
+            type="text"
+            defaultValue={productDetails.updateDate}
+            name="updateDate"
+            placeholder="Update date"
+          />
+        </RowWrapper>
+        <RowWrapper>
+          <Text>Image URL:</Text>
+          <Input
+            type=""
+            defaultValue={productDetails.imgSrc}
+            name="imgSrc"
+            placeholder="Image URL"
+          />
+        </RowWrapper>
+
+        <Button>UPDATE</Button>
       </form>
     </Wrapper>
   );
 };
-export default ChangePasswordForm;
+export default UpdateBookForm;

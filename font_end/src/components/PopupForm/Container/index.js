@@ -72,6 +72,8 @@ export class PopupContainer extends Component {
             closeModal={this.closeModal}
             onKeyDown={this.onKeyDown}
             typeSubmit={this.props.typeSubmit}
+            productDetails={this.props.productDetails}
+            allCategories={this.props.allCategories}
           />
         ) : null}
       </React.Fragment>

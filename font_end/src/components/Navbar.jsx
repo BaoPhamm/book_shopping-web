@@ -6,8 +6,8 @@ import styled from "styled-components";
 import { mobile } from "../responsive";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { loginSelector } from "../store/reducers/loginSlice";
 import {
+  loginSelector,
   loginAction,
   logoutAction,
   startLoadingAction,

@@ -10,6 +10,8 @@ import {
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { loginSelector } from "../store/reducers/loginSlice";
 
 const Container = styled.div`
   display: flex;
@@ -85,64 +87,71 @@ const Payment = styled.img`
 `;
 
 const Footer = () => {
-  return (
-    <Container>
-      <Left>
-        <Logo>BOOKSTORE.</Logo>
-        <Desc>We only sale books.</Desc>
-        <SocialContainer>
-          <SocialIcon color="3B5999">
-            <Facebook />
-          </SocialIcon>
-          <SocialIcon color="E4405F">
-            <Instagram />
-          </SocialIcon>
-          <SocialIcon color="55ACEE">
-            <Twitter />
-          </SocialIcon>
-        </SocialContainer>
-      </Left>
-      <Center>
-        <Title>Useful Links</Title>
-        <List>
-          <ListItem>
-            <Link to="/" style={{ textDecoration: "none", color: "black" }}>
-              Home
-            </Link>
-          </ListItem>
-          <ListItem>
-            <Link
-              to="/profile"
-              style={{ textDecoration: "none", color: "black" }}
-            >
-              My Account
-            </Link>
-          </ListItem>
-          <ListItem>Terms</ListItem>
-          <ListItem>
-            <Link
-              to="/products"
-              style={{ textDecoration: "none", color: "black" }}
-            >
-              Products
-            </Link>
-          </ListItem>
-        </List>
-      </Center>
-      <Right>
-        <Title>Contact</Title>
-        <ContactItem>
-          <Room style={{ marginRight: "10px" }} /> Etown4, HCMc, VN
-        </ContactItem>
-        <ContactItem>
-          <Phone style={{ marginRight: "10px" }} /> +84 090 2345678
-        </ContactItem>
-        <ContactItem>
-          <MailOutline style={{ marginRight: "10px" }} /> baobao@elite.java
-        </ContactItem>
-        <Payment src="https://i.ibb.co/Qfvn4z6/payment.png" />
-      </Right>
-    </Container>
+  const loginInfo = useSelector(loginSelector);
+  return !loginInfo.isLoading ? (
+    !loginInfo.isAdmin ? (
+      <Container>
+        <Left>
+          <Logo>BOOKSTORE.</Logo>
+          <Desc>We only sale books.</Desc>
+          <SocialContainer>
+            <SocialIcon color="3B5999">
+              <Facebook />
+            </SocialIcon>
+            <SocialIcon color="E4405F">
+              <Instagram />
+            </SocialIcon>
+            <SocialIcon color="55ACEE">
+              <Twitter />
+            </SocialIcon>
+          </SocialContainer>
+        </Left>
+        <Center>
+          <Title>Useful Links</Title>
+          <List>
+            <ListItem>
+              <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+                Home
+              </Link>
+            </ListItem>
+            <ListItem>
+              <Link
+                to="/profile"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                My Account
+              </Link>
+            </ListItem>
+            <ListItem>Terms</ListItem>
+            <ListItem>
+              <Link
+                to="/products"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                Products
+              </Link>
+            </ListItem>
+          </List>
+        </Center>
+        <Right>
+          <Title>Contact</Title>
+          <ContactItem>
+            <Room style={{ marginRight: "10px" }} /> Etown4, HCMc, VN
+          </ContactItem>
+          <ContactItem>
+            <Phone style={{ marginRight: "10px" }} /> +84 090 2345678
+          </ContactItem>
+          <ContactItem>
+            <MailOutline style={{ marginRight: "10px" }} /> baobao@elite.java
+          </ContactItem>
+          <Payment src="https://i.ibb.co/Qfvn4z6/payment.png" />
+        </Right>
+      </Container>
+    ) : (
+      ""
+    )
+  ) : (
+    ""
   );
 };
 

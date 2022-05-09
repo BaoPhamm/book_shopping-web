@@ -4,8 +4,7 @@ import { mobile } from "../responsive";
 import { Link, Navigate } from "react-router-dom";
 import AuthService from "../services/user/AuthService";
 import { useSelector, useDispatch } from "react-redux";
-import { loginAction } from "../store/reducers/loginSlice";
-import { loginSelector } from "../store/reducers/loginSlice";
+import { loginAction, loginSelector } from "../store/reducers/loginSlice";
 
 const Container = styled.div`
   width: 98vw;

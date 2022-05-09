@@ -14,16 +14,32 @@ export const Modal = ({
   closeModal,
   onSubmit,
   typeSubmit,
+  productDetails,
+  allCategories,
 }) => {
   const submitForm = () => {
     if (typeSubmit === "changePassword") {
       return <ChangePasswordForm onSubmit={onSubmit} />;
     } else if (typeSubmit === "updateBook") {
-      return <UpdateBookForm onSubmit={onSubmit} />;
+      return (
+        <UpdateBookForm onSubmit={onSubmit} productDetails={productDetails} />
+      );
     } else if (typeSubmit === "addCatToBook") {
-      return <AddCategoryToBookForm onSubmit={onSubmit} />;
+      return (
+        <AddCategoryToBookForm
+          onSubmit={onSubmit}
+          productDetails={productDetails}
+          allCategories={allCategories}
+        />
+      );
     } else if (typeSubmit === "removeCatFromBook") {
-      return <RemoveCategoryFromBookForm onSubmit={onSubmit} />;
+      return (
+        <RemoveCategoryFromBookForm
+          onSubmit={onSubmit}
+          productDetails={productDetails}
+          allCategories={allCategories}
+        />
+      );
     }
   };
   return ReactDOM.createPortal(

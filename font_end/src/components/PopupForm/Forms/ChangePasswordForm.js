@@ -11,7 +11,7 @@ const RowWrapper = styled.div`
   justify-content: start;
   width: 100%;
   display: grid;
-  grid-template-columns: 30% 70%;
+  grid-template-columns: 22% 78%;
   align-items: center;
   margin-top: 10px;
 `;
@@ -31,7 +31,7 @@ const Title = styled.h1`
   font-weight: 300;
 `;
 const Button = styled.button`
-  width: 60%;
+  width: 40%;
   border: none;
   padding: 15px 20px;
   background-color: teal;

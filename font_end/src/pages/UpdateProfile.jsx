@@ -80,11 +80,12 @@ const UpdateProfile = () => {
   const [formAddress, setAddress] = useState("");
   const [formPhoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [dataChange, toggleDataChange] = useState(false);
   const loginInfo = useSelector(loginSelector);
 
   useEffect(() => {
     fetchData();
-  }, [loginInfo.isLogged]);
+  }, [loginInfo.isLogged, dataChange]);
 
   const fetchData = async () => {
     await setIsLoading(true);
@@ -144,10 +145,6 @@ const UpdateProfile = () => {
   const onChangePasswordSubmit = (event) => {
     event.preventDefault(event);
 
-    console.log(event.target.currentPassword.value);
-    console.log(event.target.newPassword.value);
-    console.log(event.target.repeatNewPassword.value);
-
     const changePasswordRequest = JSON.stringify({
       currentPassword: event.target.currentPassword.value,
       newPassword: event.target.newPassword.value,
@@ -181,6 +178,7 @@ const UpdateProfile = () => {
         }
       } else if (res.status === 200) {
         alert("Password successfully changed!");
+        await toggleDataChange(!dataChange);
       }
     });
   };
