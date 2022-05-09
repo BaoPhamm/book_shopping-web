@@ -13,12 +13,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.springboot.shopping.dto.exception.ExceptionResponse;
 
 @RestControllerAdvice
-
 public class InputFieldException extends ResponseEntityExceptionHandler {
 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		System.out.println("ASASASASAS");
 		String errorMessage = ex.getBindingResult().getFieldError().getDefaultMessage();
 		System.out.println(errorMessage);
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), errorMessage,

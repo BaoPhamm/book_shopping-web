@@ -20,32 +20,31 @@ public class BookRequest {
 
 	private long id;
 
-	@NotBlank(message = "Fill in the input field")
+	@NotBlank(message = "title blank")
 	@Length(max = 255)
 	private String title;
 
-	@NotBlank(message = "Fill in the input field")
+	@NotBlank(message = "author blank")
 	@Length(max = 255)
 	private String author;
 
-	@NotNull(message = "Fill in the input field")
+	@NotNull(message = "totalPages blank")
 	private long totalPages;
 
-	@NotNull(message = "Fill in the input field")
+	@NotNull(message = "requiredAge blank")
 	private long requiredAge;
 
-	@NotBlank(message = "Fill in the input field")
-	@Length(max = 255)
+	@NotNull(message = "releaseDate blank")
 	private LocalDate releaseDate;
 
-	@NotNull(message = "Fill in the input field")
+	@NotNull(message = "price blank")
 	private Integer price;
 
-	@NotBlank(message = "Fill in the input field")
+	@NotBlank(message = "description blank")
 	@Length(max = 510)
 	private String description;
 
-	@NotBlank(message = "Fill in the input field")
+	@NotBlank(message = "imgSrc blank")
 	@Length(max = 255)
 	private String imgSrc;
 }

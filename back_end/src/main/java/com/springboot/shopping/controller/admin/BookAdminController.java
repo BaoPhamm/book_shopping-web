@@ -3,6 +3,7 @@ package com.springboot.shopping.controller.admin;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,7 +58,7 @@ public class BookAdminController {
 
 	// Create a new book
 	@PostMapping()
-	public ResponseEntity<BookAdminResponse> saveBook(@RequestBody BookRequest bookRequest) {
+	public ResponseEntity<BookAdminResponse> saveBook(@Validated @RequestBody BookRequest bookRequest) {
 		BookAdminResponse createdBook = bookAdminService.createBook(bookRequest);
 		return ResponseEntity.ok(createdBook);
 	}
@@ -79,7 +80,7 @@ public class BookAdminController {
 
 	// Update an existing book
 	@PutMapping()
-	public ResponseEntity<BookAdminResponse> updateBook(@RequestBody BookRequest bookRequest) {
+	public ResponseEntity<BookAdminResponse> updateBook(@Validated @RequestBody BookRequest bookRequest) {
 		BookAdminResponse updatedBook = bookAdminService.updateBook(bookRequest);
 		return ResponseEntity.ok(updatedBook);
 	}

@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class AddCategoryToBookForm {
 	private long bookId;
-	private List<Long> CategoriesId;
+	private List<Long> categoriesId;
 }
