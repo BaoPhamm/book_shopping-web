@@ -139,6 +139,28 @@ const Navbar = () => {
     dispatch(endLoadingAction());
   };
 
+  const CenterContent = () => {
+    return (
+      <Center>
+        {loginInfo.isAdmin ? (
+          <Logo>
+            <Link
+              to="/admin"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              BOOKSTORE MANAGEMENT
+            </Link>
+          </Logo>
+        ) : (
+          <Logo>
+            <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+              BOOKSTORE.
+            </Link>
+          </Logo>
+        )}
+      </Center>
+    );
+  };
   const RightContent = () => {
     return (
       <Right>
@@ -197,13 +219,7 @@ const Navbar = () => {
             <Search style={{ color: "gray", fontSize: 16 }} />
           </SearchContainer>
         </Left>
-        <Center>
-          <Logo>
-            <Link to="/" style={{ textDecoration: "none", color: "black" }}>
-              BOOKSTORE.
-            </Link>
-          </Logo>
-        </Center>
+        <CenterContent />
         <RightContent />
       </Wrapper>
     </Container>

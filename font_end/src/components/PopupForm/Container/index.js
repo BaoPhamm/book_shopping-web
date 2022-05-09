@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { Modal } from "../Modal";
 import ChangPasswordButton from "../Forms/buttons/ChangPasswordButton";
+import AddBookButton from "../Forms/buttons/AddBookButton";
 import UpdateBookButton from "../Forms/buttons/UpdateBookButton";
 import AddCatToBookButton from "../Forms/buttons/AddCatToBookButton";
 import RemoveCatFromBookButton from "../Forms/buttons/RemoveCatFromBookButton";
+import DeleteBookButton from "../Forms/buttons/DeleteBookButton";
 import "./index.css";
 
 export class PopupContainer extends Component {
@@ -36,6 +38,13 @@ export class PopupContainer extends Component {
           buttonRef={(n) => (this.TriggerButton = n)}
         />
       );
+    } else if (this.props.typeSubmit === "addBook") {
+      return (
+        <AddBookButton
+          showModal={this.showModal}
+          buttonRef={(n) => (this.TriggerButton = n)}
+        />
+      );
     } else if (this.props.typeSubmit === "updateBook") {
       return (
         <UpdateBookButton
@@ -53,6 +62,13 @@ export class PopupContainer extends Component {
     } else if (this.props.typeSubmit === "removeCatFromBook") {
       return (
         <RemoveCatFromBookButton
+          showModal={this.showModal}
+          buttonRef={(n) => (this.TriggerButton = n)}
+        />
+      );
+    } else if (this.props.typeSubmit === "deleteBook") {
+      return (
+        <DeleteBookButton
           showModal={this.showModal}
           buttonRef={(n) => (this.TriggerButton = n)}
         />

@@ -1,9 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import ChangePasswordForm from "./Forms/ChangePasswordForm";
+import AddBookForm from "./Forms/AddBookForm";
 import UpdateBookForm from "./Forms/UpdateBookForm";
 import AddCategoryToBookForm from "./Forms/AddCategoryToBookForm";
 import RemoveCategoryFromBookForm from "./Forms/RemoveCategoryFromBookForm";
+import DeleteBookForm from "./Forms/DeleteBookForm";
 import FocusTrap from "focus-trap-react";
 
 export const Modal = ({
@@ -20,6 +22,8 @@ export const Modal = ({
   const submitForm = () => {
     if (typeSubmit === "changePassword") {
       return <ChangePasswordForm onSubmit={onSubmit} />;
+    } else if (typeSubmit === "addBook") {
+      return <AddBookForm onSubmit={onSubmit} />;
     } else if (typeSubmit === "updateBook") {
       return (
         <UpdateBookForm onSubmit={onSubmit} productDetails={productDetails} />
@@ -38,6 +42,14 @@ export const Modal = ({
           onSubmit={onSubmit}
           productDetails={productDetails}
           allCategories={allCategories}
+        />
+      );
+    } else if (typeSubmit === "deleteBook") {
+      return (
+        <DeleteBookForm
+          onSubmit={onSubmit}
+          onNoSubmit={closeModal}
+          productDetails={productDetails}
         />
       );
     }

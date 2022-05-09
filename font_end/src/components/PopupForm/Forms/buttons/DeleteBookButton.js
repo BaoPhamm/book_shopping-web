@@ -1,16 +1,16 @@
 import React from "react";
 import Button from "@mui/material/Button";
 
-const RemoveCatFromBookButton = ({ buttonRef, showModal }) => {
+const DeleteBookButton = ({ buttonRef, showModal }) => {
   return (
     <Button
       variant="contained"
-      color="warning"
+      color="error"
       ref={buttonRef}
       onClick={showModal}
     >
-      -CAT
+      DELETE
     </Button>
   );
 };
-export default RemoveCatFromBookButton;
+export default DeleteBookButton;

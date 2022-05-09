@@ -179,13 +179,12 @@ const UpdateBookForm = ({ onSubmit, productDetails }) => {
         <RowWrapper>
           <Text>Image URL:</Text>
           <Input
-            type=""
+            type="text"
             defaultValue={productDetails.imgSrc}
             name="imgSrc"
             placeholder="Image URL"
           />
         </RowWrapper>
-
         <Button>UPDATE</Button>
       </form>
     </Wrapper>

@@ -11,9 +11,18 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Divider } from "@mui/material";
 
-const ButtonContainer = styled(Divider)(() => ({
+const Container = styled("div")(() => ({
+  display: "flex",
+  flexDirection: "column",
+}));
+
+const AddBookButtonContainer = styled("div")(() => ({
+  display: "flex",
+  marginBottom: "1rem",
+}));
+
+const ButtonContainer = styled("div")(() => ({
   display: "flex",
 }));
 
@@ -71,6 +80,49 @@ const ProductsList = () => {
     });
   };
 
+  const onAddBookSubmit = (event) => {
+    event.preventDefault(event);
+
+    const bookRequest = JSON.stringify({
+      title: event.target.title.value,
+      author: event.target.author.value,
+      totalPages: event.target.totalPages.value,
+      requiredAge: event.target.requiredAge.value,
+      releaseDate: event.target.releaseDate.value,
+      price: event.target.price.value,
+      description: event.target.description.value,
+      imgSrc: event.target.imgSrc.value,
+    });
+
+    BookAdminService.saveBook(bookRequest).then(async (res) => {
+      if (res.status === 400) {
+        if (res.data.errorMessage === "title blank") {
+          alert("Please fill in the title field");
+        } else if (res.data.errorMessage === "author blank") {
+          alert("Please fill in the author field");
+        } else if (res.data.errorMessage === "totalPages blank") {
+          alert("Please fill in the total pages field");
+        } else if (res.data.errorMessage === "requiredAge blank") {
+          alert("Please fill in the required age field");
+        } else if (res.data.errorMessage === "releaseDate blank") {
+          alert("Please fill in the release date field");
+        } else if (res.data.errorMessage === "price blank") {
+          alert("Please fill in the price field");
+        } else if (res.data.errorMessage === "description blank") {
+          alert("Please fill in the description field");
+        } else if (res.data.errorMessage === "imgSrc blank") {
+          alert("Please fill in the image URL field");
+        }
+      } else if (res.status === 200) {
+        alert("Book successfully added!");
+        await toggleDataChange(!dataChange);
+      } else if (res.status === 403) {
+        alert("Please login again!");
+        await toggleDataChange(!dataChange);
+      }
+    });
+  };
+
   const onUpdateBookSubmit = (event) => {
     event.preventDefault(event);
 
@@ -108,10 +160,14 @@ const ProductsList = () => {
       } else if (res.status === 200) {
         alert("Book datails successfully changed!");
         await toggleDataChange(!dataChange);
+      } else if (res.status === 403) {
+        alert("Please login again!");
+        await toggleDataChange(!dataChange);
       }
     });
   };
-  const onAddCatToBookSubmit = (event) => {
+
+  const onAddCatToBookSubmit = async (event) => {
     event.preventDefault(event);
 
     let categoriesIdAddList = [];
@@ -133,14 +189,18 @@ const ProductsList = () => {
           await toggleDataChange(!dataChange);
         } else if (res.status === 400) {
           alert(res.data.message);
+        } else if (res.status === 403) {
+          alert("Please login again!");
+          await toggleDataChange(!dataChange);
         }
       });
     } else {
       alert("Please select atleast 1 category to add.");
+      await toggleDataChange(!dataChange);
     }
   };
 
-  const onRemoveCatFromBookSubmit = (event) => {
+  const onRemoveCatFromBookSubmit = async (event) => {
     event.preventDefault(event);
 
     let targetBook = allProducts.find(
@@ -166,116 +226,153 @@ const ProductsList = () => {
             await toggleDataChange(!dataChange);
           } else if (res.status === 400) {
             alert(res.data.message);
+          } else if (res.status === 403) {
+            alert("Please login again!");
+            await toggleDataChange(!dataChange);
           }
         }
       );
     } else {
       alert("Please select atleast 1 category to remove.");
+      await toggleDataChange(!dataChange);
     }
+  };
+  const onDeleteBookSubmit = (event) => {
+    event.preventDefault(event);
+
+    console.log(event.target.id.value);
+    BookAdminService.deleteBook(event.target.id.value).then(async (res) => {
+      console.log(res);
+      if (res.status === 200) {
+        alert("Book successfully deleted.");
+        await toggleDataChange(!dataChange);
+      } else if (res.status === 400) {
+        alert(res.data.message);
+      } else if (res.status === 403) {
+        alert("Please login again!");
+        await toggleDataChange(!dataChange);
+      }
+    });
   };
 
   return !isLoading ? (
-    <TableContainer component={Paper}>
-      <Table
-        size="small"
-        classes={{ root: tableClasses.customTableCell }}
-        aria-label="customized table"
-      >
-        <TableHead>
-          <TableRow>
-            <StyledTableCell align="center" style={{ width: "2%" }}>
-              ID
-            </StyledTableCell>
-            <StyledTableCell align="center" style={{ width: "15%" }}>
-              Title
-            </StyledTableCell>
-            <StyledTableCell align="center" style={{ width: "10%" }}>
-              Author
-            </StyledTableCell>
-            <StyledTableCell align="center" style={{ width: "4%" }}>
-              TotalPage
-            </StyledTableCell>
-            <StyledTableCell align="center" style={{ width: "4%" }}>
-              ReqAge
-            </StyledTableCell>
-            <StyledTableCell align="center" style={{ width: "8%" }}>
-              ReleaseDate
-            </StyledTableCell>
-            <StyledTableCell align="center" style={{ width: "5%" }}>
-              Price
-            </StyledTableCell>
-            <StyledTableCell align="center" style={{ width: "4%" }}>
-              Rating
-            </StyledTableCell>
-            <StyledTableCell align="center" style={{ width: "7%" }}>
-              Categories
-            </StyledTableCell>
-            <StyledTableCell align="center" style={{ width: "5%" }}>
-              Actions
-            </StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {allProducts.map((product) => (
-            <StyledTableRow key={product.id}>
-              <StyledTableCell align="center" omponent="th" scope="row">
-                {product.id}
+    <Container>
+      <AddBookButtonContainer>
+        <PopupContainer onSubmit={onAddBookSubmit} typeSubmit="addBook" />
+      </AddBookButtonContainer>
+      <TableContainer component={Paper}>
+        <Table
+          size="small"
+          classes={{ root: tableClasses.customTableCell }}
+          aria-label="customized table"
+        >
+          <TableHead>
+            <TableRow>
+              <StyledTableCell align="center" style={{ width: "2%" }}>
+                ID
               </StyledTableCell>
-              <StyledTableCell align="center">{product.title}</StyledTableCell>
-              <StyledTableCell align="center">{product.author}</StyledTableCell>
-              <StyledTableCell align="center">
-                {product.totalPages}
+              <StyledTableCell align="center" style={{ width: "18%" }}>
+                Title
               </StyledTableCell>
-              <StyledTableCell align="center">
-                {product.requiredAge}
+              <StyledTableCell align="center" style={{ width: "10%" }}>
+                Author
               </StyledTableCell>
-              <StyledTableCell align="center">
-                {product.releaseDate}
+              <StyledTableCell align="center" style={{ width: "4%" }}>
+                TotalPage
               </StyledTableCell>
-              <StyledTableCell align="center">{product.price}</StyledTableCell>
-              <StyledTableCell align="center">
-                {product.ratingPoint}
+              <StyledTableCell align="center" style={{ width: "4%" }}>
+                ReqAge
               </StyledTableCell>
-              <StyledTableCell align="center">
-                <select>
-                  {product.categories.map((category) => (
-                    <option value={category.id}>{category.name}</option>
-                  ))}
-                </select>
+              <StyledTableCell align="center" style={{ width: "6%" }}>
+                ReleaseDate
               </StyledTableCell>
-              <StyledTableCell align="center">
-                <ButtonContainer
-                  sx={{
-                    "& .MuiButton-root": {
-                      fontSize: 11,
-                      padding: "2px 2px 2px 2px",
-                      marginLeft: "1px",
-                    },
-                  }}
-                >
-                  <PopupContainer
-                    onSubmit={onUpdateBookSubmit}
-                    typeSubmit="updateBook"
-                    productDetails={product}
-                  />
-                  <PopupContainer
-                    onSubmit={onAddCatToBookSubmit}
-                    typeSubmit="addCatToBook"
-                    productDetails={product}
-                    allCategories={allCategories}
-                  />
-                  <PopupContainer
-                    onSubmit={onRemoveCatFromBookSubmit}
-                    typeSubmit="removeCatFromBook"
-                    productDetails={product}
-                  />
-                </ButtonContainer>
+              <StyledTableCell align="center" style={{ width: "5%" }}>
+                Price
               </StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+              <StyledTableCell align="center" style={{ width: "4%" }}>
+                Rating
+              </StyledTableCell>
+              <StyledTableCell align="center" style={{ width: "7%" }}>
+                Categories
+              </StyledTableCell>
+              <StyledTableCell align="center" style={{ width: "5%" }}>
+                Actions
+              </StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {allProducts.map((product) => (
+              <StyledTableRow key={product.id}>
+                <StyledTableCell align="center" omponent="th" scope="row">
+                  {product.id}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {product.title}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {product.author}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {product.totalPages}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {product.requiredAge}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {product.releaseDate}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {product.price}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {product.ratingPoint}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <select>
+                    {product.categories.map((category) => (
+                      <option value={category.id}>{category.name}</option>
+                    ))}
+                  </select>
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <ButtonContainer
+                    sx={{
+                      "& .MuiButton-root": {
+                        fontSize: 11,
+                        padding: "1px 1px 1px 1px",
+                        marginLeft: "1px",
+                      },
+                    }}
+                  >
+                    <PopupContainer
+                      onSubmit={onUpdateBookSubmit}
+                      typeSubmit="updateBook"
+                      productDetails={product}
+                    />
+                    <PopupContainer
+                      onSubmit={onAddCatToBookSubmit}
+                      typeSubmit="addCatToBook"
+                      productDetails={product}
+                      allCategories={allCategories}
+                    />
+                    <PopupContainer
+                      onSubmit={onRemoveCatFromBookSubmit}
+                      typeSubmit="removeCatFromBook"
+                      productDetails={product}
+                    />
+                    <PopupContainer
+                      onSubmit={onDeleteBookSubmit}
+                      typeSubmit="deleteBook"
+                      productDetails={product}
+                    />
+                  </ButtonContainer>
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
   ) : (
     ""
   );
