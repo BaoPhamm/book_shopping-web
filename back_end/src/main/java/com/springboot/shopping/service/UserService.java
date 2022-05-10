@@ -33,6 +33,10 @@ public interface UserService {
 
 	String deleteUser(Long userId, String adminUsername);
 
+	String blockUser(Long userId, String adminUsername);
+
+	String unBlockUser(Long userId);
+
 	UserResponse updateProfile(String username, UserRequest userRequest);
 
 	String passwordReset(String username, PasswordResetRequest passwordReset);

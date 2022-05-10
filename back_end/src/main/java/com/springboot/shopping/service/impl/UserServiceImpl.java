@@ -29,18 +29,15 @@ import com.springboot.shopping.dto.PasswordResetRequest;
 import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
 import com.springboot.shopping.exception.auth.PasswordException;
-import com.springboot.shopping.exception.book.BookNotFoundException;
-import com.springboot.shopping.exception.category.CategoryExistException;
-import com.springboot.shopping.exception.category.CategoryNotFoundException;
 import com.springboot.shopping.exception.role.RoleNotFoundException;
+import com.springboot.shopping.exception.user.AdminSelfBlockException;
 import com.springboot.shopping.exception.user.AdminSelfDeleteException;
 import com.springboot.shopping.exception.user.PhoneNumberExistException;
+import com.springboot.shopping.exception.user.UserAlreadyBlockedException;
+import com.springboot.shopping.exception.user.UserNotBlockedException;
 import com.springboot.shopping.exception.user.UserNotFoundException;
 import com.springboot.shopping.exception.user.UserRoleExistException;
-import com.springboot.shopping.exception.user.UserRoleNotFoundException;
 import com.springboot.shopping.mapper.CommonMapper;
-import com.springboot.shopping.model.Book;
-import com.springboot.shopping.model.Category;
 import com.springboot.shopping.model.Role;
 import com.springboot.shopping.model.UserEntity;
 import com.springboot.shopping.repository.RoleRepository;
@@ -139,6 +136,38 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return "User successfully deleted.";
 	}
 
+	@Override
+	public String blockUser(Long userId, String adminUsername) {
+
+		Optional<UserEntity> userFromDb = userRepository.findById(userId);
+		if (userFromDb.isEmpty()) {
+			throw new UserNotFoundException();
+		} else if (userFromDb.get().isBlocked()) {
+			throw new UserAlreadyBlockedException();
+		}
+		Optional<UserEntity> adminFromDb = userRepository.findByUsername(adminUsername);
+		if (adminFromDb.get().getId() == userId) {
+			throw new AdminSelfBlockException();
+		}
+		userFromDb.get().setBlocked(true);
+		userRepository.save(userFromDb.get());
+		return "User successfully blocked.";
+	}
+
+	@Override
+	public String unBlockUser(Long userId) {
+
+		Optional<UserEntity> userFromDb = userRepository.findById(userId);
+		if (userFromDb.isEmpty()) {
+			throw new UserNotFoundException();
+		}else if (!userFromDb.get().isBlocked()) {
+			throw new UserNotBlockedException();
+		}
+		userFromDb.get().setBlocked(false);
+		userRepository.save(userFromDb.get());
+		return "User successfully unblocked.";
+	}
+
 	private Role findRoleExist(List<Role> allRoles, Long roleId) {
 		for (Role role : allRoles) {
 			if (role.getId() == roleId) {
@@ -147,6 +176,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		}
 		throw new RoleNotFoundException(roleId);
 	}
+
 	@Override
 	public String addRolesToUser(Long userId, List<Long> rolesId) {
 
@@ -154,11 +184,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
 		}
-		
+
 		Collection<Role> validRoles = new ArrayList<>();
 		List<Long> userRolesId = userRepository.findAllIdsOfRoles(userId);
 		List<Role> allRoles = roleRepository.findAll();
-		
+
 		rolesId.forEach(roleId -> {
 			if (userRolesId.contains(roleId)) {
 				throw new UserRoleExistException(roleId);
@@ -166,12 +196,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			Role validRole = findRoleExist(allRoles, roleId);
 			validRoles.add(validRole);
 		});
-		
+
 		userFromDb.get().getRoles().addAll(validRoles);
 		userRepository.save(userFromDb.get());
 		return "Role successfully added.";
 	}
-	
+
 	@Override
 	public String removeRolesFromUser(Long userId, List<Long> rolesId) {
 
