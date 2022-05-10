@@ -175,6 +175,7 @@ const ProductsList = () => {
       if (event.target["Id" + category.id].checked) {
         categoriesIdAddList.push(category.id);
       }
+      return 0;
     });
     const bookRequest = JSON.stringify({
       bookId: event.target.id.value,
@@ -211,6 +212,7 @@ const ProductsList = () => {
       if (event.target["Id" + category.id].checked) {
         categoriesIdRemoveList.push(category.id);
       }
+      return 0;
     });
     const bookRequest = JSON.stringify({
       bookId: event.target.id.value,

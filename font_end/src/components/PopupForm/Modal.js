@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import ChangePasswordForm from "./Forms/ChangePasswordForm";
-import AddBookForm from "./Forms/AddBookForm";
-import UpdateBookForm from "./Forms/UpdateBookForm";
-import AddCategoryToBookForm from "./Forms/AddCategoryToBookForm";
-import RemoveCategoryFromBookForm from "./Forms/RemoveCategoryFromBookForm";
-import DeleteBookForm from "./Forms/DeleteBookForm";
+import AddBookForm from "./Forms/bookAdmin/AddBookForm";
+import UpdateBookForm from "./Forms/bookAdmin/UpdateBookForm";
+import AddCategoryToBookForm from "./Forms/bookAdmin/AddCategoryToBookForm";
+import RemoveCategoryFromBookForm from "./Forms/bookAdmin/RemoveCategoryFromBookForm";
+import DeleteBookForm from "./Forms/bookAdmin/DeleteBookForm";
 import FocusTrap from "focus-trap-react";
 
 export const Modal = ({

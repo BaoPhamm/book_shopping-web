@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Modal } from "../Modal";
-import ChangPasswordButton from "../Forms/buttons/ChangPasswordButton";
-import AddBookButton from "../Forms/buttons/AddBookButton";
-import UpdateBookButton from "../Forms/buttons/UpdateBookButton";
-import AddCatToBookButton from "../Forms/buttons/AddCatToBookButton";
-import RemoveCatFromBookButton from "../Forms/buttons/RemoveCatFromBookButton";
-import DeleteBookButton from "../Forms/buttons/DeleteBookButton";
+import ChangPasswordButton from "../Forms/bookAdmin/buttons/ChangPasswordButton";
+import AddBookButton from "../Forms/bookAdmin/buttons/AddBookButton";
+import UpdateBookButton from "../Forms/bookAdmin/buttons/UpdateBookButton";
+import AddCatToBookButton from "../Forms/bookAdmin/buttons/AddCatToBookButton";
+import RemoveCatFromBookButton from "../Forms/bookAdmin/buttons/RemoveCatFromBookButton";
+import DeleteBookButton from "../Forms/bookAdmin/buttons/DeleteBookButton";
 import "./index.css";
 
 export class PopupContainer extends Component {
