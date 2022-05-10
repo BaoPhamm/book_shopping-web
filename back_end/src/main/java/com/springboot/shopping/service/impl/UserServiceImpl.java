@@ -95,7 +95,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public List<UserResponse> findAllUsers() {
-		return commonMapper.convertToResponseList(userRepository.findAll(), UserResponse.class);
+		List<UserEntity> allUsers = userRepository.findAll();
+		return commonMapper.convertToResponseList(allUsers, UserResponse.class);
 	}
 
 	@Override
@@ -106,29 +107,31 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			throw new UserNotFoundException();
 		}
 		Optional<UserEntity> checkUserPhoneNumFromDb = userRepository.findByPhoneNumber(newUserInfo.getPhoneNumber());
-		if (!newUserInfo.getPhoneNumber().equals(userFromDb.get().getPhoneNumber()) && checkUserPhoneNumFromDb.isPresent()) {
+		if (!newUserInfo.getPhoneNumber().equals(userFromDb.get().getPhoneNumber())
+				&& checkUserPhoneNumFromDb.isPresent()) {
 			throw new PhoneNumberExistException();
 		}
 		userFromDb.get().setFirstName(newUserInfo.getFirstName());
 		userFromDb.get().setLastName(newUserInfo.getLastName());
 		userFromDb.get().setAddress(newUserInfo.getAddress());
 		userFromDb.get().setPhoneNumber(newUserInfo.getPhoneNumber());
-		return commonMapper.convertToResponse(userRepository.save(userFromDb.get()), UserResponse.class);
+		UserEntity savedUser = userRepository.save(userFromDb.get());
+		return commonMapper.convertToResponse(savedUser, UserResponse.class);
 	}
 
 	@Override
-	public List<UserResponse> deleteUser(Long userId, String adminUsername) {
+	public String deleteUser(Long userId, String adminUsername) {
 
 		Optional<UserEntity> userFromDb = userRepository.findById(userId);
 		if (userFromDb.isEmpty()) {
-			throw new UserNotFoundException();	
+			throw new UserNotFoundException();
 		}
 		Optional<UserEntity> adminFromDb = userRepository.findByUsername(adminUsername);
-		if(adminFromDb.get().getId() == userId) {
+		if (adminFromDb.get().getId() == userId) {
 			throw new AdminSelfDeleteException();
 		}
 		userRepository.deleteById(userId);
-		return commonMapper.convertToResponseList(userRepository.findAll(), UserResponse.class);
+		return "User successfully deleted.";
 	}
 
 	@Override

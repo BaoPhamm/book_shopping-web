@@ -46,10 +46,10 @@ public class UserAdminController {
 
 	// Delete an existing user by ID
 	@DeleteMapping("/{id}")
-	public ResponseEntity<List<UserResponse>> deleteUser(@PathVariable("id") Long UserId) {
+	public ResponseEntity<String> deleteUser(@PathVariable("id") Long UserId) {
 		String adminUsername = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		List<UserResponse> newUserList = userService.deleteUser(UserId, adminUsername);
-		return ResponseEntity.ok(newUserList);
+		String message = userService.deleteUser(UserId, adminUsername);
+		return ResponseEntity.ok(message);
 	}
 
 	@PostMapping("/role/add-to-user")
