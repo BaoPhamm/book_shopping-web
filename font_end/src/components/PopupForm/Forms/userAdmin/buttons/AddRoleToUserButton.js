@@ -1,16 +1,16 @@
 import React from "react";
 import Button from "@mui/material/Button";
 
-const DeleteBookButton = ({ buttonRef, showModal }) => {
+const AddRoleToUserButton = ({ buttonRef, showModal }) => {
   return (
     <Button
       variant="contained"
-      color="error"
+      color="success"
       ref={buttonRef}
       onClick={showModal}
     >
-      DELETE
+      +ROLE
     </Button>
   );
 };
-export default DeleteBookButton;
+export default AddRoleToUserButton;

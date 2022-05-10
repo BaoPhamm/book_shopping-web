@@ -47,7 +47,7 @@ const RowWrapper = styled.div`
   justify-content: start;
   width: 100%;
   display: grid;
-  grid-template-columns: 14% 86%;
+  grid-template-columns: 18% 82%;
   align-items: center;
   margin-top: 2px;
 `;
@@ -58,27 +58,36 @@ const Input = styled.input`
   right: 0;
 `;
 
-const DeleteBookForm = ({ onSubmit, onNoSubmit, productDetails }) => {
+const BlockUserForm = ({ onSubmit, onNoSubmit, userDetails }) => {
   return (
     <Wrapper>
-      <Title>Are you sure to delete this book?</Title>
+      <Title>Are you sure to block this user?</Title>
       <form onSubmit={onSubmit}>
         <RowWrapper>
           <Text>ID:</Text>
           <Input
             disabled="true"
             type="number"
-            defaultValue={productDetails.id}
+            defaultValue={userDetails.id}
             name="id"
           />
         </RowWrapper>
         <RowWrapper>
-          <Text>Title:</Text>
+          <Text>Username:</Text>
           <Input
             disabled="true"
             type="text"
-            defaultValue={productDetails.title}
-            name="title"
+            defaultValue={userDetails.username}
+            name="username"
+          />
+        </RowWrapper>
+        <RowWrapper>
+          <Text>Block status:</Text>
+          <Input
+            disabled="true"
+            type="text"
+            defaultValue={userDetails.blocked}
+            name="blockstatus"
           />
         </RowWrapper>
         <ButtonContainer>
@@ -89,4 +98,4 @@ const DeleteBookForm = ({ onSubmit, onNoSubmit, productDetails }) => {
     </Wrapper>
   );
 };
-export default DeleteBookForm;
+export default BlockUserForm;

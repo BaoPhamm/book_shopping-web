@@ -12,6 +12,7 @@ const loginSlice = createSlice({
       phoneNumber: "",
       address: "",
       userRoles: "",
+      isBlocked: true,
       isLogged: false,
       isAdmin: false,
       isLoading: true,
@@ -29,6 +30,7 @@ const loginSlice = createSlice({
       state.loginInfo.refreshToken = action.payload.refreshToken;
       state.loginInfo.userRoles = action.payload.userRoles;
       state.loginInfo.isAdmin = action.payload.userRoles.includes("ADMIN");
+      state.loginInfo.isBlocked = action.payload.isBlocked;
       state.loginInfo.isLogged = true;
     },
     startLoadingAction: (state) => {
@@ -49,6 +51,7 @@ const loginSlice = createSlice({
       state.loginInfo.userRoles = "";
       state.loginInfo.isLogged = false;
       state.loginInfo.isAdmin = false;
+      state.loginInfo.isBlocked = true;
       localStorage.removeItem("userLoginInfo");
     },
   },

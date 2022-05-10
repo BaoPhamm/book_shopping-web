@@ -106,6 +106,7 @@ const Login = () => {
           refreshToken: res.data.refreshToken,
           userRoles: res.data.userRoles,
           username: res.data.username,
+          isBlocked: res.data.isBlocked,
         };
         dispatch(loginAction(loginResponse));
         alert("Login successfully");

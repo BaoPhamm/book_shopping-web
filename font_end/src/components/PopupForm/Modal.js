@@ -6,6 +6,10 @@ import UpdateBookForm from "./Forms/bookAdmin/UpdateBookForm";
 import AddCategoryToBookForm from "./Forms/bookAdmin/AddCategoryToBookForm";
 import RemoveCategoryFromBookForm from "./Forms/bookAdmin/RemoveCategoryFromBookForm";
 import DeleteBookForm from "./Forms/bookAdmin/DeleteBookForm";
+import AddRoleToUserForm from "./Forms/userAdmin/AddRoleToUserForm";
+import RemoveRoleFromUserForm from "./Forms/userAdmin/RemoveRoleFromUserForm";
+import DeleteUserForm from "./Forms/userAdmin/DeleteUserForm";
+import BlockUserForm from "./Forms/userAdmin/BlockUserForm";
 import FocusTrap from "focus-trap-react";
 
 export const Modal = ({
@@ -18,11 +22,15 @@ export const Modal = ({
   typeSubmit,
   productDetails,
   allCategories,
+  userDetails,
+  allRoles,
 }) => {
   const submitForm = () => {
     if (typeSubmit === "changePassword") {
       return <ChangePasswordForm onSubmit={onSubmit} />;
-    } else if (typeSubmit === "addBook") {
+    }
+    // BOOK
+    else if (typeSubmit === "addBook") {
       return <AddBookForm onSubmit={onSubmit} />;
     } else if (typeSubmit === "updateBook") {
       return (
@@ -50,6 +58,36 @@ export const Modal = ({
           onSubmit={onSubmit}
           onNoSubmit={closeModal}
           productDetails={productDetails}
+        />
+      );
+    }
+    // USER
+    else if (typeSubmit === "addRoleToUser") {
+      return (
+        <AddRoleToUserForm
+          onSubmit={onSubmit}
+          userDetails={userDetails}
+          allRoles={allRoles}
+        />
+      );
+    } else if (typeSubmit === "removeRoleFromUser") {
+      return (
+        <RemoveRoleFromUserForm onSubmit={onSubmit} userDetails={userDetails} />
+      );
+    } else if (typeSubmit === "deleteUser") {
+      return (
+        <DeleteUserForm
+          onSubmit={onSubmit}
+          userDetails={userDetails}
+          onNoSubmit={closeModal}
+        />
+      );
+    } else if (typeSubmit === "blockUser") {
+      return (
+        <BlockUserForm
+          onSubmit={onSubmit}
+          userDetails={userDetails}
+          onNoSubmit={closeModal}
         />
       );
     }

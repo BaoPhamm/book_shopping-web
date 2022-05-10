@@ -34,7 +34,7 @@ const CategoriesText = styled.h2`
   font-weight: 300;
 `;
 const Button = styled.button`
-  width: 60%;
+  width: 30%;
   border: none;
   padding: 15px 20px;
   background-color: teal;
@@ -47,7 +47,7 @@ const Button = styled.button`
 const AddCategoryToBookForm = ({ onSubmit, productDetails, allCategories }) => {
   return (
     <Wrapper>
-      <Title>ADD CATEGORY TO BOOK</Title>
+      <Title>ADD CATEGORIES TO BOOK</Title>
       <form onSubmit={onSubmit}>
         <RowWrapper>
           <Text>ID:</Text>
@@ -73,9 +73,7 @@ const AddCategoryToBookForm = ({ onSubmit, productDetails, allCategories }) => {
         <FormGroup>
           {allCategories.map((category) => (
             <FormControlLabel
-              control={
-                <Checkbox name={"Id" + category.id} data-attr={category.id} />
-              }
+              control={<Checkbox name={"Id" + category.id} />}
               label={category.name}
             />
           ))}

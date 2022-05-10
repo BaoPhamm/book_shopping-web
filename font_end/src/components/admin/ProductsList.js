@@ -242,7 +242,6 @@ const ProductsList = () => {
   const onDeleteBookSubmit = (event) => {
     event.preventDefault(event);
 
-    console.log(event.target.id.value);
     BookAdminService.deleteBook(event.target.id.value).then(async (res) => {
       console.log(res);
       if (res.status === 200) {

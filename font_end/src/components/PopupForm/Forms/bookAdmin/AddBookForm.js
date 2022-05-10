@@ -41,7 +41,7 @@ const Title = styled.h1`
   font-weight: 300;
 `;
 const Button = styled.button`
-  width: 40%;
+  width: 30%;
   border: none;
   padding: 15px 20px;
   background-color: teal;

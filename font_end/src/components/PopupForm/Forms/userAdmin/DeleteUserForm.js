@@ -58,27 +58,27 @@ const Input = styled.input`
   right: 0;
 `;
 
-const DeleteBookForm = ({ onSubmit, onNoSubmit, productDetails }) => {
+const DeleteUserForm = ({ onSubmit, onNoSubmit, userDetails }) => {
   return (
     <Wrapper>
-      <Title>Are you sure to delete this book?</Title>
+      <Title>Are you sure to delete this user?</Title>
       <form onSubmit={onSubmit}>
         <RowWrapper>
           <Text>ID:</Text>
           <Input
             disabled="true"
             type="number"
-            defaultValue={productDetails.id}
+            defaultValue={userDetails.id}
             name="id"
           />
         </RowWrapper>
         <RowWrapper>
-          <Text>Title:</Text>
+          <Text>Username:</Text>
           <Input
             disabled="true"
             type="text"
-            defaultValue={productDetails.title}
-            name="title"
+            defaultValue={userDetails.username}
+            name="username"
           />
         </RowWrapper>
         <ButtonContainer>
@@ -89,4 +89,4 @@ const DeleteBookForm = ({ onSubmit, onNoSubmit, productDetails }) => {
     </Wrapper>
   );
 };
-export default DeleteBookForm;
+export default DeleteUserForm;

@@ -122,6 +122,7 @@ const Navbar = () => {
             lastName: res.data.lastName,
             phoneNumber: res.data.phoneNumber,
             address: res.data.address,
+            isBlocked: res.data.isBlocked,
           };
           dispatch(loginAction(loginInfo));
         }

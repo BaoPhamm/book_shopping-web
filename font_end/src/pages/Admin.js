@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProductsList from "../components/admin/ProductsList";
+import UsersList from "../components/admin/UsersList";
 import styled from "styled-components";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -48,16 +49,20 @@ const Admin = () => {
                 aria-label="Admin management page"
                 centered
               >
-                <Tab label="BOOKS" value="1" />
-                <Tab label="USERS" value="2" />
-                <Tab label="CATEGORIES" value="3" />
+                <Tab label="USERS" value="1" />
+                <Tab label="ROLES" value="2" />
+                <Tab label="BOOKS" value="3" />
+                <Tab label="CATEGORIES" value="4" />
               </TabList>
             </Box>
             <TabPanel value="1">
+              <UsersList />
+            </TabPanel>
+            <TabPanel value="2">ROLE PAGES</TabPanel>
+            <TabPanel value="3">
               <ProductsList />
             </TabPanel>
-            <TabPanel value="2">USERS PAGES</TabPanel>
-            <TabPanel value="3">CATEGORIES PAGES</TabPanel>
+            <TabPanel value="4">CATEGORIES PAGES</TabPanel>
           </TabContext>
         </Box>
       </Container>

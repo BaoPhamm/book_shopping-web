@@ -13,9 +13,9 @@ const RowWrapper = styled.div`
   justify-content: start;
   width: 100%;
   display: grid;
-  grid-template-columns: 30% 70%;
+  grid-template-columns: 10% 90%;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 5px;
 `;
 const Text = styled.p`
   font-size: 15px;
@@ -44,39 +44,37 @@ const Button = styled.button`
   margin-top: 1rem;
 `;
 
-const RemoveCategoryFromBookForm = ({ onSubmit, productDetails }) => {
+const RemoveRoleFromUserForm = ({ onSubmit, userDetails }) => {
   return (
     <Wrapper>
-      <Title>REMOVE CATEGORY FROM BOOK</Title>
+      <Title>REMOVE ROLES FROM USER</Title>
       <form onSubmit={onSubmit}>
         <RowWrapper>
           <Text>ID:</Text>
           <Input
             disabled="true"
             type="number"
-            defaultValue={productDetails.id}
+            defaultValue={userDetails.id}
             name="id"
             placeholder="ID"
           />
         </RowWrapper>
         <RowWrapper>
-          <Text>Title:</Text>
+          <Text>Username:</Text>
           <Input
             disabled="true"
             type="text"
-            defaultValue={productDetails.title}
-            name="title"
-            placeholder="ID"
+            defaultValue={userDetails.username}
+            name="username"
+            placeholder="Username"
           />
         </RowWrapper>
-        <CategoriesText>Categories:</CategoriesText>
+        <CategoriesText>Roles:</CategoriesText>
         <FormGroup>
-          {productDetails.categories.map((category) => (
+          {userDetails.roles.map((role) => (
             <FormControlLabel
-              control={
-                <Checkbox name={"Id" + category.id} data-attr={category.id} />
-              }
-              label={category.name}
+              control={<Checkbox name={"Id" + role.id} />}
+              label={role.name}
             />
           ))}
         </FormGroup>
@@ -85,4 +83,4 @@ const RemoveCategoryFromBookForm = ({ onSubmit, productDetails }) => {
     </Wrapper>
   );
 };
-export default RemoveCategoryFromBookForm;
+export default RemoveRoleFromUserForm;

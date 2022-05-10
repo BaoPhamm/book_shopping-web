@@ -1,16 +1,16 @@
 import React from "react";
 import Button from "@mui/material/Button";
 
-const AddCatToBookButton = ({ buttonRef, showModal }) => {
+const AddRoleToUserButton = ({ buttonRef, showModal }) => {
   return (
     <Button
       variant="contained"
-      color="success"
+      color="warning"
       ref={buttonRef}
       onClick={showModal}
     >
-      +CAT
+      -ROLE
     </Button>
   );
 };
-export default AddCatToBookButton;
+export default AddRoleToUserButton;

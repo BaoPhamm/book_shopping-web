@@ -6,6 +6,10 @@ import UpdateBookButton from "../Forms/bookAdmin/buttons/UpdateBookButton";
 import AddCatToBookButton from "../Forms/bookAdmin/buttons/AddCatToBookButton";
 import RemoveCatFromBookButton from "../Forms/bookAdmin/buttons/RemoveCatFromBookButton";
 import DeleteBookButton from "../Forms/bookAdmin/buttons/DeleteBookButton";
+import AddRoleToUserButton from "../Forms/userAdmin/buttons/AddRoleToUserButton";
+import RemoveRoleFromUserButton from "../Forms/userAdmin/buttons/RemoveRoleFromUserButton";
+import DeleteUserButton from "../Forms/userAdmin/buttons/DeleteUserButton";
+import BlockUserSwitch from "../Forms/userAdmin/buttons/BlockUserSwitch";
 import "./index.css";
 
 export class PopupContainer extends Component {
@@ -38,7 +42,9 @@ export class PopupContainer extends Component {
           buttonRef={(n) => (this.TriggerButton = n)}
         />
       );
-    } else if (this.props.typeSubmit === "addBook") {
+    }
+    // BOOK
+    else if (this.props.typeSubmit === "addBook") {
       return (
         <AddBookButton
           showModal={this.showModal}
@@ -74,6 +80,37 @@ export class PopupContainer extends Component {
         />
       );
     }
+    // USER
+    else if (this.props.typeSubmit === "addRoleToUser") {
+      return (
+        <AddRoleToUserButton
+          showModal={this.showModal}
+          buttonRef={(n) => (this.TriggerButton = n)}
+        />
+      );
+    } else if (this.props.typeSubmit === "removeRoleFromUser") {
+      return (
+        <RemoveRoleFromUserButton
+          showModal={this.showModal}
+          buttonRef={(n) => (this.TriggerButton = n)}
+        />
+      );
+    } else if (this.props.typeSubmit === "deleteUser") {
+      return (
+        <DeleteUserButton
+          showModal={this.showModal}
+          buttonRef={(n) => (this.TriggerButton = n)}
+        />
+      );
+    } else if (this.props.typeSubmit === "blockUser") {
+      return (
+        <BlockUserSwitch
+          showModal={this.showModal}
+          buttonRef={(n) => (this.TriggerButton = n)}
+          userDetails={this.props.userDetails}
+        />
+      );
+    }
   };
 
   render() {
@@ -90,6 +127,8 @@ export class PopupContainer extends Component {
             typeSubmit={this.props.typeSubmit}
             productDetails={this.props.productDetails}
             allCategories={this.props.allCategories}
+            userDetails={this.props.userDetails}
+            allRoles={this.props.allRoles}
           />
         ) : null}
       </React.Fragment>
