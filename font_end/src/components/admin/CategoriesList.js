@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import RoleAdminService from "../../services/admin/RoleAdminService";
+import CategoryAdminService from "../../services/admin/CategoryAdminService";
+import CategoryService from "../../services/user/CategoryService";
 import { PopupContainer } from "../PopupForm/Container/index";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@material-ui/styles";
@@ -14,7 +15,6 @@ import Paper from "@mui/material/Paper";
 const Container = styled("div")(() => ({
   display: "flex",
   flexDirection: "column",
-  width: "50%",
 }));
 
 const AddRoleButtonContainer = styled("div")(() => ({
@@ -56,36 +56,37 @@ const useStyles = makeStyles({
   },
 });
 
-const RolesList = () => {
-  const [allRoles, setAllRoles] = useState([]);
+const CategoriesList = () => {
+  const [allCategories, setAllCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [dataChange, toggleDataChange] = useState(false);
   const tableClasses = useStyles();
 
   useEffect(() => {
-    GetAllRoles();
+    GetAllCategories();
   }, [dataChange]);
 
-  const GetAllRoles = async () => {
-    await setIsLoading(false);
-    RoleAdminService.getAllRoles().then(async (res) => {
-      await setAllRoles([...res]);
+  const GetAllCategories = async () => {
+    await setIsLoading(true);
+    CategoryService.getAllCategories().then(async (res) => {
+      await setAllCategories([...res]);
       await setIsLoading(false);
     });
   };
 
-  const onAddNewRoleSubmit = async (event) => {
+  const onAddNewCategorySubmit = async (event) => {
     event.preventDefault(event);
 
-    const roleRequest = JSON.stringify({
-      name: event.target.rolename.value,
+    const categoryRequest = JSON.stringify({
+      name: event.target.categoryname.value,
+      description: event.target.description.value,
+      imgSrc: event.target.imgsrc.value,
     });
-
-    RoleAdminService.createRole(roleRequest).then(async (res) => {
+    CategoryAdminService.createCategory(categoryRequest).then(async (res) => {
       if (res.status === 400) {
         alert(res.data.message);
       } else if (res.status === 200) {
-        alert("Role successfully added!");
+        alert("Category successfully added!");
         await toggleDataChange(!dataChange);
       } else if (res.status === 403) {
         alert("Please login again!");
@@ -94,18 +95,21 @@ const RolesList = () => {
     });
   };
 
-  const onUpdateRoleSubmit = async (event) => {
+  const onUpdateCategorySubmit = async (event) => {
     event.preventDefault(event);
 
-    const roleRequest = JSON.stringify({
-      name: event.target.rolename.value,
+    const categoryRequest = JSON.stringify({
+      id: event.target.categoryid.value,
+      name: event.target.categoryname.value,
+      description: event.target.description.value,
+      imgSrc: event.target.imgsrc.value,
     });
 
-    RoleAdminService.updateRole(roleRequest).then(async (res) => {
+    CategoryAdminService.updateCategory(categoryRequest).then(async (res) => {
       if (res.status === 400 || res.status === 404) {
         alert(res.data.message);
       } else if (res.status === 200) {
-        alert("Role successfully updated!");
+        alert("Category successfully updated!");
         await toggleDataChange(!dataChange);
       } else if (res.status === 403) {
         alert("Please login again!");
@@ -114,26 +118,31 @@ const RolesList = () => {
     });
   };
 
-  const onDeleteRoleSubmit = async (event) => {
+  const onDeleteCategorySubmit = async (event) => {
     event.preventDefault(event);
 
-    RoleAdminService.deleteRole(event.target.roleid.value).then(async (res) => {
-      if (res.status === 400 || res.status === 404) {
-        alert(res.data.message);
-      } else if (res.status === 200) {
-        alert("Role successfully deleted!");
-        await toggleDataChange(!dataChange);
-      } else if (res.status === 403) {
-        alert("Please login again!");
-        await toggleDataChange(!dataChange);
+    CategoryAdminService.deleteCategory(event.target.categoryid.value).then(
+      async (res) => {
+        if (res.status === 400 || res.status === 404) {
+          alert(res.data.message);
+        } else if (res.status === 200) {
+          alert("Category successfully deleted!");
+          await toggleDataChange(!dataChange);
+        } else if (res.status === 403) {
+          alert("Please login again!");
+          await toggleDataChange(!dataChange);
+        }
       }
-    });
+    );
   };
 
   return !isLoading ? (
     <Container>
       <AddRoleButtonContainer>
-        <PopupContainer onSubmit={onAddNewRoleSubmit} typeSubmit="addNewRole" />
+        <PopupContainer
+          onSubmit={onAddNewCategorySubmit}
+          typeSubmit="addNewCategory"
+        />
       </AddRoleButtonContainer>
       <TableContainer component={Paper}>
         <Table
@@ -143,24 +152,38 @@ const RolesList = () => {
         >
           <TableHead>
             <TableRow>
-              <StyledTableCell align="center" style={{ width: "25%" }}>
+              <StyledTableCell align="center" style={{ width: "5%" }}>
                 ID
               </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: "25%" }}>
+              <StyledTableCell align="center" style={{ width: "15%" }}>
                 Name
               </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: "50%" }}>
+              <StyledTableCell align="center" style={{ width: "35%" }}>
+                Description
+              </StyledTableCell>
+              <StyledTableCell align="center" style={{ width: "25%" }}>
+                Image URL
+              </StyledTableCell>
+              <StyledTableCell align="center" style={{ width: "20%" }}>
                 Actions
               </StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {allRoles.map((role) => (
-              <StyledTableRow key={role.id}>
+            {allCategories.map((category) => (
+              <StyledTableRow key={category.id}>
                 <StyledTableCell align="center" omponent="th" scope="row">
-                  {role.id}
+                  {category.id}
                 </StyledTableCell>
-                <StyledTableCell align="center">{role.name}</StyledTableCell>
+                <StyledTableCell align="center">
+                  {category.name}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {category.description}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {category.imgSrc}
+                </StyledTableCell>
                 <StyledTableCell align="center">
                   <ButtonContainer
                     sx={{
@@ -176,14 +199,14 @@ const RolesList = () => {
                     }}
                   >
                     <PopupContainer
-                      onSubmit={onUpdateRoleSubmit}
-                      typeSubmit="updateRole"
-                      roleDetails={role}
+                      onSubmit={onUpdateCategorySubmit}
+                      typeSubmit="updateCategory"
+                      categoryDetails={category}
                     />
                     <PopupContainer
-                      onSubmit={onDeleteRoleSubmit}
-                      typeSubmit="deleteRole"
-                      roleDetails={role}
+                      onSubmit={onDeleteCategorySubmit}
+                      typeSubmit="deleteCategory"
+                      categoryDetails={category}
                     />
                   </ButtonContainer>
                 </StyledTableCell>
@@ -198,4 +221,4 @@ const RolesList = () => {
   );
 };
 
-export default RolesList;
+export default CategoriesList;

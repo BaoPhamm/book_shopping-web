@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ProductsList from "../components/admin/ProductsList";
 import UsersList from "../components/admin/UsersList";
 import RolesList from "../components/admin/RolesList";
+import CategoriesList from "../components/admin/CategoriesList";
 import styled from "styled-components";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -65,7 +66,9 @@ const Admin = () => {
             <TabPanel value="3">
               <ProductsList />
             </TabPanel>
-            <TabPanel value="4">CATEGORIES PAGES</TabPanel>
+            <TabPanel value="4">
+              <CategoriesList />
+            </TabPanel>
           </TabContext>
         </Box>
       </Container>

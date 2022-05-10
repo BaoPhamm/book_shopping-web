@@ -13,6 +13,10 @@ import BlockUserSwitch from "../Forms/userAdmin/buttons/BlockUserSwitch";
 import AddNewRoleButton from "../Forms/roleAdmin/buttons/AddNewRoleButton";
 import UpdateRoleButton from "../Forms/roleAdmin/buttons/UpdateRoleButton";
 import DeleteRoleButton from "../Forms/roleAdmin/buttons/DeleteRoleButton";
+
+import AddNewCategoryButton from "../Forms/categoryAdmin/buttons/AddNewCategoryButton";
+import UpdateCategoryButton from "../Forms/categoryAdmin/buttons/UpdateCategoryButton";
+import DeleteCategoryButton from "../Forms/categoryAdmin/buttons/DeleteCategoryButton";
 import "./index.css";
 
 export class PopupContainer extends Component {
@@ -137,6 +141,29 @@ export class PopupContainer extends Component {
         />
       );
     }
+    // CATEGORY
+    else if (this.props.typeSubmit === "addNewCategory") {
+      return (
+        <AddNewCategoryButton
+          showModal={this.showModal}
+          buttonRef={(n) => (this.TriggerButton = n)}
+        />
+      );
+    } else if (this.props.typeSubmit === "updateCategory") {
+      return (
+        <UpdateCategoryButton
+          showModal={this.showModal}
+          buttonRef={(n) => (this.TriggerButton = n)}
+        />
+      );
+    } else if (this.props.typeSubmit === "deleteCategory") {
+      return (
+        <DeleteCategoryButton
+          showModal={this.showModal}
+          buttonRef={(n) => (this.TriggerButton = n)}
+        />
+      );
+    }
   };
 
   render() {
@@ -155,6 +182,7 @@ export class PopupContainer extends Component {
             allCategories={this.props.allCategories}
             userDetails={this.props.userDetails}
             roleDetails={this.props.roleDetails}
+            categoryDetails={this.props.categoryDetails}
             allRoles={this.props.allRoles}
           />
         ) : null}

@@ -96,23 +96,7 @@ const ProductsList = () => {
 
     BookAdminService.saveBook(bookRequest).then(async (res) => {
       if (res.status === 400) {
-        if (res.data.message === "title blank") {
-          alert("Please fill in the title field");
-        } else if (res.data.message === "author blank") {
-          alert("Please fill in the author field");
-        } else if (res.data.message === "totalPages blank") {
-          alert("Please fill in the total pages field");
-        } else if (res.data.message === "requiredAge blank") {
-          alert("Please fill in the required age field");
-        } else if (res.data.message === "releaseDate blank") {
-          alert("Please fill in the release date field");
-        } else if (res.data.message === "price blank") {
-          alert("Please fill in the price field");
-        } else if (res.data.message === "description blank") {
-          alert("Please fill in the description field");
-        } else if (res.data.message === "imgSrc blank") {
-          alert("Please fill in the image URL field");
-        }
+        alert(res.data.message);
       } else if (res.status === 200) {
         alert("Book successfully added!");
         await toggleDataChange(!dataChange);

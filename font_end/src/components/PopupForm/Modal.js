@@ -13,6 +13,10 @@ import BlockUserForm from "./Forms/userAdmin/BlockUserForm";
 import AddNewRoleForm from "./Forms/roleAdmin/AddNewRoleForm";
 import UpdateRoleForm from "./Forms/roleAdmin/UpdateRoleForm";
 import DeleteRoleForm from "./Forms/roleAdmin/DeleteRoleForm";
+
+import AddNewCategoryForm from "./Forms/categoryAdmin/AddNewCategoryForm";
+import UpdateCategoryForm from "./Forms/categoryAdmin/UpdateCategoryForm";
+import DeleteCategoryForm from "./Forms/categoryAdmin/DeleteCategoryForm";
 import FocusTrap from "focus-trap-react";
 
 export const Modal = ({
@@ -28,6 +32,7 @@ export const Modal = ({
   userDetails,
   allRoles,
   roleDetails,
+  categoryDetails,
 }) => {
   const submitForm = () => {
     if (typeSubmit === "changePassword") {
@@ -106,6 +111,25 @@ export const Modal = ({
           onSubmit={onSubmit}
           onNoSubmit={closeModal}
           roleDetails={roleDetails}
+        />
+      );
+    }
+    // CATEGORY
+    else if (typeSubmit === "addNewCategory") {
+      return <AddNewCategoryForm onSubmit={onSubmit} />;
+    } else if (typeSubmit === "updateCategory") {
+      return (
+        <UpdateCategoryForm
+          onSubmit={onSubmit}
+          categoryDetails={categoryDetails}
+        />
+      );
+    } else if (typeSubmit === "deleteCategory") {
+      return (
+        <DeleteCategoryForm
+          onSubmit={onSubmit}
+          onNoSubmit={closeModal}
+          categoryDetails={categoryDetails}
         />
       );
     }
