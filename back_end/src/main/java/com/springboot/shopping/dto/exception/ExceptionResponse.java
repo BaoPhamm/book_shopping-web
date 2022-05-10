@@ -9,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ExceptionResponse {
 	private Date date;
-	private String errorMessage;
+	private String message;
 	private String requestDescription;
 	private int httpStatus;
 

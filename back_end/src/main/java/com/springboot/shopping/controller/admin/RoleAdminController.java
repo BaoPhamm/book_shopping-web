@@ -3,14 +3,17 @@ package com.springboot.shopping.controller.admin;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.springboot.shopping.dto.role.RoleRequest;
 import com.springboot.shopping.dto.role.RoleResponse;
 import com.springboot.shopping.service.RoleService;
 
@@ -36,15 +39,21 @@ public class RoleAdminController {
 	}
 
 	@PostMapping()
-	public ResponseEntity<RoleResponse> createRole(@RequestBody String roleName) {
-		RoleResponse createdRole = roleService.createRole(roleName);
+	public ResponseEntity<RoleResponse> createRole(@Validated @RequestBody RoleRequest roleRequest) {
+		RoleResponse createdRole = roleService.createRole(roleRequest.getName());
+		return ResponseEntity.ok(createdRole);
+	}
+
+	@PutMapping()
+	public ResponseEntity<RoleResponse> updateRole(@Validated @RequestBody RoleRequest roleRequest) {
+		RoleResponse createdRole = roleService.updateRole(roleRequest.getName());
 		return ResponseEntity.ok(createdRole);
 	}
 
 	@DeleteMapping()
-	public ResponseEntity<RoleResponse> deleteRole(@RequestBody String roleName) {
-		RoleResponse createdRole = roleService.createRole(roleName);
-		return ResponseEntity.ok(createdRole);
+	public ResponseEntity<String> deleteRole(@RequestBody Long roleId) {
+		String message = roleService.deleteRole(roleId);
+		return ResponseEntity.ok(message);
 	}
 
 }

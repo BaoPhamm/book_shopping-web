@@ -18,10 +18,9 @@ public class InputFieldException extends ResponseEntityExceptionHandler {
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		System.out.println("ASASASASAS");
-		String errorMessage = ex.getBindingResult().getFieldError().getDefaultMessage();
-		System.out.println(errorMessage);
-		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), errorMessage,
+		String message = ex.getBindingResult().getFieldError().getDefaultMessage();
+		System.out.println(message);
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), message,
 				request.getDescription(false), HttpStatus.BAD_REQUEST.value());
 
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
