@@ -1,16 +1,15 @@
 package com.springboot.shopping.exception.user;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import lombok.Getter;
 
 @Getter
+@ResponseStatus(HttpStatus.BAD_REQUEST)
 public class UserRoleExistException extends RuntimeException {
-
-	private final HttpStatus status;
 
 	public UserRoleExistException() {
 		super("User already has this role!");
-		this.status = HttpStatus.BAD_REQUEST;
 	}
 }

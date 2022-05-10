@@ -69,6 +69,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		Optional<Role> role = roleRepository.findByname("USER");
 
 		newUser.getRoles().add(role.get());
+		newUser.setBlocked(false);
 		newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 		userRepository.save(newUser);
 		return "User successfully registered.";

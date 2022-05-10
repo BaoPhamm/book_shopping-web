@@ -33,6 +33,7 @@ public class UserEntity {
 	private String password;
 	private String phoneNumber;
 	private String address;
+	private boolean isBlocked;
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<Role> roles = new ArrayList<>();

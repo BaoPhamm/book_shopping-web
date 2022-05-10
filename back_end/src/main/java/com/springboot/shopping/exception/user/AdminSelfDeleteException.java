@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import lombok.Getter;
 
 @Getter
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class UserRoleNotFoundException extends RuntimeException {
+@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+public class AdminSelfDeleteException extends RuntimeException {
 
-	public UserRoleNotFoundException() {
-		super("User don't has this role!");
+	public AdminSelfDeleteException() {
+		super("You can not delete yourself.");
 	}
 }

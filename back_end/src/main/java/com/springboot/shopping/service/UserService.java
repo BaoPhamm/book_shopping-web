@@ -31,7 +31,7 @@ public interface UserService {
 
 	String removeRoleFromUser(String username, String roleName);
 
-	List<UserResponse> deleteUser(Long userId);
+	List<UserResponse> deleteUser(Long userId, String adminUsername);
 
 	UserResponse updateProfile(String username, UserRequest userRequest);
 

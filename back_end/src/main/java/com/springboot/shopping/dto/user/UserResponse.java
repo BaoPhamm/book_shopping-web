@@ -18,5 +18,6 @@ public class UserResponse {
 	private String username;
 	private String phoneNumber;
 	private String address;
+	private boolean isBlocked;
 	private Set<Role> roles;
 }

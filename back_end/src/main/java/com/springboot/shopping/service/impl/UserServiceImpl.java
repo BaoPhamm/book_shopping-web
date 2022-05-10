@@ -30,6 +30,7 @@ import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
 import com.springboot.shopping.exception.auth.PasswordException;
 import com.springboot.shopping.exception.role.RoleNotFoundException;
+import com.springboot.shopping.exception.user.AdminSelfDeleteException;
 import com.springboot.shopping.exception.user.PhoneNumberExistException;
 import com.springboot.shopping.exception.user.UserNotFoundException;
 import com.springboot.shopping.exception.user.UserRoleExistException;
@@ -116,11 +117,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public List<UserResponse> deleteUser(Long userId) {
+	public List<UserResponse> deleteUser(Long userId, String adminUsername) {
 
 		Optional<UserEntity> userFromDb = userRepository.findById(userId);
 		if (userFromDb.isEmpty()) {
-			throw new UserNotFoundException();
+			throw new UserNotFoundException();	
+		}
+		Optional<UserEntity> adminFromDb = userRepository.findByUsername(adminUsername);
+		if(adminFromDb.get().getId() == userId) {
+			throw new AdminSelfDeleteException();
 		}
 		userRepository.deleteById(userId);
 		return commonMapper.convertToResponseList(userRepository.findAll(), UserResponse.class);
