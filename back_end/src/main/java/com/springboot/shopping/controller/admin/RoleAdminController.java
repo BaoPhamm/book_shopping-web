@@ -50,8 +50,8 @@ public class RoleAdminController {
 		return ResponseEntity.ok(createdRole);
 	}
 
-	@DeleteMapping()
-	public ResponseEntity<String> deleteRole(@RequestBody Long roleId) {
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> deleteRole(@PathVariable("id") Long roleId) {
 		String message = roleService.deleteRole(roleId);
 		return ResponseEntity.ok(message);
 	}
