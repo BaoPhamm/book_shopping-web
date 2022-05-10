@@ -47,7 +47,7 @@ const RowWrapper = styled.div`
   justify-content: start;
   width: 100%;
   display: grid;
-  grid-template-columns: 18% 82%;
+  grid-template-columns: 14% 86%;
   align-items: center;
   margin-top: 2px;
 `;
@@ -58,36 +58,27 @@ const Input = styled.input`
   right: 0;
 `;
 
-const BlockUserForm = ({ onSubmit, onNoSubmit, userDetails }) => {
+const DeleteUserForm = ({ onSubmit, onNoSubmit, roleDetails }) => {
   return (
     <Wrapper>
-      <Title>Are you sure to block this user?</Title>
+      <Title>Are you sure to delete this role?</Title>
       <form onSubmit={onSubmit}>
         <RowWrapper>
           <Text>ID:</Text>
           <Input
             disabled={true}
             type="number"
-            defaultValue={userDetails.id}
-            name="id"
+            defaultValue={roleDetails.id}
+            name="roleid"
           />
         </RowWrapper>
         <RowWrapper>
-          <Text>Username:</Text>
+          <Text>Name:</Text>
           <Input
             disabled={true}
             type="text"
-            defaultValue={userDetails.username}
-            name="username"
-          />
-        </RowWrapper>
-        <RowWrapper>
-          <Text>Block status:</Text>
-          <Input
-            disabled={true}
-            type="text"
-            defaultValue={userDetails.blocked}
-            name="blockstatus"
+            defaultValue={roleDetails.name}
+            name="rolename"
           />
         </RowWrapper>
         <ButtonContainer>
@@ -98,4 +89,4 @@ const BlockUserForm = ({ onSubmit, onNoSubmit, userDetails }) => {
     </Wrapper>
   );
 };
-export default BlockUserForm;
+export default DeleteUserForm;

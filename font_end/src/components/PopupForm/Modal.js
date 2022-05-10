@@ -10,6 +10,9 @@ import AddRoleToUserForm from "./Forms/userAdmin/AddRoleToUserForm";
 import RemoveRoleFromUserForm from "./Forms/userAdmin/RemoveRoleFromUserForm";
 import DeleteUserForm from "./Forms/userAdmin/DeleteUserForm";
 import BlockUserForm from "./Forms/userAdmin/BlockUserForm";
+import AddNewRoleForm from "./Forms/roleAdmin/AddNewRoleForm";
+import UpdateRoleForm from "./Forms/roleAdmin/UpdateRoleForm";
+import DeleteRoleForm from "./Forms/roleAdmin/DeleteRoleForm";
 import FocusTrap from "focus-trap-react";
 
 export const Modal = ({
@@ -24,6 +27,7 @@ export const Modal = ({
   allCategories,
   userDetails,
   allRoles,
+  roleDetails,
 }) => {
   const submitForm = () => {
     if (typeSubmit === "changePassword") {
@@ -91,7 +95,22 @@ export const Modal = ({
         />
       );
     }
+    // ROLE
+    else if (typeSubmit === "addNewRole") {
+      return <AddNewRoleForm onSubmit={onSubmit} />;
+    } else if (typeSubmit === "updateRole") {
+      return <UpdateRoleForm onSubmit={onSubmit} roleDetails={roleDetails} />;
+    } else if (typeSubmit === "deleteRole") {
+      return (
+        <DeleteRoleForm
+          onSubmit={onSubmit}
+          onNoSubmit={closeModal}
+          roleDetails={roleDetails}
+        />
+      );
+    }
   };
+
   return ReactDOM.createPortal(
     <FocusTrap>
       <aside

@@ -52,7 +52,7 @@ const AddRoleToUserForm = ({ onSubmit, userDetails, allRoles }) => {
         <RowWrapper>
           <Text>ID:</Text>
           <Input
-            disabled="true"
+            disabled={true}
             type="number"
             defaultValue={userDetails.id}
             name="id"
@@ -62,7 +62,7 @@ const AddRoleToUserForm = ({ onSubmit, userDetails, allRoles }) => {
         <RowWrapper>
           <Text>Username:</Text>
           <Input
-            disabled="true"
+            disabled={true}
             type="text"
             defaultValue={userDetails.username}
             name="username"

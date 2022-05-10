@@ -66,7 +66,7 @@ const UpdateBookForm = ({ onSubmit, productDetails }) => {
         <RowWrapper>
           <Text>ID:</Text>
           <Input
-            disabled="true"
+            disabled={true}
             type="number"
             defaultValue={productDetails.id}
             name="id"
@@ -139,7 +139,7 @@ const UpdateBookForm = ({ onSubmit, productDetails }) => {
         <RowWrapper>
           <Text>Rating point:</Text>
           <Input
-            disabled="true"
+            disabled={true}
             type="text"
             defaultValue={productDetails.ratingPoint}
             name="ratingPoint"
@@ -149,7 +149,7 @@ const UpdateBookForm = ({ onSubmit, productDetails }) => {
         <RowWrapper>
           <Text>Categories:</Text>
           <Input
-            disabled="true"
+            disabled={true}
             type="text"
             defaultValue={getCategogiesString()}
             name="categories"
@@ -159,7 +159,7 @@ const UpdateBookForm = ({ onSubmit, productDetails }) => {
         <RowWrapper>
           <Text>Create date:</Text>
           <Input
-            disabled="true"
+            disabled={true}
             type="text"
             defaultValue={productDetails.createDate}
             name="createDate"
@@ -169,7 +169,7 @@ const UpdateBookForm = ({ onSubmit, productDetails }) => {
         <RowWrapper>
           <Text>Update date:</Text>
           <Input
-            disabled="true"
+            disabled={true}
             type="text"
             defaultValue={productDetails.updateDate}
             name="updateDate"

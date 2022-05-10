@@ -117,37 +117,7 @@ const Register = () => {
     RegistrationService.registration(registrationRequest).then(async (res) => {
       console.log(res);
       if (res.status === 400) {
-        if (res.data.errorMessage === "First name cannot be empty") {
-          alert("First name cannot be empty");
-        } else if (res.data.errorMessage === "Last name cannot be empty") {
-          alert("Last name cannot be empty");
-        } else if (
-          res.data.errorMessage ===
-          "User name must be between 6 and 16 characters long"
-        ) {
-          alert("User name must be between 6 and 16 characters long");
-        } else if (
-          res.data.errorMessage ===
-          "The password must be between 6 and 16 characters long"
-        ) {
-          alert("The password must be between 6 and 16 characters long");
-        } else if (
-          res.data.errorMessage ===
-          "The password confirmation must be between 6 and 16 characters long"
-        ) {
-          alert(
-            "The password confirmation must be between 6 and 16 characters long"
-          );
-        } else if (
-          res.data.errorMessage ===
-          "The phone number must be has atleast 10 characters long"
-        ) {
-          alert("The phone number must be has atleast 10 characters long");
-        } else if (res.data.errorMessage === "The address cannot be empty") {
-          alert("The address cannot be empty");
-        } else if (res.data.message === "UserName is already used!") {
-          alert("UserName is already used!");
-        }
+        alert(res.data.message);
       } else if (res.status === 406) {
         alert("password and confirm password are not match!");
       } else if (res.status === 200) {

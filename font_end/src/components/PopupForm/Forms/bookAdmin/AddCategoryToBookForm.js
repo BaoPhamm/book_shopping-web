@@ -52,7 +52,7 @@ const AddCategoryToBookForm = ({ onSubmit, productDetails, allCategories }) => {
         <RowWrapper>
           <Text>ID:</Text>
           <Input
-            disabled="true"
+            disabled={true}
             type="number"
             defaultValue={productDetails.id}
             name="id"
@@ -62,7 +62,7 @@ const AddCategoryToBookForm = ({ onSubmit, productDetails, allCategories }) => {
         <RowWrapper>
           <Text>Title:</Text>
           <Input
-            disabled="true"
+            disabled={true}
             type="text"
             defaultValue={productDetails.title}
             name="title"

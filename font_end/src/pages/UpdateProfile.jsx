@@ -124,16 +124,16 @@ const UpdateProfile = () => {
     UserService.updateUserInfo(updateProfileRequest).then(async (res) => {
       console.log(res);
       if (res.status === 400) {
-        if (res.data.errorMessage === "First name cannot be empty") {
+        if (res.data.message === "First name cannot be empty") {
           alert("First name cannot be empty");
-        } else if (res.data.errorMessage === "Last name cannot be empty") {
+        } else if (res.data.message === "Last name cannot be empty") {
           alert("Last name cannot be empty");
         } else if (
-          res.data.errorMessage ===
+          res.data.message ===
           "The phone number must be has atleast 4 characters long"
         ) {
           alert("The phone number must be has atleast 4 characters long");
-        } else if (res.data.errorMessage === "The address cannot be empty") {
+        } else if (res.data.message === "The address cannot be empty") {
           alert("The address cannot be empty");
         }
       } else if (res.status === 200) {
@@ -154,24 +154,7 @@ const UpdateProfile = () => {
     UserService.updateUserPassword(changePasswordRequest).then(async (res) => {
       console.log(res);
       if (res.status === 400) {
-        if (
-          res.data.errorMessage ===
-          "The password must be between 4 and 16 characters long"
-        ) {
-          alert("The password must be between 4 and 16 characters long");
-        } else if (
-          res.data.errorMessage ===
-          "The password must be between 4 and 16 characters long"
-        ) {
-          alert("The password must be between 4 and 16 characters long");
-        } else if (
-          res.data.errorMessage ===
-          "The password confirmation must be between 4 and 16 characters long"
-        ) {
-          alert(
-            "The password confirmation must be between 4 and 16 characters long"
-          );
-        }
+        alert(res.data.message);
       } else if (res.status === 406) {
         if (res.data.message === "Passwords do not match.") {
           alert("Passwords do not match.");

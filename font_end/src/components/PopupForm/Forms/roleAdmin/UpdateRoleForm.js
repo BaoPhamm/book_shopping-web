@@ -1,8 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 
 const Wrapper = styled.div`
   width: 95%;
@@ -30,9 +27,6 @@ const Title = styled.h1`
   font-size: 24px;
   font-weight: 300;
 `;
-const CategoriesText = styled.h2`
-  font-weight: 300;
-`;
 const Button = styled.button`
   width: 30%;
   border: none;
@@ -44,43 +38,33 @@ const Button = styled.button`
   margin-top: 1rem;
 `;
 
-const RemoveRoleFromUserForm = ({ onSubmit, userDetails }) => {
+const UpdateRoleForm = ({ onSubmit, roleDetails }) => {
   return (
     <Wrapper>
-      <Title>REMOVE ROLES FROM USER</Title>
+      <Title>UPDATE ROLE</Title>
       <form onSubmit={onSubmit}>
         <RowWrapper>
           <Text>ID:</Text>
           <Input
             disabled={true}
-            type="number"
-            defaultValue={userDetails.id}
-            name="id"
-            placeholder="ID"
+            type="text"
+            defaultValue={roleDetails.id}
+            name="roleid"
+            placeholder="Role ID"
           />
         </RowWrapper>
         <RowWrapper>
-          <Text>Username:</Text>
+          <Text>Name:</Text>
           <Input
-            disabled={true}
             type="text"
-            defaultValue={userDetails.username}
-            name="username"
-            placeholder="Username"
+            defaultValue={roleDetails.name}
+            name="rolename"
+            placeholder="Role name"
           />
         </RowWrapper>
-        <CategoriesText>Roles:</CategoriesText>
-        <FormGroup>
-          {userDetails.roles.map((role) => (
-            <FormControlLabel
-              control={<Checkbox name={"Id" + role.id} />}
-              label={role.name}
-            />
-          ))}
-        </FormGroup>
-        <Button>REMOVE</Button>
+        <Button>UPDATE</Button>
       </form>
     </Wrapper>
   );
 };
-export default RemoveRoleFromUserForm;
+export default UpdateRoleForm;

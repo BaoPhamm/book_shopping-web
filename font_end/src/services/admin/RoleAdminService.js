@@ -51,9 +51,25 @@ class RoleAdminService {
     return response;
   }
 
-  async deleteRole(roleName) {
+  async updateRole(roleName) {
     const response = await axios
-      .delete(ADMIN_ROLE_API_BASE_URL, roleName, {
+      .put(ADMIN_ROLE_API_BASE_URL, roleName, {
+        headers: AuthHeader(),
+      })
+      .then(function (response) {
+        console.log(response);
+        return response;
+      })
+      .catch(function (error) {
+        console.log(error);
+        return error.response;
+      });
+    return response;
+  }
+
+  async deleteRole(roleId) {
+    const response = await axios
+      .delete(ADMIN_ROLE_API_BASE_URL + "/" + roleId, {
         headers: AuthHeader(),
       })
       .then(function (response) {
