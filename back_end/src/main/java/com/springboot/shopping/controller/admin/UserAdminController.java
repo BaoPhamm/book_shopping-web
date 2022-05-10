@@ -53,15 +53,15 @@ public class UserAdminController {
 	}
 
 	@PostMapping("/role/add-to-user")
-	public ResponseEntity<String> addRoleToUser(@RequestBody AddRoleToUserForm addRoleToUserForm) {
-		String message = userService.addRoleToUser(addRoleToUserForm.getUsername(), addRoleToUserForm.getRolename());
+	public ResponseEntity<String> addRolesToUser(@RequestBody AddRoleToUserForm addRoleToUserForm) {
+		String message = userService.addRolesToUser(addRoleToUserForm.getUserId(), addRoleToUserForm.getRolesId());
 		return ResponseEntity.ok(message);
 	}
 
 	@PostMapping("/role/remove-from-user")
-	public ResponseEntity<String> removeRoleFromUser(@RequestBody RemoveRoleFromUserForm removeRoleFromUserForm) {
-		String message = userService.removeRoleFromUser(removeRoleFromUserForm.getUsername(),
-				removeRoleFromUserForm.getRolename());
+	public ResponseEntity<String> removeRolesFromUser(@RequestBody RemoveRoleFromUserForm removeRoleFromUserForm) {
+		String message = userService.removeRolesFromUser(removeRoleFromUserForm.getUserId(),
+				removeRoleFromUserForm.getRolesId());
 		return ResponseEntity.ok(message);
 	}
 }

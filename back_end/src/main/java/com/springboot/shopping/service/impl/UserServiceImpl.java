@@ -29,6 +29,9 @@ import com.springboot.shopping.dto.PasswordResetRequest;
 import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
 import com.springboot.shopping.exception.auth.PasswordException;
+import com.springboot.shopping.exception.book.BookNotFoundException;
+import com.springboot.shopping.exception.category.CategoryExistException;
+import com.springboot.shopping.exception.category.CategoryNotFoundException;
 import com.springboot.shopping.exception.role.RoleNotFoundException;
 import com.springboot.shopping.exception.user.AdminSelfDeleteException;
 import com.springboot.shopping.exception.user.PhoneNumberExistException;
@@ -36,6 +39,8 @@ import com.springboot.shopping.exception.user.UserNotFoundException;
 import com.springboot.shopping.exception.user.UserRoleExistException;
 import com.springboot.shopping.exception.user.UserRoleNotFoundException;
 import com.springboot.shopping.mapper.CommonMapper;
+import com.springboot.shopping.model.Book;
+import com.springboot.shopping.model.Category;
 import com.springboot.shopping.model.Role;
 import com.springboot.shopping.model.UserEntity;
 import com.springboot.shopping.repository.RoleRepository;
@@ -134,43 +139,81 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return "User successfully deleted.";
 	}
 
+	private Role findRoleExist(List<Role> allRoles, Long roleId) {
+		for (Role role : allRoles) {
+			if (role.getId() == roleId) {
+				return role;
+			}
+		}
+		throw new RoleNotFoundException(roleId);
+	}
 	@Override
-	public String addRoleToUser(String username, String roleName) {
+	public String addRolesToUser(Long userId, List<Long> rolesId) {
 
-		Optional<UserEntity> userFromDb = userRepository.findByUsername(username);
+		Optional<UserEntity> userFromDb = userRepository.findById(userId);
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
 		}
-		Optional<Role> roleFromDb = roleRepository.findByname(roleName);
-		if (roleFromDb.isEmpty()) {
-			throw new RoleNotFoundException();
-		}
-		if (userFromDb.get().getRoles().contains(roleFromDb.get())) {
-			throw new UserRoleExistException();
-		}
-		userFromDb.get().getRoles().add(roleFromDb.get());
+		
+		Collection<Role> validRoles = new ArrayList<>();
+		List<Long> userRolesId = userRepository.findAllIdsOfRoles(userId);
+		List<Role> allRoles = roleRepository.findAll();
+		
+		rolesId.forEach(roleId -> {
+			if (userRolesId.contains(roleId)) {
+				throw new UserRoleExistException(roleId);
+			}
+			Role validRole = findRoleExist(allRoles, roleId);
+			validRoles.add(validRole);
+		});
+		
+		userFromDb.get().getRoles().addAll(validRoles);
 		userRepository.save(userFromDb.get());
 		return "Role successfully added.";
 	}
-
+	
 	@Override
-	public String removeRoleFromUser(String username, String roleName) {
+	public String removeRolesFromUser(Long userId, List<Long> rolesId) {
 
-		Optional<UserEntity> userFromDb = userRepository.findByUsername(username);
+		Optional<UserEntity> userFromDb = userRepository.findById(userId);
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
 		}
-		Optional<Role> roleFromDb = roleRepository.findByname(roleName);
-		if (roleFromDb.isEmpty()) {
-			throw new RoleNotFoundException();
-		}
-		if (!userFromDb.get().getRoles().contains(roleFromDb.get())) {
-			throw new UserRoleNotFoundException();
-		}
-		userFromDb.get().getRoles().remove(roleFromDb.get());
+		Collection<Role> validRolesToRemove = new ArrayList<>();
+		List<Long> bookCategoriesId = userRepository.findAllIdsOfRoles(userId);
+		List<Role> allRoles = roleRepository.findAll();
+
+		rolesId.forEach(categoryId -> {
+			if (!bookCategoriesId.contains(categoryId)) {
+				throw new RoleNotFoundException(categoryId);
+			}
+			Role validRole = findRoleExist(allRoles, categoryId);
+			validRolesToRemove.add(validRole);
+		});
+
+		userFromDb.get().getRoles().removeAll(validRolesToRemove);
 		userRepository.save(userFromDb.get());
 		return "Role successfully removed.";
 	}
+
+//	@Override
+//	public String removeRolesFromUser(Long userId, List<Long> rolesId) {
+//
+//		Optional<UserEntity> userFromDb = userRepository.findByUsername(userId);
+//		if (userFromDb.isEmpty()) {
+//			throw new UserNotFoundException();
+//		}
+//		Optional<Role> roleFromDb = roleRepository.findByname(roleName);
+//		if (roleFromDb.isEmpty()) {
+//			throw new RoleNotFoundException();
+//		}
+//		if (!userFromDb.get().getRoles().contains(roleFromDb.get())) {
+//			throw new UserRoleNotFoundException();
+//		}
+//		userFromDb.get().getRoles().remove(roleFromDb.get());
+//		userRepository.save(userFromDb.get());
+//		return "Role successfully removed.";
+//	}
 
 	@Override
 	public String passwordReset(String username, PasswordResetRequest passwordResetRequest) {
