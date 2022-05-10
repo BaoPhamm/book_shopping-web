@@ -3,6 +3,7 @@ package com.springboot.shopping.controller.admin;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,24 +27,23 @@ public class CategoryAdminController {
 
 	// Create a new category
 	@PostMapping()
-	public ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest categoryRequest) {
+	public ResponseEntity<CategoryResponse> createCategory(@Validated @RequestBody CategoryRequest categoryRequest) {
 		CategoryResponse createdCategory = categoryService.createCategory(categoryRequest);
 		return ResponseEntity.ok(createdCategory);
 	}
 
 	// Update an existing category
-	@PutMapping("/{id}")
-	public ResponseEntity<CategoryResponse> updateCategory(@PathVariable("id") Long categoryId,
-			@RequestBody CategoryRequest categoryRequest) {
-		CategoryResponse updatedCategory = categoryService.updateCategory(categoryId, categoryRequest);
+	@PutMapping()
+	public ResponseEntity<CategoryResponse> updateCategory(@Validated @RequestBody CategoryRequest categoryRequest) {
+		CategoryResponse updatedCategory = categoryService.updateCategory(categoryRequest);
 		return ResponseEntity.ok(updatedCategory);
 	}
 
 	// Delete an existing category by ID
 	@DeleteMapping("/{id}")
-	public ResponseEntity<List<CategoryResponse>> deleteCategory(@PathVariable("id") Long categoryId) {
-		List<CategoryResponse> newCategoryList = categoryService.deleteCategory(categoryId);
-		return ResponseEntity.ok(newCategoryList);
+	public ResponseEntity<String> deleteCategory(@PathVariable("id") Long categoryId) {
+		String message = categoryService.deleteCategory(categoryId);
+		return ResponseEntity.ok(message);
 	}
 
 }

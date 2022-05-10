@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.springboot.shopping.dto.category.CategoryRequest;
 import com.springboot.shopping.dto.category.CategoryResponse;
@@ -48,35 +49,37 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategoryResponse createCategory(CategoryRequest categoryRequest) {
-		Category newCategory = commonMapper.convertToEntity(categoryRequest, Category.class);
 		Optional<Category> categoryFromDb = categoryRepository.findByName(categoryRequest.getName());
 		if (categoryFromDb.isPresent()) {
 			throw new CategoryExistException();
 		}
-		return commonMapper.convertToResponse(categoryRepository.save(newCategory), CategoryResponse.class);
+		Category newCategory = commonMapper.convertToEntity(categoryRequest, Category.class);
+		Category savedCategory = categoryRepository.save(newCategory);
+		return commonMapper.convertToResponse(savedCategory, CategoryResponse.class);
 	}
 
 	@Override
-	public CategoryResponse updateCategory(Long categoryId, CategoryRequest categoryRequest) {
-
-		Category newCategoryInfo = commonMapper.convertToEntity(categoryRequest, Category.class);
-		Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
+	public CategoryResponse updateCategory(CategoryRequest categoryRequest) {
+		Optional<Category> categoryFromDb = categoryRepository.findById(categoryRequest.getId());
 		if (categoryFromDb.isEmpty()) {
 			throw new CategoryNotFoundException();
 		}
-		categoryFromDb.get().setName(newCategoryInfo.getName());
-		return commonMapper.convertToResponse(categoryRepository.save(categoryFromDb.get()), CategoryResponse.class);
+		categoryFromDb.get().setName(categoryRequest.getName());
+		categoryFromDb.get().setDescription(categoryRequest.getDescription());
+		categoryFromDb.get().setImgSrc(categoryRequest.getImgSrc());
+		Category updatedCategory = categoryRepository.save(categoryFromDb.get());
+		return commonMapper.convertToResponse(updatedCategory, CategoryResponse.class);
 	}
 
 	@Override
-	public List<CategoryResponse> deleteCategory(Long categoryId) {
-
+	@Transactional
+	public String deleteCategory(Long categoryId) {
 		Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
 		if (categoryFromDb.isEmpty()) {
 			throw new CategoryNotFoundException();
 		}
 		categoryRepository.deleteById(categoryId);
-		return commonMapper.convertToResponseList(categoryRepository.findAll(), CategoryResponse.class);
+		return "Category successfully deleted.";
 	}
 
 }

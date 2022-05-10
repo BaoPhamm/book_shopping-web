@@ -24,27 +24,27 @@ public class BookRequest {
 	@Length(max = 255)
 	private String title;
 
-	@NotBlank(message = "author blank")
+	@NotBlank(message = "Please fill in the author field")
 	@Length(max = 255)
 	private String author;
 
-	@NotNull(message = "totalPages blank")
+	@NotNull(message = "Please fill in the total pages field")
 	private long totalPages;
 
-	@NotNull(message = "requiredAge blank")
+	@NotNull(message = "Please fill in the required age field")
 	private long requiredAge;
 
-	@NotNull(message = "releaseDate blank")
+	@NotNull(message = "Please fill in the release date field")
 	private LocalDate releaseDate;
 
-	@NotNull(message = "price blank")
+	@NotNull(message = "Please fill in the priceL field")
 	private Integer price;
 
-	@NotBlank(message = "description blank")
+	@NotBlank(message = "Please fill in the description field")
 	@Length(max = 510)
 	private String description;
 
-	@NotBlank(message = "imgSrc blank")
+	@NotBlank(message = "Please fill in the image URL field")
 	@Length(max = 255)
 	private String imgSrc;
 }

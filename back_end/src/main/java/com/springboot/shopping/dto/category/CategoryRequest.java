@@ -16,11 +16,15 @@ public class CategoryRequest {
 
 	private long id;
 
-	@NotBlank(message = "Fill in the input field")
+	@NotBlank(message = "Please fill in the name field")
 	@Length(max = 255)
 	private String name;
+	
+	@NotBlank(message = "Please fill in the description field")
+	@Length(max = 255)
+	private String description;
 
-	@NotBlank(message = "Fill in the input field")
+	@NotBlank(message = "Please fill in the image URL field")
 	@Length(max = 255)
 	private String imgSrc;
 }
