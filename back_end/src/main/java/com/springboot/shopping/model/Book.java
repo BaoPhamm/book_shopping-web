@@ -11,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.PostPersist;
 import javax.persistence.PrePersist;
@@ -58,6 +60,7 @@ public class Book {
 	}
 
 	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "books_categories", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "categories_id"))
 	private Collection<Category> categories = new ArrayList<>();
 
 	@Override
