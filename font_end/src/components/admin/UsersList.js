@@ -172,7 +172,7 @@ const UsersList = () => {
     if (event.target.blockstatus.value === "false") {
       UserAdminService.blockUser(event.target.id.value).then(async (res) => {
         if (res.status === 200) {
-          alert("User successfully unblocked.");
+          alert("User successfully blocked.");
           await toggleDataChange(!dataChange);
         } else if (res.status === 404 || res.status === 405) {
           alert(res.data.message);

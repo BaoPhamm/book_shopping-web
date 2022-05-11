@@ -58,7 +58,7 @@ const Input = styled.input`
   right: 0;
 `;
 
-const DeleteUserForm = ({ onSubmit, onNoSubmit, roleDetails }) => {
+const DeleteRoleForm = ({ onSubmit, onNoSubmit, roleDetails }) => {
   return (
     <Wrapper>
       <Title>Are you sure to delete this role?</Title>
@@ -89,4 +89,4 @@ const DeleteUserForm = ({ onSubmit, onNoSubmit, roleDetails }) => {
     </Wrapper>
   );
 };
-export default DeleteUserForm;
+export default DeleteRoleForm;

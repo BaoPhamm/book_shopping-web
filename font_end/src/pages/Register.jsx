@@ -151,7 +151,7 @@ const Register = () => {
               value={formUsername}
               placeholder="username"
               onChange={changeFormUsername}
-              minLength="6"
+              minLength="4"
               maxLength="16"
             />
             <Input
@@ -187,7 +187,7 @@ const Register = () => {
               value={formPassword}
               placeholder="password"
               onChange={changeFormPassword}
-              minLength="6"
+              minLength="4"
               maxLength="16"
             />
             <Input
@@ -195,7 +195,7 @@ const Register = () => {
               value={formPasswordRepeat}
               placeholder="confirm password"
               onChange={changeFormPasswordRepeat}
-              minLength="6"
+              minLength="4"
               maxLength="16"
             />
             <Agreement>

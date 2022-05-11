@@ -61,7 +61,9 @@ const Input = styled.input`
 const BlockUserForm = ({ onSubmit, onNoSubmit, userDetails }) => {
   return (
     <Wrapper>
-      <Title>Are you sure to block this user?</Title>
+      <Title>
+        Are you sure to {userDetails.blocked ? "unblock" : "block"} this user?
+      </Title>
       <form onSubmit={onSubmit}>
         <RowWrapper>
           <Text>ID:</Text>

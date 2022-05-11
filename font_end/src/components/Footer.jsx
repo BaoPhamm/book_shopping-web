@@ -122,7 +122,6 @@ const Footer = () => {
                 My Account
               </Link>
             </ListItem>
-            <ListItem>Terms</ListItem>
             <ListItem>
               <Link
                 to="/products"

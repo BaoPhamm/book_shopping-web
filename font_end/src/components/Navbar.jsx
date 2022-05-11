@@ -113,18 +113,23 @@ const Navbar = () => {
           alert("Please login again!");
           navigate("/login");
         } else if (res.status === 200) {
-          let loginInfo = {
-            token: userLoginInfo.token,
-            refreshToken: userLoginInfo.refreshToken,
-            userRoles: userLoginInfo.userRoles,
-            username: userLoginInfo.username,
-            firstName: res.data.firstName,
-            lastName: res.data.lastName,
-            phoneNumber: res.data.phoneNumber,
-            address: res.data.address,
-            isBlocked: res.data.isBlocked,
-          };
-          dispatch(loginAction(loginInfo));
+          if (res.data.blocked) {
+            dispatch(logoutAction());
+            alert("Your account is blocked!");
+          } else {
+            let loginInfo = {
+              token: userLoginInfo.token,
+              refreshToken: userLoginInfo.refreshToken,
+              userRoles: userLoginInfo.userRoles,
+              username: userLoginInfo.username,
+              firstName: res.data.firstName,
+              lastName: res.data.lastName,
+              phoneNumber: res.data.phoneNumber,
+              address: res.data.address,
+              blocked: res.data.blocked,
+            };
+            dispatch(loginAction(loginInfo));
+          }
         }
       });
     } else {

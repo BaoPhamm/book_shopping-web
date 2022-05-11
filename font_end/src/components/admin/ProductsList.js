@@ -26,6 +26,10 @@ const ButtonContainer = styled("div")(() => ({
   display: "flex",
 }));
 
+const Select = styled("select")(() => ({
+  width: "80%",
+}));
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -313,11 +317,11 @@ const ProductsList = () => {
                   {product.ratingPoint}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  <select>
+                  <Select>
                     {product.categories.map((category) => (
                       <option value={category.id}>{category.name}</option>
                     ))}
-                  </select>
+                  </Select>
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <ButtonContainer

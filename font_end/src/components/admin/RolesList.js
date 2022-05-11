@@ -67,7 +67,7 @@ const RolesList = () => {
   }, [dataChange]);
 
   const GetAllRoles = async () => {
-    await setIsLoading(false);
+    await setIsLoading(true);
     RoleAdminService.getAllRoles().then(async (res) => {
       await setAllRoles([...res]);
       await setIsLoading(false);
@@ -98,6 +98,7 @@ const RolesList = () => {
     event.preventDefault(event);
 
     const roleRequest = JSON.stringify({
+      id: event.target.roleid.value,
       name: event.target.rolename.value,
     });
 

@@ -131,6 +131,7 @@ export class PopupContainer extends Component {
         <UpdateRoleButton
           showModal={this.showModal}
           buttonRef={(n) => (this.TriggerButton = n)}
+          roleDetails={this.props.roleDetails}
         />
       );
     } else if (this.props.typeSubmit === "deleteRole") {
@@ -138,6 +139,7 @@ export class PopupContainer extends Component {
         <DeleteRoleButton
           showModal={this.showModal}
           buttonRef={(n) => (this.TriggerButton = n)}
+          roleDetails={this.props.roleDetails}
         />
       );
     }
