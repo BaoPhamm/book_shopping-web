@@ -44,16 +44,20 @@ public class RoleServiceImpl implements RoleService {
 		if (roleFromDb.isPresent()) {
 			throw new RoleExistException();
 		}
-		Role newRole = new Role(null, roleName);
+		Role newRole = new Role(null, roleName, null);
 		Role createdRole = roleRepository.save(newRole);
 		return commonMapper.convertToResponse(createdRole, RoleResponse.class);
 	}
 
 	@Override
-	public RoleResponse updateRole(String roleName) {
-		Optional<Role> roleFromDb = roleRepository.findByname(roleName);
+	public RoleResponse updateRole(Long roleId, String roleName) {
+		Optional<Role> roleFromDb = roleRepository.findById(roleId);
 		if (roleFromDb.isEmpty()) {
 			throw new RoleNotFoundException();
+		}
+		Optional<Role> existRoleFromDb = roleRepository.findByname(roleName);
+		if (existRoleFromDb.isPresent()) {
+			throw new RoleExistException(roleName);
 		}
 		roleFromDb.get().setName(roleName);
 		Role updatedRole = roleRepository.save(roleFromDb.get());

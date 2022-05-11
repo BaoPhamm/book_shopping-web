@@ -12,7 +12,7 @@ public interface RoleService {
 
 	RoleResponse createRole(String roleName);
 
-	RoleResponse updateRole(String roleName);
+	RoleResponse updateRole(Long roleId,String roleName);
 
 	String deleteRole(Long roleId);
 }

@@ -46,7 +46,7 @@ public class RoleAdminController {
 
 	@PutMapping()
 	public ResponseEntity<RoleResponse> updateRole(@Validated @RequestBody RoleRequest roleRequest) {
-		RoleResponse createdRole = roleService.updateRole(roleRequest.getName());
+		RoleResponse createdRole = roleService.updateRole(roleRequest.getId(), roleRequest.getName());
 		return ResponseEntity.ok(createdRole);
 	}
 
