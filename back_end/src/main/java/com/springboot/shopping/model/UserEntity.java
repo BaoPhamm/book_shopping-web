@@ -1,9 +1,9 @@
 package com.springboot.shopping.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -40,9 +40,32 @@ public class UserEntity {
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_entity_id"), inverseJoinColumns = @JoinColumn(name = "roles_id"))
-	private Collection<Role> roles = new ArrayList<>();
+	private Set<Role> roles = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.LAZY)
-	private Collection<BookRating> bookRatings = new ArrayList<>();
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	private Set<BookRating> bookRatings = new HashSet<>();
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserEntity other = (UserEntity) obj;
+		return Objects.equals(address, other.address) && Objects.equals(bookRatings, other.bookRatings)
+				&& Objects.equals(firstName, other.firstName) && Objects.equals(id, other.id)
+				&& isBlocked == other.isBlocked && Objects.equals(lastName, other.lastName)
+				&& Objects.equals(password, other.password) && Objects.equals(phoneNumber, other.phoneNumber)
+				&& Objects.equals(roles, other.roles) && Objects.equals(username, other.username);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(address, firstName, id, isBlocked, lastName, password, phoneNumber,
+				username);
+	}
+
+	
 }

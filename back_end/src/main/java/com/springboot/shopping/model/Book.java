@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -61,7 +64,10 @@ public class Book {
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "books_categories", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "categories_id"))
-	private Collection<Category> categories = new ArrayList<>();
+	private Set<Category> categories = new HashSet<>();
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
+	private Set<BookRating> bookRatings = new HashSet<>();
 
 	@Override
 	public boolean equals(Object obj) {
@@ -72,16 +78,19 @@ public class Book {
 		if (getClass() != obj.getClass())
 			return false;
 		Book other = (Book) obj;
-		return Objects.equals(author, other.author) && Objects.equals(categories, other.categories)
+		return Objects.equals(author, other.author) && Objects.equals(createDate, other.createDate)
 				&& Objects.equals(description, other.description) && id == other.id
 				&& Objects.equals(imgSrc, other.imgSrc) && Objects.equals(price, other.price)
-				&& Objects.equals(releaseDate, other.releaseDate) && requiredAge == other.requiredAge
-				&& Objects.equals(title, other.title) && totalPages == other.totalPages;
+				&& Objects.equals(ratingPoint, other.ratingPoint) && Objects.equals(releaseDate, other.releaseDate)
+				&& requiredAge == other.requiredAge && Objects.equals(title, other.title)
+				&& totalPages == other.totalPages && Objects.equals(updateDate, other.updateDate);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(author, categories, description, id, imgSrc, price, releaseDate, requiredAge, title,
-				totalPages);
+		return Objects.hash(author, createDate, description, id, imgSrc, price, ratingPoint, releaseDate, requiredAge,
+				title, totalPages, updateDate);
 	}
+
+
 }
