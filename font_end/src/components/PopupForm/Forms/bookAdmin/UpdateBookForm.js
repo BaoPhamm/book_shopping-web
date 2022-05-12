@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -52,12 +52,17 @@ const Button = styled.button`
 `;
 
 const UpdateBookForm = ({ onSubmit, productDetails }) => {
+  const [bookImageURL, setBookImageURL] = useState(productDetails.imgSrc);
+
   const getCategogiesString = () => {
     let CategogiesString = "";
     productDetails.categories.map(
       (category) => (CategogiesString += category.name + " - ")
     );
     return CategogiesString.slice(0, -2);
+  };
+  const onChangeBookImg = async (event) => {
+    await setBookImageURL(URL.createObjectURL(event.target.files[0]));
   };
   return (
     <Wrapper>
@@ -179,11 +184,16 @@ const UpdateBookForm = ({ onSubmit, productDetails }) => {
         <RowWrapper>
           <Text>Image URL:</Text>
           <Input
+            disabled={true}
+            value={productDetails.imgSrc}
             type="text"
-            defaultValue={productDetails.imgSrc}
-            name="imgSrc"
-            placeholder="Image URL"
+            name="imgURL"
           />
+        </RowWrapper>
+        <RowWrapper>
+          <Text>Image preview:</Text>
+          <Input type="file" name="imgFile" onChange={onChangeBookImg} />
+          <img src={bookImageURL} width="200" />
         </RowWrapper>
         <Button>UPDATE</Button>
       </form>

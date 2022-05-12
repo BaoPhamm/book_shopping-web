@@ -11,7 +11,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { ConnectedTvOutlined } from "@mui/icons-material";
+import uploadImage from "../../firebase/upload";
 
 const Container = styled("div")(() => ({
   display: "flex",
@@ -86,9 +86,16 @@ const ProductsList = () => {
     });
   };
 
-  const onAddBookSubmit = (event) => {
+  const onAddBookSubmit = async (event) => {
     event.preventDefault(event);
+    let urlImage = event.target.imgURL.value;
+    let bookImage = event.target.imgFile.files[0];
+    // console.log(event.target.imgFile.files[0]);
 
+    if (bookImage != null) {
+      urlImage = await uploadImage("/book_img", bookImage);
+    }
+    console.log(urlImage);
     const bookRequest = JSON.stringify({
       title: event.target.title.value,
       author: event.target.author.value,
@@ -97,7 +104,7 @@ const ProductsList = () => {
       releaseDate: event.target.releaseDate.value,
       price: event.target.price.value,
       description: event.target.description.value,
-      imgSrc: event.target.imgSrc.value,
+      imgSrc: urlImage,
     });
 
     BookAdminService.saveBook(bookRequest).then(async (res) => {
@@ -113,9 +120,16 @@ const ProductsList = () => {
     });
   };
 
-  const onUpdateBookSubmit = (event) => {
+  const onUpdateBookSubmit = async (event) => {
     event.preventDefault(event);
 
+    let urlImage = event.target.imgURL.value;
+    let bookImage = event.target.imgFile.files[0];
+
+    if (bookImage != null) {
+      urlImage = await uploadImage("/book_img", bookImage);
+    }
+    console.log(urlImage);
     const bookRequest = JSON.stringify({
       id: event.target.id.value,
       title: event.target.title.value,
@@ -125,7 +139,7 @@ const ProductsList = () => {
       releaseDate: event.target.releaseDate.value,
       price: event.target.price.value,
       description: event.target.description.value,
-      imgSrc: event.target.imgSrc.value,
+      imgSrc: urlImage,
     });
 
     BookAdminService.updateBook(bookRequest).then(async (res) => {

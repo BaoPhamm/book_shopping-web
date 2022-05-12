@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -52,6 +52,11 @@ const Button = styled.button`
 `;
 
 const AddBookForm = ({ onSubmit }) => {
+  const [bookImageURL, setBookImageURL] = useState("");
+
+  const onChangeBookImg = async (event) => {
+    await setBookImageURL(URL.createObjectURL(event.target.files[0]));
+  };
   return (
     <Wrapper>
       <Title>ADD NEW BOOK</Title>
@@ -89,8 +94,9 @@ const AddBookForm = ({ onSubmit }) => {
           />
         </RowWrapper>
         <RowWrapper>
-          <Text>Image URL:</Text>
-          <Input type="text" name="imgSrc" placeholder="Image URL" />
+          <Text>Image preview:</Text>
+          <Input type="file" name="imgFile" onChange={onChangeBookImg} />
+          <img src={bookImageURL} width="200" />
         </RowWrapper>
         <Button>ADD</Button>
       </form>

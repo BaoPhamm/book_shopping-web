@@ -39,11 +39,6 @@ const ProductList = () => {
     GetAllCategories();
   }, [dataChange]);
 
-  useEffect(() => {
-    localStorage.setItem("FilterSelectedCategory", 0);
-    GetAllCategories();
-  }, []);
-
   const GetAllCategories = async () => {
     await setIsLoading(true);
     CategoryService.getAllCategories().then(async (res) => {

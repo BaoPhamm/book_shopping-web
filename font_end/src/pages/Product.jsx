@@ -52,11 +52,10 @@ const Title = styled.h1`
   font-size: 60px;
 `;
 
-const Desc = styled.p`
+const BookInfo = styled.p`
   margin: 20px 0px;
   font-size: 20px;
 `;
-
 const Price = styled.span`
   font-weight: 100;
   font-size: 40px;
@@ -174,6 +173,14 @@ const Product = () => {
     });
   };
 
+  const getCategogiesString = () => {
+    let CategogiesString = "";
+    book.categories.map(
+      (category) => (CategogiesString += category.name + " - ")
+    );
+    return CategogiesString.slice(0, -2);
+  };
+
   return !isLoading ? (
     isBookExist ? (
       <Container>
@@ -194,7 +201,12 @@ const Product = () => {
                 <em>{book.totalRatings}</em>
               </WrapperTotalRatingsText>
             </WrapperRating>
-            <Desc>{book.description}</Desc>
+            <BookInfo>{"Description:  " + book.description}</BookInfo>
+            <BookInfo>{"Author:  " + book.author}</BookInfo>
+            <BookInfo>{"TotalPages:  " + book.totalPages}</BookInfo>
+            <BookInfo>{"RequiredAge:  " + book.requiredAge}</BookInfo>
+            <BookInfo>{"ReleaseDate:  " + book.releaseDate}</BookInfo>
+            <BookInfo>{"Categories:  " + getCategogiesString()}</BookInfo>
             <Price>{formatter.format(book.price) + " VND"}</Price>
             <AddContainer>
               <AmountContainer>
