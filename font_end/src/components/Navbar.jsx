@@ -122,6 +122,7 @@ const Navbar = () => {
               refreshToken: userLoginInfo.refreshToken,
               userRoles: userLoginInfo.userRoles,
               username: userLoginInfo.username,
+              id: res.data.id,
               firstName: res.data.firstName,
               lastName: res.data.lastName,
               phoneNumber: res.data.phoneNumber,

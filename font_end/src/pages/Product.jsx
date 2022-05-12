@@ -4,10 +4,13 @@ import styled from "styled-components";
 import { mobile } from "../responsive";
 import { useParams } from "react-router-dom";
 import BookService from "../services/user/BookService";
+import RatingService from "../services/user/RatingService";
 import { Navigate } from "react-router-dom";
 import Rating from "@material-ui/lab/Rating";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import { useSelector } from "react-redux";
+import { loginSelector } from "../store/reducers/loginSlice";
 
 const Container = styled.div``;
 
@@ -16,14 +19,24 @@ const Wrapper = styled.div`
   display: flex;
   ${mobile({ padding: "10px", flexDirection: "column" })}
 `;
+const WrapperRating = styled.div`
+  width: 10rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const WrapperTotalRatingsText = styled.p`
+  height: 1rem;
+  margin-left: 0.5rem;
+  font-size: 16px;
+`;
 
 const ImgContainer = styled.div`
   flex: 1;
 `;
 
 const Image = styled.img`
-  width: 100%;
-  height: 90vh;
+  height: 85vh;
   object-fit: cover;
   ${mobile({ height: "40vh" })}
 `;
@@ -99,15 +112,17 @@ const Product = () => {
   const [book, setBook] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isBookExist, setIsBookExist] = useState(false);
-  const [ratingValue, setRatingValue] = useState(0);
-
+  const [isUserRatedBook, setIsUserRatedBook] = useState(false);
+  const [userRatingValue, setUserRatingValue] = useState(0);
+  const [dataChange, toggleDataChange] = useState(false);
+  const loginInfo = useSelector(loginSelector);
   let { id } = useParams();
 
   useEffect(() => {
-    GetBook();
-  }, []);
+    fetchData();
+  }, [dataChange]);
 
-  const GetBook = async () => {
+  const fetchData = async () => {
     await setIsLoading(true);
     BookService.getBookById(id).then(async (res) => {
       if (res.status === 404) {
@@ -115,6 +130,19 @@ const Product = () => {
       } else if (res.status === 200) {
         await setIsBookExist(true);
         await setBook(res.data);
+
+        RatingService.getUserRatingPoingBook(id).then(async (ratingRes) => {
+          if (ratingRes.status === 404) {
+            alert(ratingRes.data.message);
+          } else if (ratingRes.status === 200) {
+            if (ratingRes.data === 0) {
+              await setIsUserRatedBook(false);
+            } else {
+              setUserRatingValue(ratingRes.data);
+              await setIsUserRatedBook(true);
+            }
+          }
+        });
       }
       await setIsLoading(false);
     });
@@ -126,6 +154,26 @@ const Product = () => {
     minimumFractionDigits: 0,
   });
 
+  const onRatingSubmit = (event, newRatingValue) => {
+    event.preventDefault(event);
+
+    const ratingRequest = JSON.stringify({
+      bookId: book.id,
+      userId: loginInfo.id,
+      point: newRatingValue,
+    });
+
+    console.log(ratingRequest);
+    RatingService.postRating(ratingRequest).then(async (ratingRes) => {
+      if (ratingRes.status === 404) {
+        alert(ratingRes.data.message);
+      } else if (ratingRes.status === 200) {
+        alert("Book successfully rated.");
+        await toggleDataChange(!dataChange);
+      }
+    });
+  };
+
   return !isLoading ? (
     isBookExist ? (
       <Container>
@@ -135,7 +183,17 @@ const Product = () => {
           </ImgContainer>
           <InfoContainer>
             <Title>{book.title}</Title>
-            <Rating name="Rating Label" value={4} disabled={true} />
+            <WrapperRating>
+              <Rating
+                name="Rating Label"
+                value={book.ratingPoint}
+                disabled={true}
+                precision={0.5}
+              />
+              <WrapperTotalRatingsText>
+                <em>{book.totalRatings}</em>
+              </WrapperTotalRatingsText>
+            </WrapperRating>
             <Desc>{book.description}</Desc>
             <Price>{formatter.format(book.price) + " VND"}</Price>
             <AddContainer>
@@ -149,14 +207,17 @@ const Product = () => {
             <RatingContainer>
               <Box component="fieldset" mb={3} borderColor="transparent">
                 <Typography component="legend">
-                  Please Rate our book!
+                  {isUserRatedBook
+                    ? "Your rating for this book"
+                    : "Please Rate our book!"}
                 </Typography>
                 <Rating
                   name="Rating book"
-                  value={ratingValue}
+                  disabled={isUserRatedBook}
+                  value={userRatingValue}
                   size="large"
-                  onChange={(event, newValue) => {
-                    setRatingValue(newValue);
+                  onChange={(event, newRatingValue) => {
+                    onRatingSubmit(event, newRatingValue);
                   }}
                 />
               </Box>

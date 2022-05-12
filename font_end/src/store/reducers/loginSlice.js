@@ -6,6 +6,7 @@ const loginSlice = createSlice({
     loginInfo: {
       token: "",
       refreshToken: "",
+      id: 0,
       username: "",
       firstName: "",
       lastName: "",
@@ -22,6 +23,7 @@ const loginSlice = createSlice({
   reducers: {
     loginAction: (state, action) => {
       state.loginInfo.token = action.payload.token;
+      state.loginInfo.id = action.payload.id;
       state.loginInfo.username = action.payload.username;
       state.loginInfo.firstName = action.payload.firstName;
       state.loginInfo.lastName = action.payload.lastName;
@@ -42,6 +44,7 @@ const loginSlice = createSlice({
 
     logoutAction: (state) => {
       state.loginInfo.token = "";
+      state.loginInfo.id = 0;
       state.loginInfo.username = "";
       state.loginInfo.firstName = "";
       state.loginInfo.lastName = "";

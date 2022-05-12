@@ -62,6 +62,10 @@ const Title = styled.p`
 const Price = styled.p`
   font-size: 17px;
 `;
+const WrapperTotalRatingsText = styled.p`
+  margin-left: 0.5rem;
+  font-size: 19px;
+`;
 
 const Product = ({ productItem }) => {
   const formatter = new Intl.NumberFormat("en-US", {
@@ -86,9 +90,16 @@ const Product = ({ productItem }) => {
       <WrapperPrice>
         <Price>{formatter.format(productItem.price) + " VND"} </Price>
       </WrapperPrice>
-
       <WrapperRating>
-        <Rating name="Rating Label" value={4} disabled="true" />
+        <Rating
+          name="Rating Label"
+          value={productItem.ratingPoint}
+          disabled="true"
+          precision={0.5}
+        />
+        <WrapperTotalRatingsText>
+          <em>{productItem.totalRatings}</em>
+        </WrapperTotalRatingsText>
       </WrapperRating>
     </Container>
   );

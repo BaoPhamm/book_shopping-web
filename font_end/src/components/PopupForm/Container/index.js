@@ -13,14 +13,13 @@ import BlockUserSwitch from "../Forms/userAdmin/buttons/BlockUserSwitch";
 import AddNewRoleButton from "../Forms/roleAdmin/buttons/AddNewRoleButton";
 import UpdateRoleButton from "../Forms/roleAdmin/buttons/UpdateRoleButton";
 import DeleteRoleButton from "../Forms/roleAdmin/buttons/DeleteRoleButton";
-
 import AddNewCategoryButton from "../Forms/categoryAdmin/buttons/AddNewCategoryButton";
 import UpdateCategoryButton from "../Forms/categoryAdmin/buttons/UpdateCategoryButton";
 import DeleteCategoryButton from "../Forms/categoryAdmin/buttons/DeleteCategoryButton";
 import "./index.css";
 
 export class PopupContainer extends Component {
-  state = { isShown: false };
+  state = { isShown: false, newBookRatingValue: 0 };
   showModal = () => {
     this.setState({ isShown: true }, () => {
       this.closeButton.focus();
@@ -41,6 +40,7 @@ export class PopupContainer extends Component {
   toggleScrollLock = () => {
     document.querySelector("html").classList.toggle("scroll-lock");
   };
+
   GetButton = () => {
     if (this.props.typeSubmit === "changePassword") {
       return (
