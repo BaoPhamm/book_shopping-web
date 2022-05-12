@@ -10,5 +10,4 @@ public class RatingResponse {
 	private Long bookId;
 	private Long userId;
 	private Long point;
-	private String comment;
 }

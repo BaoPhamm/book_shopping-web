@@ -54,7 +54,8 @@ public class BookAdminServiceImpl implements BookAdminService {
 			throw new BookExistException();
 		}
 		Book newBook = commonMapper.convertToEntity(bookRequest, Book.class);
-		newBook.setRatingPoint(Float.valueOf(0));
+		newBook.setRatingPoint(Double.valueOf(0));
+		newBook.setTotalRatings(Long.valueOf(0));
 		Book savedBook = bookRepository.save(newBook);
 		return commonMapper.convertToResponse(savedBook, BookAdminResponse.class);
 	}
@@ -127,6 +128,7 @@ public class BookAdminServiceImpl implements BookAdminService {
 		newBookInfo.setCategories(bookFromDb.get().getCategories());
 		newBookInfo.setCreateDate(bookFromDb.get().getCreateDate());
 		newBookInfo.setRatingPoint(bookFromDb.get().getRatingPoint());
+		newBookInfo.setTotalRatings(bookFromDb.get().getTotalRatings());
 		Book updatedBook = bookRepository.save(newBookInfo);
 		return commonMapper.convertToResponse(updatedBook, BookAdminResponse.class);
 	}

@@ -6,5 +6,6 @@ import com.springboot.shopping.dto.rating.RatingResponse;
 public interface RatingService {
 
 	RatingResponse postRating(RatingRequest ratingRequest);
-
+	
+	Long getUserRatingPoingBook(String username, Long bookId);
 }

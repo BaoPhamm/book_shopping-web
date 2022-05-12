@@ -48,7 +48,8 @@ public class Book {
 	private Integer price;
 	private String imgSrc;
 	private String description;
-	private Float ratingPoint;
+	private Double ratingPoint;
+	private long totalRatings;
 	private Date createDate;
 	private Date updateDate;
 
@@ -83,14 +84,14 @@ public class Book {
 				&& Objects.equals(imgSrc, other.imgSrc) && Objects.equals(price, other.price)
 				&& Objects.equals(ratingPoint, other.ratingPoint) && Objects.equals(releaseDate, other.releaseDate)
 				&& requiredAge == other.requiredAge && Objects.equals(title, other.title)
-				&& totalPages == other.totalPages && Objects.equals(updateDate, other.updateDate);
+				&& totalPages == other.totalPages && totalRatings == other.totalRatings
+				&& Objects.equals(updateDate, other.updateDate);
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(author, createDate, description, id, imgSrc, price, ratingPoint, releaseDate, requiredAge,
-				title, totalPages, updateDate);
+				title, totalPages, totalRatings, updateDate);
 	}
-
 
 }

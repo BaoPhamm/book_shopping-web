@@ -13,7 +13,4 @@ public interface BookService {
 	List<BookResponse> findFeaturesBooks();
 
 	List<BookResponse> findBooksByCategory(Long categoryId);
-
-	Float getBookRatingById(Long bookId);
-
 }

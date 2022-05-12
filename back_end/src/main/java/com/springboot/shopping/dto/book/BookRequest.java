@@ -20,7 +20,7 @@ public class BookRequest {
 
 	private long id;
 
-	@NotBlank(message = "title blank")
+	@NotBlank(message = "Please fill in the title field")
 	@Length(max = 255)
 	private String title;
 
@@ -37,7 +37,7 @@ public class BookRequest {
 	@NotNull(message = "Please fill in the release date field")
 	private LocalDate releaseDate;
 
-	@NotNull(message = "Please fill in the priceL field")
+	@NotNull(message = "Please fill in the price field")
 	private Integer price;
 
 	@NotBlank(message = "Please fill in the description field")

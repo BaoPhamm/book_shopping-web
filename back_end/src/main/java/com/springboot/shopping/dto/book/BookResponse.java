@@ -25,7 +25,8 @@ public class BookResponse {
 	private Integer price;
 	private String imgSrc;
 	private String description;
-	private Float ratingPoint;
+	private Double ratingPoint;
+	private Long totalRatings;
 	private Set<Category> categories;
 
 	@Override

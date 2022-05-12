@@ -1,8 +1,11 @@
 package com.springboot.shopping.controller.user;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +27,13 @@ public class RatingController {
 	public ResponseEntity<RatingResponse> postRating(@Validated @RequestBody RatingRequest ratingRequest) {
 		RatingResponse ratingResponse = ratingService.postRating(ratingRequest);
 		return ResponseEntity.ok(ratingResponse);
+	}
+
+	@GetMapping("/{bookid}")
+	public ResponseEntity<Long> getUserRatingPoingBook(@PathVariable("bookid") Long bookId) {
+		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Long ratingPoint = ratingService.getUserRatingPoingBook(username, bookId);
+		return ResponseEntity.ok(ratingPoint);
 	}
 
 }

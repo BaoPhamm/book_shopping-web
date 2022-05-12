@@ -55,13 +55,4 @@ public class BookServiceImpl implements BookService {
 		return commonMapper.convertToResponseList(bookRepository.findFeaturesBooks(), BookResponse.class);
 	}
 
-	@Override
-	public Float getBookRatingById(Long bookId) {
-		Optional<Book> bookFromDb = bookRepository.findById(bookId);
-		if (bookFromDb.isEmpty()) {
-			throw new BookNotFoundException();
-		}
-
-		return Float.valueOf(3.4F);
-	}
 }

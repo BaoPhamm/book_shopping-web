@@ -26,7 +26,8 @@ public class BookAdminResponse {
 	private Integer price;
 	private String imgSrc;
 	private String description;
-	private Float ratingPoint;
+	private Double ratingPoint;
+	private Long totalRatings;
 	private Date createDate;
 	private Date updateDate;
 	private Set<Category> categories;

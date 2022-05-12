@@ -23,7 +23,6 @@ public class BookRating {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Long point;
-	private String comment;
 	
 	@ManyToOne
 	@JoinColumn(name = "book_id")
