@@ -193,7 +193,11 @@ const UpdateBookForm = ({ onSubmit, productDetails }) => {
         <RowWrapper>
           <Text>Image preview:</Text>
           <Input type="file" name="imgFile" onChange={onChangeBookImg} />
-          <img src={bookImageURL} width="200" />
+          <img
+            src={bookImageURL}
+            width="200"
+            alt="https://firebasestorage.googleapis.com/v0/b/shopping-web-a0eb0.appspot.com/o/category_img%2Fdefault.jpg"
+          />
         </RowWrapper>
         <Button>UPDATE</Button>
       </form>

@@ -88,9 +88,8 @@ const ProductsList = () => {
 
   const onAddBookSubmit = async (event) => {
     event.preventDefault(event);
-    let urlImage = event.target.imgURL.value;
+    let urlImage = "";
     let bookImage = event.target.imgFile.files[0];
-    // console.log(event.target.imgFile.files[0]);
 
     if (bookImage != null) {
       urlImage = await uploadImage("/book_img", bookImage);

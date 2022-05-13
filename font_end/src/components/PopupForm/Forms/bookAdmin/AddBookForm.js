@@ -94,9 +94,13 @@ const AddBookForm = ({ onSubmit }) => {
           />
         </RowWrapper>
         <RowWrapper>
-          <Text>Image preview:</Text>
+          <Text>Book image:</Text>
           <Input type="file" name="imgFile" onChange={onChangeBookImg} />
-          <img src={bookImageURL} width="200" />
+          <img
+            src={bookImageURL}
+            width="200"
+            alt="https://firebasestorage.googleapis.com/v0/b/shopping-web-a0eb0.appspot.com/o/category_img%2Fdefault.jpg"
+          />
         </RowWrapper>
         <Button>ADD</Button>
       </form>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -48,6 +48,14 @@ const Button = styled.button`
 `;
 
 const UpdateCategoryForm = ({ onSubmit, categoryDetails }) => {
+  const [categoryImageURL, setcategoryImageURL] = useState(
+    categoryDetails.imgSrc
+  );
+
+  const onChangeCatImg = async (event) => {
+    await setcategoryImageURL(URL.createObjectURL(event.target.files[0]));
+  };
+
   return (
     <Wrapper>
       <Title>UPDATE CATEGORY</Title>
@@ -81,12 +89,21 @@ const UpdateCategoryForm = ({ onSubmit, categoryDetails }) => {
           />
         </RowWrapper>
         <RowWrapper>
-          <Text>Name:</Text>
+          <Text>Image URL:</Text>
           <Input
+            disabled={true}
+            value={categoryDetails.imgSrc}
             type="text"
-            defaultValue={categoryDetails.imgSrc}
-            name="imgsrc"
-            placeholder="Image URL"
+            name="imgURL"
+          />
+        </RowWrapper>
+        <RowWrapper>
+          <Text>Image preview:</Text>
+          <Input type="file" name="imgFile" onChange={onChangeCatImg} />
+          <img
+            src={categoryImageURL}
+            width="200"
+            alt="https://firebasestorage.googleapis.com/v0/b/shopping-web-a0eb0.appspot.com/o/category_img%2Fdefault.jpg"
           />
         </RowWrapper>
         <Button>UPDATE</Button>

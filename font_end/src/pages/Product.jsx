@@ -203,9 +203,9 @@ const Product = () => {
             </WrapperRating>
             <BookInfo>{"Description:  " + book.description}</BookInfo>
             <BookInfo>{"Author:  " + book.author}</BookInfo>
-            <BookInfo>{"TotalPages:  " + book.totalPages}</BookInfo>
-            <BookInfo>{"RequiredAge:  " + book.requiredAge}</BookInfo>
-            <BookInfo>{"ReleaseDate:  " + book.releaseDate}</BookInfo>
+            <BookInfo>{"Total pages:  " + book.totalPages}</BookInfo>
+            <BookInfo>{"Required age:  " + book.requiredAge}</BookInfo>
+            <BookInfo>{"Release date:  " + book.releaseDate}</BookInfo>
             <BookInfo>{"Categories:  " + getCategogiesString()}</BookInfo>
             <Price>{formatter.format(book.price) + " VND"}</Price>
             <AddContainer>

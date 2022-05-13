@@ -11,6 +11,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import uploadImage from "../../firebase/upload";
 
 const Container = styled("div")(() => ({
   display: "flex",
@@ -76,11 +77,17 @@ const CategoriesList = () => {
 
   const onAddNewCategorySubmit = async (event) => {
     event.preventDefault(event);
+    let urlCatImage = "";
+    let categoryImage = event.target.imgFile.files[0];
+
+    if (categoryImage != null) {
+      urlCatImage = await uploadImage("/book_img", categoryImage);
+    }
 
     const categoryRequest = JSON.stringify({
       name: event.target.categoryname.value,
       description: event.target.description.value,
-      imgSrc: event.target.imgsrc.value,
+      imgSrc: urlCatImage,
     });
     CategoryAdminService.createCategory(categoryRequest).then(async (res) => {
       if (res.status === 400) {
@@ -97,12 +104,17 @@ const CategoriesList = () => {
 
   const onUpdateCategorySubmit = async (event) => {
     event.preventDefault(event);
+    let urlCatImage = event.target.imgURL.value;
+    let categoryImage = event.target.imgFile.files[0];
 
+    if (categoryImage != null) {
+      urlCatImage = await uploadImage("/category_img", categoryImage);
+    }
     const categoryRequest = JSON.stringify({
       id: event.target.categoryid.value,
       name: event.target.categoryname.value,
       description: event.target.description.value,
-      imgSrc: event.target.imgsrc.value,
+      imgSrc: urlCatImage,
     });
 
     CategoryAdminService.updateCategory(categoryRequest).then(async (res) => {
@@ -182,7 +194,11 @@ const CategoriesList = () => {
                   {category.description}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {category.imgSrc}
+                  <img
+                    src={category.imgSrc}
+                    height="90"
+                    alt="https://firebasestorage.googleapis.com/v0/b/shopping-web-a0eb0.appspot.com/o/category_img%2Fdefault.jpg"
+                  />
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <ButtonContainer

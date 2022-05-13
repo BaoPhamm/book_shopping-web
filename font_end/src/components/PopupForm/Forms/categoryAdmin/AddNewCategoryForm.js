@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+
 const Wrapper = styled.div`
   width: 95%;
   background-color: white;
@@ -47,6 +48,12 @@ const Button = styled.button`
 `;
 
 const AddNewCategoryForm = ({ onSubmit }) => {
+  const [categoryImageURL, setcategoryImageURL] = useState("");
+
+  const onChangeCatImg = async (event) => {
+    await setcategoryImageURL(URL.createObjectURL(event.target.files[0]));
+  };
+
   return (
     <Wrapper>
       <Title>ADD NEW CATEGORY</Title>
@@ -64,8 +71,13 @@ const AddNewCategoryForm = ({ onSubmit }) => {
           />
         </RowWrapper>
         <RowWrapper>
-          <Text>Image URL:</Text>
-          <Input type="text" name="imgsrc" placeholder="Image URL" />
+          <Text>Category image:</Text>
+          <Input type="file" name="imgFile" onChange={onChangeCatImg} />
+          <img
+            src={categoryImageURL}
+            width="200"
+            alt="https://firebasestorage.googleapis.com/v0/b/shopping-web-a0eb0.appspot.com/o/category_img%2Fdefault.jpg"
+          />
         </RowWrapper>
         <Button>ADD</Button>
       </form>
