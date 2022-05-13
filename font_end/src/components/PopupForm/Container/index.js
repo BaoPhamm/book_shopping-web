@@ -51,120 +51,128 @@ export class PopupContainer extends Component {
       );
     }
     // BOOK
-    else if (this.props.typeSubmit === "addBook") {
-      return (
-        <AddBookButton
-          showModal={this.showModal}
-          buttonRef={(n) => (this.TriggerButton = n)}
-        />
-      );
-    } else if (this.props.typeSubmit === "updateBook") {
-      return (
-        <UpdateBookButton
-          showModal={this.showModal}
-          buttonRef={(n) => (this.TriggerButton = n)}
-        />
-      );
-    } else if (this.props.typeSubmit === "addCatToBook") {
-      return (
-        <AddCatToBookButton
-          showModal={this.showModal}
-          buttonRef={(n) => (this.TriggerButton = n)}
-        />
-      );
-    } else if (this.props.typeSubmit === "removeCatFromBook") {
-      return (
-        <RemoveCatFromBookButton
-          showModal={this.showModal}
-          buttonRef={(n) => (this.TriggerButton = n)}
-        />
-      );
-    } else if (this.props.typeSubmit === "deleteBook") {
-      return (
-        <DeleteBookButton
-          showModal={this.showModal}
-          buttonRef={(n) => (this.TriggerButton = n)}
-        />
-      );
+    else if (this.props.typeSubmitGroup === "book") {
+      if (this.props.typeSubmit === "addNew") {
+        return (
+          <AddBookButton
+            showModal={this.showModal}
+            buttonRef={(n) => (this.TriggerButton = n)}
+          />
+        );
+      } else if (this.props.typeSubmit === "update") {
+        return (
+          <UpdateBookButton
+            showModal={this.showModal}
+            buttonRef={(n) => (this.TriggerButton = n)}
+          />
+        );
+      } else if (this.props.typeSubmit === "addCat") {
+        return (
+          <AddCatToBookButton
+            showModal={this.showModal}
+            buttonRef={(n) => (this.TriggerButton = n)}
+          />
+        );
+      } else if (this.props.typeSubmit === "removeCat") {
+        return (
+          <RemoveCatFromBookButton
+            showModal={this.showModal}
+            buttonRef={(n) => (this.TriggerButton = n)}
+          />
+        );
+      } else if (this.props.typeSubmit === "delete") {
+        return (
+          <DeleteBookButton
+            showModal={this.showModal}
+            buttonRef={(n) => (this.TriggerButton = n)}
+          />
+        );
+      }
     }
     // USER
-    else if (this.props.typeSubmit === "addRoleToUser") {
-      return (
-        <AddRoleToUserButton
-          showModal={this.showModal}
-          buttonRef={(n) => (this.TriggerButton = n)}
-        />
-      );
-    } else if (this.props.typeSubmit === "removeRoleFromUser") {
-      return (
-        <RemoveRoleFromUserButton
-          showModal={this.showModal}
-          buttonRef={(n) => (this.TriggerButton = n)}
-        />
-      );
-    } else if (this.props.typeSubmit === "deleteUser") {
-      return (
-        <DeleteUserButton
-          showModal={this.showModal}
-          buttonRef={(n) => (this.TriggerButton = n)}
-        />
-      );
-    } else if (this.props.typeSubmit === "blockUser") {
-      return (
-        <BlockUserSwitch
-          showModal={this.showModal}
-          buttonRef={(n) => (this.TriggerButton = n)}
-          userDetails={this.props.userDetails}
-        />
-      );
+    else if (this.props.typeSubmitGroup === "user") {
+      if (this.props.typeSubmit === "addRole") {
+        return (
+          <AddRoleToUserButton
+            showModal={this.showModal}
+            buttonRef={(n) => (this.TriggerButton = n)}
+          />
+        );
+      } else if (this.props.typeSubmit === "removeRole") {
+        return (
+          <RemoveRoleFromUserButton
+            showModal={this.showModal}
+            buttonRef={(n) => (this.TriggerButton = n)}
+          />
+        );
+      } else if (this.props.typeSubmit === "delete") {
+        return (
+          <DeleteUserButton
+            showModal={this.showModal}
+            buttonRef={(n) => (this.TriggerButton = n)}
+          />
+        );
+      } else if (this.props.typeSubmit === "block") {
+        return (
+          <BlockUserSwitch
+            showModal={this.showModal}
+            buttonRef={(n) => (this.TriggerButton = n)}
+            userDetails={this.props.userDetails}
+          />
+        );
+      }
     }
     // ROLE
-    else if (this.props.typeSubmit === "addNewRole") {
-      return (
-        <AddNewRoleButton
-          showModal={this.showModal}
-          buttonRef={(n) => (this.TriggerButton = n)}
-        />
-      );
-    } else if (this.props.typeSubmit === "updateRole") {
-      return (
-        <UpdateRoleButton
-          showModal={this.showModal}
-          buttonRef={(n) => (this.TriggerButton = n)}
-          roleDetails={this.props.roleDetails}
-        />
-      );
-    } else if (this.props.typeSubmit === "deleteRole") {
-      return (
-        <DeleteRoleButton
-          showModal={this.showModal}
-          buttonRef={(n) => (this.TriggerButton = n)}
-          roleDetails={this.props.roleDetails}
-        />
-      );
+    else if (this.props.typeSubmitGroup === "role") {
+      if (this.props.typeSubmit === "addNew") {
+        return (
+          <AddNewRoleButton
+            showModal={this.showModal}
+            buttonRef={(n) => (this.TriggerButton = n)}
+          />
+        );
+      } else if (this.props.typeSubmit === "update") {
+        return (
+          <UpdateRoleButton
+            showModal={this.showModal}
+            buttonRef={(n) => (this.TriggerButton = n)}
+            roleDetails={this.props.roleDetails}
+          />
+        );
+      } else if (this.props.typeSubmit === "delete") {
+        return (
+          <DeleteRoleButton
+            showModal={this.showModal}
+            buttonRef={(n) => (this.TriggerButton = n)}
+            roleDetails={this.props.roleDetails}
+          />
+        );
+      }
     }
     // CATEGORY
-    else if (this.props.typeSubmit === "addNewCategory") {
-      return (
-        <AddNewCategoryButton
-          showModal={this.showModal}
-          buttonRef={(n) => (this.TriggerButton = n)}
-        />
-      );
-    } else if (this.props.typeSubmit === "updateCategory") {
-      return (
-        <UpdateCategoryButton
-          showModal={this.showModal}
-          buttonRef={(n) => (this.TriggerButton = n)}
-        />
-      );
-    } else if (this.props.typeSubmit === "deleteCategory") {
-      return (
-        <DeleteCategoryButton
-          showModal={this.showModal}
-          buttonRef={(n) => (this.TriggerButton = n)}
-        />
-      );
+    else if (this.props.typeSubmitGroup === "category") {
+      if (this.props.typeSubmit === "addNew") {
+        return (
+          <AddNewCategoryButton
+            showModal={this.showModal}
+            buttonRef={(n) => (this.TriggerButton = n)}
+          />
+        );
+      } else if (this.props.typeSubmit === "update") {
+        return (
+          <UpdateCategoryButton
+            showModal={this.showModal}
+            buttonRef={(n) => (this.TriggerButton = n)}
+          />
+        );
+      } else if (this.props.typeSubmit === "delete") {
+        return (
+          <DeleteCategoryButton
+            showModal={this.showModal}
+            buttonRef={(n) => (this.TriggerButton = n)}
+          />
+        );
+      }
     }
   };
 
@@ -179,6 +187,7 @@ export class PopupContainer extends Component {
             buttonRef={(n) => (this.closeButton = n)}
             closeModal={this.closeModal}
             onKeyDown={this.onKeyDown}
+            typeSubmitGroup={this.props.typeSubmitGroup}
             typeSubmit={this.props.typeSubmit}
             productDetails={this.props.productDetails}
             allCategories={this.props.allCategories}

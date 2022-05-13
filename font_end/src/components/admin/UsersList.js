@@ -277,23 +277,27 @@ const UsersList = () => {
                   >
                     <PopupContainer
                       onSubmit={onAddRoleToUserSubmit}
-                      typeSubmit="addRoleToUser"
+                      typeSubmitGroup="user"
+                      typeSubmit="addRole"
                       userDetails={user}
                       allRoles={allRoles}
                     />
                     <PopupContainer
                       onSubmit={onRemoveRoleFromUserSubmit}
-                      typeSubmit="removeRoleFromUser"
+                      typeSubmitGroup="user"
+                      typeSubmit="removeRole"
                       userDetails={user}
                     />
                     <PopupContainer
                       onSubmit={onDeleteUserSubmit}
-                      typeSubmit="deleteUser"
+                      typeSubmitGroup="user"
+                      typeSubmit="delete"
                       userDetails={user}
                     />
                     <PopupContainer
                       onSubmit={onBlockOrUnBlockUserSubmit}
-                      typeSubmit="blockUser"
+                      typeSubmitGroup="user"
+                      typeSubmit="block"
                       userDetails={user}
                     />
                   </ButtonContainer>

@@ -153,7 +153,8 @@ const CategoriesList = () => {
       <AddRoleButtonContainer>
         <PopupContainer
           onSubmit={onAddNewCategorySubmit}
-          typeSubmit="addNewCategory"
+          typeSubmitGroup="category"
+          typeSubmit="addNew"
         />
       </AddRoleButtonContainer>
       <TableContainer component={Paper}>
@@ -216,12 +217,14 @@ const CategoriesList = () => {
                   >
                     <PopupContainer
                       onSubmit={onUpdateCategorySubmit}
-                      typeSubmit="updateCategory"
+                      typeSubmitGroup="category"
+                      typeSubmit="update"
                       categoryDetails={category}
                     />
                     <PopupContainer
                       onSubmit={onDeleteCategorySubmit}
-                      typeSubmit="deleteCategory"
+                      typeSubmitGroup="category"
+                      typeSubmit="delete"
                       categoryDetails={category}
                     />
                   </ButtonContainer>

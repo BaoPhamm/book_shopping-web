@@ -246,7 +246,11 @@ const ProductsList = () => {
   return !isLoading ? (
     <Container>
       <AddBookButtonContainer>
-        <PopupContainer onSubmit={onAddBookSubmit} typeSubmit="addBook" />
+        <PopupContainer
+          onSubmit={onAddBookSubmit}
+          typeSubmitGroup="book"
+          typeSubmit="addNew"
+        />
       </AddBookButtonContainer>
       <TableContainer component={Paper}>
         <Table
@@ -340,23 +344,27 @@ const ProductsList = () => {
                   >
                     <PopupContainer
                       onSubmit={onUpdateBookSubmit}
-                      typeSubmit="updateBook"
+                      typeSubmitGroup="book"
+                      typeSubmit="update"
                       productDetails={product}
                     />
                     <PopupContainer
                       onSubmit={onAddCatToBookSubmit}
-                      typeSubmit="addCatToBook"
+                      typeSubmitGroup="book"
+                      typeSubmit="addCat"
                       productDetails={product}
                       allCategories={allCategories}
                     />
                     <PopupContainer
                       onSubmit={onRemoveCatFromBookSubmit}
-                      typeSubmit="removeCatFromBook"
+                      typeSubmitGroup="book"
+                      typeSubmit="removeCat"
                       productDetails={product}
                     />
                     <PopupContainer
                       onSubmit={onDeleteBookSubmit}
-                      typeSubmit="deleteBook"
+                      typeSubmitGroup="book"
+                      typeSubmit="delete"
                       productDetails={product}
                     />
                   </ButtonContainer>

@@ -25,6 +25,7 @@ export const Modal = ({
   buttonRef,
   closeModal,
   onSubmit,
+  typeSubmitGroup,
   typeSubmit,
   productDetails,
   allCategories,
@@ -38,99 +39,110 @@ export const Modal = ({
       return <ChangePasswordForm onSubmit={onSubmit} />;
     }
     // BOOK
-    else if (typeSubmit === "addBook") {
-      return <AddBookForm onSubmit={onSubmit} />;
-    } else if (typeSubmit === "updateBook") {
-      return (
-        <UpdateBookForm onSubmit={onSubmit} productDetails={productDetails} />
-      );
-    } else if (typeSubmit === "addCatToBook") {
-      return (
-        <AddCategoryToBookForm
-          onSubmit={onSubmit}
-          productDetails={productDetails}
-          allCategories={allCategories}
-        />
-      );
-    } else if (typeSubmit === "removeCatFromBook") {
-      return (
-        <RemoveCategoryFromBookForm
-          onSubmit={onSubmit}
-          productDetails={productDetails}
-          allCategories={allCategories}
-        />
-      );
-    } else if (typeSubmit === "deleteBook") {
-      return (
-        <DeleteBookForm
-          onSubmit={onSubmit}
-          onNoSubmit={closeModal}
-          productDetails={productDetails}
-        />
-      );
+    else if (typeSubmitGroup === "book") {
+      if (typeSubmit === "addNew") {
+        return <AddBookForm onSubmit={onSubmit} />;
+      } else if (typeSubmit === "update") {
+        return (
+          <UpdateBookForm onSubmit={onSubmit} productDetails={productDetails} />
+        );
+      } else if (typeSubmit === "addCat") {
+        return (
+          <AddCategoryToBookForm
+            onSubmit={onSubmit}
+            productDetails={productDetails}
+            allCategories={allCategories}
+          />
+        );
+      } else if (typeSubmit === "removeCat") {
+        return (
+          <RemoveCategoryFromBookForm
+            onSubmit={onSubmit}
+            productDetails={productDetails}
+            allCategories={allCategories}
+          />
+        );
+      } else if (typeSubmit === "delete") {
+        return (
+          <DeleteBookForm
+            onSubmit={onSubmit}
+            onNoSubmit={closeModal}
+            productDetails={productDetails}
+          />
+        );
+      }
     }
     // USER
-    else if (typeSubmit === "addRoleToUser") {
-      return (
-        <AddRoleToUserForm
-          onSubmit={onSubmit}
-          userDetails={userDetails}
-          allRoles={allRoles}
-        />
-      );
-    } else if (typeSubmit === "removeRoleFromUser") {
-      return (
-        <RemoveRoleFromUserForm onSubmit={onSubmit} userDetails={userDetails} />
-      );
-    } else if (typeSubmit === "deleteUser") {
-      return (
-        <DeleteUserForm
-          onSubmit={onSubmit}
-          userDetails={userDetails}
-          onNoSubmit={closeModal}
-        />
-      );
-    } else if (typeSubmit === "blockUser") {
-      return (
-        <BlockUserForm
-          onSubmit={onSubmit}
-          userDetails={userDetails}
-          onNoSubmit={closeModal}
-        />
-      );
+    else if (typeSubmitGroup === "user") {
+      if (typeSubmit === "addRole") {
+        return (
+          <AddRoleToUserForm
+            onSubmit={onSubmit}
+            userDetails={userDetails}
+            allRoles={allRoles}
+          />
+        );
+      } else if (typeSubmit === "removeRole") {
+        return (
+          <RemoveRoleFromUserForm
+            onSubmit={onSubmit}
+            userDetails={userDetails}
+          />
+        );
+      } else if (typeSubmit === "delete") {
+        return (
+          <DeleteUserForm
+            onSubmit={onSubmit}
+            userDetails={userDetails}
+            onNoSubmit={closeModal}
+          />
+        );
+      } else if (typeSubmit === "block") {
+        return (
+          <BlockUserForm
+            onSubmit={onSubmit}
+            userDetails={userDetails}
+            onNoSubmit={closeModal}
+          />
+        );
+      }
     }
     // ROLE
-    else if (typeSubmit === "addNewRole") {
-      return <AddNewRoleForm onSubmit={onSubmit} />;
-    } else if (typeSubmit === "updateRole") {
-      return <UpdateRoleForm onSubmit={onSubmit} roleDetails={roleDetails} />;
-    } else if (typeSubmit === "deleteRole") {
-      return (
-        <DeleteRoleForm
-          onSubmit={onSubmit}
-          onNoSubmit={closeModal}
-          roleDetails={roleDetails}
-        />
-      );
+    else if (typeSubmitGroup === "role") {
+      if (typeSubmit === "addNew") {
+        return <AddNewRoleForm onSubmit={onSubmit} />;
+      } else if (typeSubmit === "update") {
+        return <UpdateRoleForm onSubmit={onSubmit} roleDetails={roleDetails} />;
+      } else if (typeSubmit === "delete") {
+        return (
+          <DeleteRoleForm
+            onSubmit={onSubmit}
+            onNoSubmit={closeModal}
+            roleDetails={roleDetails}
+          />
+        );
+      }
     }
     // CATEGORY
-    else if (typeSubmit === "addNewCategory") {
-      return <AddNewCategoryForm onSubmit={onSubmit} />;
-    } else if (typeSubmit === "updateCategory") {
-      return (
-        <UpdateCategoryForm
-          onSubmit={onSubmit}
-          categoryDetails={categoryDetails}
-        />
-      );
-    } else if (typeSubmit === "deleteCategory") {
-      return (
-        <DeleteCategoryForm
-          onSubmit={onSubmit}
-          onNoSubmit={closeModal}
-          categoryDetails={categoryDetails}
-        />
-      );
+    else if (typeSubmitGroup === "category") {
+      if (typeSubmit === "addNew") {
+        return <AddNewCategoryForm onSubmit={onSubmit} />;
+      } else if (typeSubmit === "update") {
+        return (
+          <UpdateCategoryForm
+            onSubmit={onSubmit}
+            categoryDetails={categoryDetails}
+          />
+        );
+      } else if (typeSubmit === "delete") {
+        return (
+          <DeleteCategoryForm
+            onSubmit={onSubmit}
+            onNoSubmit={closeModal}
+            categoryDetails={categoryDetails}
+          />
+        );
+      }
     }
   };
 

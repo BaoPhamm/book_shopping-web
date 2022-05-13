@@ -134,7 +134,11 @@ const RolesList = () => {
   return !isLoading ? (
     <Container>
       <AddRoleButtonContainer>
-        <PopupContainer onSubmit={onAddNewRoleSubmit} typeSubmit="addNewRole" />
+        <PopupContainer
+          onSubmit={onAddNewRoleSubmit}
+          typeSubmitGroup="role"
+          typeSubmit="addNew"
+        />
       </AddRoleButtonContainer>
       <TableContainer component={Paper}>
         <Table
@@ -178,12 +182,14 @@ const RolesList = () => {
                   >
                     <PopupContainer
                       onSubmit={onUpdateRoleSubmit}
-                      typeSubmit="updateRole"
+                      typeSubmitGroup="role"
+                      typeSubmit="update"
                       roleDetails={role}
                     />
                     <PopupContainer
                       onSubmit={onDeleteRoleSubmit}
-                      typeSubmit="deleteRole"
+                      typeSubmitGroup="role"
+                      typeSubmit="delete"
                       roleDetails={role}
                     />
                   </ButtonContainer>
