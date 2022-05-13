@@ -77,7 +77,7 @@ const AmountContainer = styled.div`
 `;
 
 const RatingContainer = styled.div`
-  width: 50%;
+  width: 55%;
   align-items: center;
   justify-content: space-between;
   margin-top: 2rem;
@@ -219,13 +219,15 @@ const Product = () => {
             <RatingContainer>
               <Box component="fieldset" mb={3} borderColor="transparent">
                 <Typography component="legend">
-                  {isUserRatedBook
-                    ? "Your rating for this book"
-                    : "Please Rate our book!"}
+                  {loginInfo.isLogged
+                    ? isUserRatedBook
+                      ? "Your rating for this book"
+                      : "Please Rate our book!"
+                    : "Please loggin to rate this book"}
                 </Typography>
                 <Rating
                   name="Rating book"
-                  disabled={isUserRatedBook}
+                  disabled={isUserRatedBook || !loginInfo.isLogged}
                   value={userRatingValue}
                   size="large"
                   onChange={(event, newRatingValue) => {

@@ -173,8 +173,8 @@ const CategoriesList = () => {
               <StyledTableCell align="center" style={{ width: "30%" }}>
                 Description
               </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: "30%" }}>
-                Image URL
+              <StyledTableCell align="center" style={{ width: "10%" }}>
+                Image
               </StyledTableCell>
               <StyledTableCell align="center" style={{ width: "20%" }}>
                 Actions
