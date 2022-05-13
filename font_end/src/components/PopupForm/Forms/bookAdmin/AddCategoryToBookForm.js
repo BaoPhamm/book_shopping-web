@@ -45,6 +45,13 @@ const Button = styled.button`
 `;
 
 const AddCategoryToBookForm = ({ onSubmit, productDetails, allCategories }) => {
+  const getCategogiesString = () => {
+    let CategogiesString = "";
+    productDetails.categories.map(
+      (category) => (CategogiesString += category.name + " - ")
+    );
+    return CategogiesString.slice(0, -2);
+  };
   return (
     <Wrapper>
       <Title>ADD CATEGORIES TO BOOK</Title>
@@ -69,7 +76,17 @@ const AddCategoryToBookForm = ({ onSubmit, productDetails, allCategories }) => {
             placeholder="ID"
           />
         </RowWrapper>
-        <CategoriesText>Categories:</CategoriesText>
+        <RowWrapper>
+          <Text>Categories:</Text>
+          <Input
+            disabled={true}
+            type="text"
+            defaultValue={getCategogiesString()}
+            name="categories"
+            placeholder="Categories"
+          />
+        </RowWrapper>
+        <CategoriesText>Choose categories to add</CategoriesText>
         <FormGroup>
           {allCategories.map((category) => (
             <FormControlLabel

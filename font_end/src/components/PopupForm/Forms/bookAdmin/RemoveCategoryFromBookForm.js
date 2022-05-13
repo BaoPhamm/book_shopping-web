@@ -13,7 +13,7 @@ const RowWrapper = styled.div`
   justify-content: start;
   width: 100%;
   display: grid;
-  grid-template-columns: 30% 70%;
+  grid-template-columns: 10% 90%;
   align-items: center;
   margin-top: 10px;
 `;
@@ -69,7 +69,7 @@ const RemoveCategoryFromBookForm = ({ onSubmit, productDetails }) => {
             placeholder="ID"
           />
         </RowWrapper>
-        <CategoriesText>Categories:</CategoriesText>
+        <CategoriesText>Choose categories to remove</CategoriesText>
         <FormGroup>
           {productDetails.categories.map((category) => (
             <FormControlLabel
