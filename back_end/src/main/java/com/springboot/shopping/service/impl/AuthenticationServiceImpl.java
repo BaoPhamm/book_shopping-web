@@ -1,11 +1,9 @@
 package com.springboot.shopping.service.impl;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -69,10 +67,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 		// Create default role is "USER"
 		Optional<Role> role = roleRepository.findByname("USER");
-//		Optional<Role> role2 = roleRepository.findByname("ADMIN");
-		
+
 		newUser.getRoles().add(role.get());
-//		newUser.getRoles().add(role2.get());
 		newUser.setBlocked(false);
 		newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 		userRepository.save(newUser);
