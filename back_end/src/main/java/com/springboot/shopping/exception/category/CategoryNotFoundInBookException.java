@@ -1,21 +1,20 @@
 package com.springboot.shopping.exception.category;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import lombok.Getter;
 
 @Getter
+@ResponseStatus(HttpStatus.NOT_FOUND)
 public class CategoryNotFoundInBookException extends RuntimeException {
 
-	private final HttpStatus status;
 
 	public CategoryNotFoundInBookException() {
 		super("Category is not found in this book!");
-		this.status = HttpStatus.NOT_FOUND;
 	}
-	
-	public CategoryNotFoundInBookException(String categoryName) {
-		super("Category: " + categoryName + " is not found in this book!");
-		this.status = HttpStatus.NOT_FOUND;
+
+	public CategoryNotFoundInBookException(Long categoryId) {
+		super("Category " + categoryId + " is not found in this book!");
 	}
 }

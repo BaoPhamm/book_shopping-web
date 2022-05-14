@@ -1,5 +1,6 @@
 package com.springboot.shopping.model;
 
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -38,5 +39,23 @@ public class Category {
 	@JsonIgnore
 	@JoinTable(name = "books_categories", joinColumns = @JoinColumn(name = "categories_id"), inverseJoinColumns = @JoinColumn(name = "book_id"))
 	Set<Book> books;
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Category other = (Category) obj;
+		return Objects.equals(description, other.description) && Objects.equals(id, other.id)
+				&& Objects.equals(imgSrc, other.imgSrc) && Objects.equals(name, other.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(description, id, imgSrc, name);
+	}
 
 }

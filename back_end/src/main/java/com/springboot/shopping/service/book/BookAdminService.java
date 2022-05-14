@@ -10,13 +10,13 @@ public interface BookAdminService {
 	BookAdminResponse findBookById(Long bookId);
 
 	List<BookAdminResponse> findAllBooks();
-	
+
 	List<BookAdminResponse> findFeaturesBooks();
-	
+
 	List<BookAdminResponse> findBooksByCategory(Long categoryId);
-	
+
 	String addCategoriesToBook(Long bookId, List<Long> categoriesId);
-	
+
 	String removeCategoriesFromBook(Long bookId, List<Long> categoriesId);
 
 	BookAdminResponse createBook(BookRequest bookRequest);
@@ -24,7 +24,5 @@ public interface BookAdminService {
 	BookAdminResponse updateBook(BookRequest bookRequest);
 
 	String deleteBook(Long bookId);
-	
-	Float getBookRatingById(Long bookId);
 
 }

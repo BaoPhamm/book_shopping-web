@@ -2,8 +2,10 @@ package com.springboot.shopping.service.book.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ import com.springboot.shopping.exception.book.BookExistException;
 import com.springboot.shopping.exception.book.BookNotFoundException;
 import com.springboot.shopping.exception.category.CategoryExistException;
 import com.springboot.shopping.exception.category.CategoryNotFoundException;
+import com.springboot.shopping.exception.category.CategoryNotFoundInBookException;
 import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Book;
 import com.springboot.shopping.model.Category;
@@ -49,9 +52,9 @@ public class BookAdminServiceImpl implements BookAdminService {
 	@Override
 	public BookAdminResponse createBook(BookRequest bookRequest) {
 
-		Optional<Book> bookFromDb = bookRepository.findById(bookRequest.getId());
-		if (bookFromDb.isPresent()) {
-			throw new BookExistException();
+		Optional<Book> bookCheckTitleFromDb = bookRepository.findByTitle(bookRequest.getTitle());
+		if (bookCheckTitleFromDb.isPresent()) {
+			throw new BookExistException(bookRequest.getTitle());
 		}
 		Book newBook = commonMapper.convertToEntity(bookRequest, Book.class);
 		newBook.setRatingPoint(Double.valueOf(0));
@@ -72,10 +75,10 @@ public class BookAdminServiceImpl implements BookAdminService {
 	@Override
 	public String addCategoriesToBook(Long bookId, List<Long> categoriesId) {
 
-		Collection<Category> validCategories = new ArrayList<>();
+		Set<Category> validCategories = new HashSet<>();
 		Optional<Book> bookFromDb = bookRepository.findById(bookId);
 		if (bookFromDb.isEmpty()) {
-			throw new BookNotFoundException();
+			throw new BookNotFoundException(bookId);
 		}
 		List<Long> bookCategoriesId = bookRepository.findAllIdsOfCategories(bookId);
 		List<Category> allCategories = categoryRepository.findAll();
@@ -99,14 +102,14 @@ public class BookAdminServiceImpl implements BookAdminService {
 		Collection<Category> validCategoriesToRemove = new ArrayList<>();
 		Optional<Book> bookFromDb = bookRepository.findById(bookId);
 		if (bookFromDb.isEmpty()) {
-			throw new BookNotFoundException();
+			throw new BookNotFoundException(bookId);
 		}
 		List<Long> bookCategoriesId = bookRepository.findAllIdsOfCategories(bookId);
 		List<Category> allCategories = categoryRepository.findAll();
 
 		categoriesId.forEach(categoryId -> {
 			if (!bookCategoriesId.contains(categoryId)) {
-				throw new CategoryNotFoundException(categoryId);
+				throw new CategoryNotFoundInBookException(categoryId);
 			}
 			Category validCategory = findCategoryExist(allCategories, categoryId);
 			validCategoriesToRemove.add(validCategory);
@@ -122,8 +125,13 @@ public class BookAdminServiceImpl implements BookAdminService {
 
 		Optional<Book> bookFromDb = bookRepository.findById(bookRequest.getId());
 		if (bookFromDb.isEmpty()) {
-			throw new BookNotFoundException();
+			throw new BookNotFoundException(bookRequest.getId());
 		}
+		Optional<Book> bookCheckTitleFromDb = bookRepository.findByTitle(bookRequest.getTitle());
+		if (bookCheckTitleFromDb.isPresent()) {
+			throw new BookExistException(bookRequest.getTitle());
+		}
+
 		Book newBookInfo = commonMapper.convertToEntity(bookRequest, Book.class);
 		newBookInfo.setCategories(bookFromDb.get().getCategories());
 		newBookInfo.setCreateDate(bookFromDb.get().getCreateDate());
@@ -139,7 +147,7 @@ public class BookAdminServiceImpl implements BookAdminService {
 
 		Optional<Book> bookFromDb = bookRepository.findById(bookId);
 		if (bookFromDb.isEmpty()) {
-			throw new BookNotFoundException();
+			throw new BookNotFoundException(bookId);
 		}
 		bookRepository.deleteById(bookId);
 		return "Book successfully deleted.";
@@ -150,7 +158,7 @@ public class BookAdminServiceImpl implements BookAdminService {
 
 		Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
 		if (categoryFromDb.isEmpty()) {
-			throw new CategoryNotFoundException();
+			throw new CategoryNotFoundException(categoryId);
 		}
 		return commonMapper.convertToResponseList(bookRepository.findByCategory(categoryId), BookAdminResponse.class);
 	}
@@ -158,15 +166,5 @@ public class BookAdminServiceImpl implements BookAdminService {
 	@Override
 	public List<BookAdminResponse> findFeaturesBooks() {
 		return commonMapper.convertToResponseList(bookRepository.findFeaturesBooks(), BookAdminResponse.class);
-	}
-
-	@Override
-	public Float getBookRatingById(Long bookId) {
-		Optional<Book> bookFromDb = bookRepository.findById(bookId);
-		if (bookFromDb.isEmpty()) {
-			throw new BookNotFoundException();
-		}
-
-		return Float.valueOf(3.4F);
 	}
 }
