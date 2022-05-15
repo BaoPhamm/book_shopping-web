@@ -17,11 +17,13 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = "username") })
 @Data
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -54,18 +56,15 @@ public class UserEntity {
 		if (getClass() != obj.getClass())
 			return false;
 		UserEntity other = (UserEntity) obj;
-		return Objects.equals(address, other.address) && Objects.equals(bookRatings, other.bookRatings)
-				&& Objects.equals(firstName, other.firstName) && Objects.equals(id, other.id)
-				&& isBlocked == other.isBlocked && Objects.equals(lastName, other.lastName)
-				&& Objects.equals(password, other.password) && Objects.equals(phoneNumber, other.phoneNumber)
-				&& Objects.equals(roles, other.roles) && Objects.equals(username, other.username);
+		return Objects.equals(address, other.address) && Objects.equals(firstName, other.firstName)
+				&& Objects.equals(id, other.id) && isBlocked == other.isBlocked
+				&& Objects.equals(lastName, other.lastName) && Objects.equals(password, other.password)
+				&& Objects.equals(phoneNumber, other.phoneNumber) && Objects.equals(username, other.username);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(address, firstName, id, isBlocked, lastName, password, phoneNumber,
-				username);
+		return Objects.hash(address, firstName, id, isBlocked, lastName, password, phoneNumber, username);
 	}
 
-	
 }
