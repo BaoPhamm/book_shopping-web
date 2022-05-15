@@ -15,14 +15,9 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.springboot.shopping.dto.RegistrationRequest;
-import com.springboot.shopping.dto.auth.AuthenticationRequest;
-import com.springboot.shopping.dto.auth.AuthenticationResponse;
 import com.springboot.shopping.exception.auth.PasswordException;
 import com.springboot.shopping.exception.user.PhoneNumberExistException;
 import com.springboot.shopping.exception.user.UsernameExistException;
@@ -31,7 +26,6 @@ import com.springboot.shopping.model.Role;
 import com.springboot.shopping.model.UserEntity;
 import com.springboot.shopping.repository.RoleRepository;
 import com.springboot.shopping.repository.UserRepository;
-import com.springboot.shopping.security.JwtProvider;
 
 class RegistrationServiceImplTest {
 
@@ -39,18 +33,12 @@ class RegistrationServiceImplTest {
 	private UserRepository userRepository;
 	private RoleRepository roleRepository;
 	private PasswordEncoder passwordEncoder;
-	private AuthenticationManager authenticationManager;
-	private JwtProvider jwtProvider;
 	private CommonMapper commonMapper;
 
 	private RegistrationRequest registrationRequestInitial;
-	private AuthenticationRequest authenticationRequest;
-	private AuthenticationResponse authenticationResponseExpected;
 	private UserEntity userInitial;
 	private UserEntity savedUserExpected;
 	private Role roleInitial;
-	private UsernamePasswordAuthenticationToken authenticationToken;
-	private Authentication authentication;
 
 	@BeforeEach
 	void beforeEach() {
@@ -79,10 +67,6 @@ class RegistrationServiceImplTest {
 		savedUserExpected = UserEntity.builder().id(1L).firstName("firstName1").lastName("lastName1")
 				.username("username1").password("password1Encoded").phoneNumber("phoneNumber1").address("address1")
 				.isBlocked(false).roles((new HashSet<Role>(List.of(roleInitial)))).build();
-
-		authenticationRequest = AuthenticationRequest.builder().username("usernamee").password("passwordd").build();
-		authenticationToken = new UsernamePasswordAuthenticationToken("username", "password");
-		authenticationResponseExpected = new AuthenticationResponse();
 	}
 
 	// UnitTest for function registerUser()

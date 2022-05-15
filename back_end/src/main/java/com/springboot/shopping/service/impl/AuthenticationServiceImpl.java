@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
@@ -41,7 +41,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			Authentication authentication = authenticationManager.authenticate(authenticationToken);
 			// Get user Principal
 			User user = (User) authentication.getPrincipal();
-			System.out.println(user.getUsername());
 			// Get user's roles
 			List<String> userRoles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority)
 					.collect(Collectors.toList());
@@ -62,7 +61,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			response.setUserRoles(credentials.get("userRoles"));
 			return response;
 
-		} catch (AuthenticationException e) {
+		} catch (BadCredentialsException e) {
 			throw new UserAuthenticationException();
 		}
 	}
