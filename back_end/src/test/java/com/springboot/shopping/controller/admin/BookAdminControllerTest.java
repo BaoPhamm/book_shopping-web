@@ -1,15 +1,12 @@
 package com.springboot.shopping.controller.admin;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -20,9 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -71,27 +65,27 @@ class BookAdminControllerTest {
 				.description("description1").ratingPoint(4.0).totalRatings(5L).createDate(new Date(100000L))
 				.updateDate(new Date(200000L))
 				.categories((new HashSet<Category>(List.of(categoryInitialFirst, categoryInitialSecond)))).build();
-
-		// expected second BookResponse
-		expectedSecondBookResponse = BookAdminResponse.builder().id(6L).title("title2").author("author2").totalPages(7L)
-				.requiredAge(8L).releaseDate(LocalDate.now()).price(200000).imgSrc("imgSrc2")
-				.description("description2").ratingPoint(9.0).totalRatings(10L).createDate(new Date(300000L))
-				.updateDate(new Date(400000L))
-				.categories((new HashSet<Category>(List.of(categoryInitialFirst, categoryInitialSecond)))).build();
-
-		// Add bookResponses to BookResponseList
-		expectedListBookResponse = new ArrayList<>();
-		expectedListBookResponse.add(expectedFirstBookResponse);
-		expectedListBookResponse.add(expectedSecondBookResponse);
-
-		// Init bookRequest Input
-		bookRequestInitial = BookRequest.builder().id(1L).title("title1").author("author1").totalPages(2L)
-				.requiredAge(3L).releaseDate(LocalDate.now()).price(100000).imgSrc("imgSrc1")
-				.description("description1").build();
-
-		addCategoryToBookForm = AddCategoryToBookForm.builder().bookId(1L).categoriesId(List.of(1L, 2L)).build();
-		removeCategoryFromBookForm = RemoveCategoryFromBookForm.builder().bookId(1L).categoriesId(List.of(1L, 2L))
-				.build();
+//
+//		// expected second BookResponse
+//		expectedSecondBookResponse = BookAdminResponse.builder().id(6L).title("title2").author("author2").totalPages(7L)
+//				.requiredAge(8L).releaseDate(LocalDate.now()).price(200000).imgSrc("imgSrc2")
+//				.description("description2").ratingPoint(9.0).totalRatings(10L).createDate(new Date(300000L))
+//				.updateDate(new Date(400000L))
+//				.categories((new HashSet<Category>(List.of(categoryInitialFirst, categoryInitialSecond)))).build();
+//
+//		// Add bookResponses to BookResponseList
+//		expectedListBookResponse = new ArrayList<>();
+//		expectedListBookResponse.add(expectedFirstBookResponse);
+//		expectedListBookResponse.add(expectedSecondBookResponse);
+//
+//		// Init bookRequest Input
+//		bookRequestInitial = BookRequest.builder().id(1L).title("title1").author("author1").totalPages(2L)
+//				.requiredAge(3L).releaseDate(LocalDate.now()).price(100000).imgSrc("imgSrc1")
+//				.description("description1").build();
+//
+//		addCategoryToBookForm = AddCategoryToBookForm.builder().bookId(1L).categoriesId(List.of(1L, 2L)).build();
+//		removeCategoryFromBookForm = RemoveCategoryFromBookForm.builder().bookId(1L).categoriesId(List.of(1L, 2L))
+//				.build();
 	}
 
 	// UnitTest for function getBookById()
@@ -101,16 +95,20 @@ class BookAdminControllerTest {
 
 		when(bookAdminService.findBookById(1L)).thenReturn(expectedFirstBookResponse);
 
-		mockMvc.perform(get("/api/v1/admin/books/1")).andExpect(status().isOk()).andExpect(jsonPath("$.id", equalTo(1)))
+		mockMvc.perform(get("/api/v1/admin/books/1")).andExpect(status().isOk())
+				.andExpect(jsonPath("$.id", equalTo(Integer.valueOf(expectedFirstBookResponse.getId().intValue()))))
 				.andExpect(jsonPath("$.title", equalTo(expectedFirstBookResponse.getTitle())))
 				.andExpect(jsonPath("$.author", equalTo(expectedFirstBookResponse.getAuthor())))
-				.andExpect(jsonPath("$.totalPages", equalTo(expectedFirstBookResponse.getTotalPages())))
-				.andExpect(jsonPath("$.requiredAge", equalTo(expectedFirstBookResponse.getRequiredAge())))
+				.andExpect(jsonPath("$.totalPages",
+						equalTo(Integer.valueOf(expectedFirstBookResponse.getTotalPages().intValue()))))
+				.andExpect(jsonPath("$.requiredAge",
+						equalTo(Integer.valueOf(expectedFirstBookResponse.getRequiredAge().intValue()))))
 				.andExpect(jsonPath("$.price", equalTo(expectedFirstBookResponse.getPrice())))
 				.andExpect(jsonPath("$.imgSrc", equalTo(expectedFirstBookResponse.getImgSrc())))
 				.andExpect(jsonPath("$.description", equalTo(expectedFirstBookResponse.getDescription())))
 				.andExpect(jsonPath("$.ratingPoint", equalTo(expectedFirstBookResponse.getRatingPoint())))
-				.andExpect(jsonPath("$.totalRatings", equalTo(expectedFirstBookResponse.getTotalRatings())));
+				.andExpect(jsonPath("$.totalRatings",
+						equalTo(Integer.valueOf(expectedFirstBookResponse.getTotalRatings().intValue()))));
 
 	}
 

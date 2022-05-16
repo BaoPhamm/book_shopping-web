@@ -17,11 +17,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookAdminResponse {
-	private long id;
+	private Long id;
 	private String title;
 	private String author;
-	private long totalPages;
-	private long requiredAge;
+	private Long totalPages;
+	private Long requiredAge;
 	private LocalDate releaseDate;
 	private Integer price;
 	private String imgSrc;
