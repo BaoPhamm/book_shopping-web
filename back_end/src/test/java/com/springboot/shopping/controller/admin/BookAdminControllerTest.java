@@ -49,10 +49,6 @@ class BookAdminControllerTest {
 
 	@BeforeEach
 	void beforeEach() {
-		// Mock BookAdminService
-//		bookAdminService = mock(BookAdminService.class);
-
-//		bookAdminController = new BookAdminController(bookAdminService);
 
 		categoryInitialFirst = Category.builder().id(1L).name("categoryName1").description("description1")
 				.imgSrc("imgSrc1").build();
