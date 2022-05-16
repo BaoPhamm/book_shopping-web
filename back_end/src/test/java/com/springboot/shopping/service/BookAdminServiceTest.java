@@ -9,12 +9,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,19 +44,22 @@ class BookAdminServiceTest {
 	private BookRequest bookCreateRequestInitial;
 	private BookRequest bookUpdateRequestInitial;
 	private BookAdminResponse expectedFirstBookResponse;
-	private BookAdminResponse expectedSecondBookResponse;
 	private List<BookAdminResponse> expectedListBookResponse;
 
 	private Book expectedFirstBook;
-	private Book expectedSecondBook;
+	private Book bookInitial;
 	private Book bookUpdateRequestConvertToEntity;
 	private List<Book> expectedBookList;
 	private List<Category> categoryListInitial;
+	private Set<Category> bookCategories;
+	private Category categoryInitial;
 	private Category categoryInitialFirst;
 	private Category categoryInitialSecond;
 	private Category categoryInitialThird;
 	private Category categoryInitialFourth;
+	private Category categoryInitialFifth;
 
+	@SuppressWarnings("unchecked")
 	@BeforeEach
 	void beforeEach() {
 		// Mock BookRepository
@@ -67,69 +71,32 @@ class BookAdminServiceTest {
 
 		bookAdminServiceImpl = new BookAdminServiceImpl(bookRepository, categoryRepository, commonMapper);
 
-		// right category list for book
+		expectedFirstBook = mock(Book.class);
+		expectedBookList = mock(List.class);
+
+		expectedFirstBookResponse = mock(BookAdminResponse.class);
+		expectedListBookResponse = mock(List.class);
+
+		bookCreateRequestInitial = mock(BookRequest.class);
+		bookUpdateRequestInitial = mock(BookRequest.class);
+		bookUpdateRequestConvertToEntity = mock(Book.class);
+
+		categoryInitial = mock(Category.class);
 		categoryListInitial = new ArrayList<>();
-		categoryInitialFirst = Category.builder().id(1L).name("categoryName1").description("description1")
-				.imgSrc("imgSrc1").build();
-		categoryInitialSecond = Category.builder().id(2L).name("categoryName2").description("description2")
-				.imgSrc("imgSrc2").build();
-		categoryInitialThird = Category.builder().id(3L).name("categoryName3").description("description3")
-				.imgSrc("imgSrc3").build();
-		categoryInitialFourth = Category.builder().id(4L).name("categoryName4").description("description4")
-				.imgSrc("imgSrc4").build();
+		categoryInitialFirst = Category.builder().id(1L).name("category1").build();
+		categoryInitialSecond = Category.builder().id(2L).name("category2").build();
+		categoryInitialThird = Category.builder().id(3L).name("category3").build();
+		categoryInitialFourth = Category.builder().id(4L).name("category4").build();
+		categoryInitialFifth = Category.builder().id(5L).name("category5").build();
 		categoryListInitial.add(categoryInitialFirst);
 		categoryListInitial.add(categoryInitialSecond);
 		categoryListInitial.add(categoryInitialThird);
 		categoryListInitial.add(categoryInitialFourth);
 
-		// expected first Book
-		expectedFirstBook = Book.builder().id(1L).title("title1").author("author1").totalPages(2L).requiredAge(3L)
-				.releaseDate(LocalDate.now()).price(100000).imgSrc("imgSrc1").description("description1")
-				.ratingPoint(4.0).totalRatings(5L).createDate(new Date(100000L)).updateDate(new Date(200000L))
-				.categories((new HashSet<Category>(List.of(categoryInitialFirst, categoryInitialSecond)))).build();
+		expectedFirstBook.setCategories(new HashSet<>(List.of(categoryInitialFirst, categoryInitialSecond)));
 
-		// expected second Book
-		expectedSecondBook = Book.builder().id(6L).title("title2").author("author2").totalPages(7L).requiredAge(8L)
-				.releaseDate(LocalDate.now()).price(200000).imgSrc("imgSrc2").description("description2")
-				.ratingPoint(9.0).totalRatings(10L).createDate(new Date(300000L)).updateDate(new Date(400000L))
-				.categories((new HashSet<Category>(List.of(categoryInitialThird, categoryInitialFourth)))).build();
-
-		// Add books to BookList
-		expectedBookList = new ArrayList<>();
-		expectedBookList.add(expectedFirstBook);
-		expectedBookList.add(expectedSecondBook);
-
-		// Init bookRequest Input
-		bookCreateRequestInitial = BookRequest.builder().id(1L).title("title1").author("author1").totalPages(2L)
-				.requiredAge(3L).releaseDate(LocalDate.now()).price(100000).imgSrc("imgSrc1")
-				.description("description1").build();
-
-		bookUpdateRequestInitial = BookRequest.builder().id(1L).title("title1Updated").author("author1Updated")
-				.totalPages(22L).requiredAge(33L).releaseDate(LocalDate.now()).price(900000).imgSrc("imgSrc1Updated")
-				.description("description1Updated").build();
-
-		bookUpdateRequestConvertToEntity = Book.builder().id(1L).title("title1Updated").author("author1Updated")
-				.totalPages(22L).requiredAge(33L).releaseDate(LocalDate.now()).price(900000).imgSrc("imgSrc1Updated")
-				.description("description1Updated").build();
-
-		// expected first BookResponse
-		expectedFirstBookResponse = BookAdminResponse.builder().id(1L).title("title1").author("author1").totalPages(2L)
-				.requiredAge(3L).releaseDate(LocalDate.now()).price(100000).imgSrc("imgSrc1")
-				.description("description1").ratingPoint(4.0).totalRatings(5L).createDate(new Date(100000L))
-				.updateDate(new Date(200000L))
-				.categories((new HashSet<Category>(List.of(categoryInitialFirst, categoryInitialSecond)))).build();
-
-		// expected second BookResponse
-		expectedSecondBookResponse = BookAdminResponse.builder().id(6L).title("title2").author("author2").totalPages(7L)
-				.requiredAge(8L).releaseDate(LocalDate.now()).price(200000).imgSrc("imgSrc2")
-				.description("description2").ratingPoint(9.0).totalRatings(10L).createDate(new Date(300000L))
-				.updateDate(new Date(400000L))
-				.categories((new HashSet<Category>(List.of(categoryInitialThird, categoryInitialFourth)))).build();
-
-		// Add bookResponses to BookResponseList
-		expectedListBookResponse = new ArrayList<>();
-		expectedListBookResponse.add(expectedFirstBookResponse);
-		expectedListBookResponse.add(expectedSecondBookResponse);
+		bookInitial = Book.builder().id(1L)
+				.categories(new HashSet<>(List.of(categoryInitialFirst, categoryInitialSecond))).build();
 	}
 
 	// UnitTest for function findBookById()
@@ -140,25 +107,25 @@ class BookAdminServiceTest {
 		when(commonMapper.convertToResponse(expectedFirstBook, BookAdminResponse.class))
 				.thenReturn(expectedFirstBookResponse);
 
-		BookAdminResponse bookResponseResult = bookAdminServiceImpl.findBookById(1L);
+		BookAdminResponse bookResponseResult = bookAdminServiceImpl.findBookById(expectedFirstBook.getId());
 
-		assertThat(bookResponseResult.equals(expectedFirstBookResponse), is(true));
+		assertThat(bookResponseResult, is(expectedFirstBookResponse));
 
-		verify(bookRepository, times(1)).findById(1L);
+		verify(bookRepository, times(1)).findById(expectedFirstBook.getId());
 		verify(commonMapper, times(1)).convertToResponse(expectedFirstBook, BookAdminResponse.class);
 	}
 
 	@Test
 	void findBookById_ShouldThrowException_WhenIdInValid() {
 
-		when(bookRepository.findById(expectedFirstBook.getId() + 1L)).thenReturn(Optional.empty());
+		when(bookRepository.findById(expectedFirstBook.getId())).thenReturn(Optional.empty());
 
 		Exception exception = assertThrows(BookNotFoundException.class,
-				() -> bookAdminServiceImpl.findBookById(expectedFirstBook.getId() + 1L));
+				() -> bookAdminServiceImpl.findBookById(expectedFirstBook.getId()));
 
-		assertThat(exception.getMessage().equals("Book is not found!"), is(true));
+		assertThat(exception.getMessage(), is("Book is not found!"));
 
-		verify(bookRepository, times(1)).findById(expectedFirstBook.getId() + 1L);
+		verify(bookRepository, times(1)).findById(expectedFirstBook.getId());
 	}
 
 	// UnitTest for function findAllBooks()
@@ -170,14 +137,9 @@ class BookAdminServiceTest {
 				.thenReturn(expectedListBookResponse);
 
 		List<BookAdminResponse> bookResponseListResult = bookAdminServiceImpl.findAllBooks();
-		bookResponseListResult.forEach(bookAdminResponse -> {
-			assertThat(bookAdminResponse
-					.equals(expectedListBookResponse.get(bookResponseListResult.indexOf(bookAdminResponse))), is(true));
-		});
 
-		assertThat(bookResponseListResult.size(), is(2));
+		assertThat(bookResponseListResult, is(expectedListBookResponse));
 
-		// Expect functions call
 		verify(bookRepository, times(1)).findAll();
 		verify(commonMapper, times(1)).convertToResponseList(expectedBookList, BookAdminResponse.class);
 	}
@@ -186,14 +148,9 @@ class BookAdminServiceTest {
 	@Test
 	void createBook_ShouldCreateBook_WhenTitleValid() {
 
-		BookRequest bookRequestInitial = BookRequest.builder().id(1L).title("title1").author("author1").totalPages(2L)
-				.requiredAge(3L).releaseDate(LocalDate.now()).price(100000).imgSrc("imgSrc1")
-				.description("description1").build();
+		BookRequest bookRequestInitial = mock(BookRequest.class);
 
-		BookAdminResponse expectedBookResponse = BookAdminResponse.builder().id(1L).title("title1").author("author1")
-				.totalPages(2L).requiredAge(3L).releaseDate(LocalDate.now()).price(100000).imgSrc("imgSrc1")
-				.description("description1").ratingPoint(4.0).totalRatings(5L).createDate(new Date(100000L))
-				.updateDate(new Date(200000L)).build();
+		BookAdminResponse expectedBookResponse = mock(BookAdminResponse.class);
 
 		when(bookRepository.findByTitle(bookRequestInitial.getTitle())).thenReturn(Optional.empty());
 		when(commonMapper.convertToEntity(bookRequestInitial, Book.class)).thenReturn(expectedFirstBook);
@@ -203,7 +160,7 @@ class BookAdminServiceTest {
 
 		BookAdminResponse bookResponseResult = bookAdminServiceImpl.createBook(bookRequestInitial);
 
-		assertThat(bookResponseResult.equals(expectedFirstBookResponse), is(true));
+		assertThat(bookResponseResult, is(expectedBookResponse));
 
 		verify(bookRepository, times(1)).findByTitle(bookRequestInitial.getTitle());
 		verify(commonMapper, times(1)).convertToEntity(bookRequestInitial, Book.class);
@@ -220,8 +177,8 @@ class BookAdminServiceTest {
 		Exception exception = assertThrows(BookExistException.class,
 				() -> bookAdminServiceImpl.createBook(bookCreateRequestInitial));
 
-		assertThat(exception.getMessage()
-				.equals("Title \"" + bookCreateRequestInitial.getTitle() + "\" is already existed!"), is(true));
+		assertThat(exception.getMessage(),
+				is("Title \"" + bookCreateRequestInitial.getTitle() + "\" is already existed!"));
 
 		verify(bookRepository, times(1)).findByTitle(bookCreateRequestInitial.getTitle());
 	}
@@ -231,43 +188,39 @@ class BookAdminServiceTest {
 	void addCategoriesToBook_ShouldAddCategoriesToBook() {
 
 		List<Long> newCategoriesIdToAdd = List.of(3L, 4L);
-		List<Long> currentBookCategoriesId = List.of(1L, 2L);
 
-		when(bookRepository.findById(expectedFirstBook.getId())).thenReturn(Optional.of(expectedFirstBook));
-		when(bookRepository.findAllIdsOfCategories(expectedFirstBook.getId())).thenReturn(currentBookCategoriesId);
+		when(bookRepository.findById(bookInitial.getId())).thenReturn(Optional.of(bookInitial));
 		when(categoryRepository.findAll()).thenReturn(categoryListInitial);
 
-		String stringResult = bookAdminServiceImpl.addCategoriesToBook(expectedFirstBook.getId(), newCategoriesIdToAdd);
+		String stringResult = bookAdminServiceImpl.addCategoriesToBook(bookInitial.getId(), newCategoriesIdToAdd);
 
 		ArgumentCaptor<Book> bookCaptor = ArgumentCaptor.forClass(Book.class);
 		verify(bookRepository).save(bookCaptor.capture());
 		Book savedBook = bookCaptor.getValue();
 
-		assertThat(savedBook.getCategories().contains(categoryInitialThird), is(true));
-		assertThat(savedBook.getCategories().contains(categoryInitialFourth), is(true));
-		assertThat(stringResult.equals("Category successfully added."), is(true));
+		List<Category> savedCategoriesList = new ArrayList<Category>(savedBook.getCategories());
+		Collections.sort(savedCategoriesList, Comparator.comparingLong(Category::getId));
 
-		verify(bookRepository, times(1)).findById(expectedFirstBook.getId());
-		verify(bookRepository, times(1)).findAllIdsOfCategories(expectedFirstBook.getId());
+		assertThat(savedCategoriesList, is(categoryListInitial));
+		assertThat(stringResult, is("Category successfully added."));
+
+		verify(bookRepository, times(1)).findById(bookInitial.getId());
 		verify(categoryRepository, times(1)).findAll();
 	}
 
 	@Test
 	void addCategoriesToBook_ShouldThrowCategoryExistException_WhenCategoryAlreadyExistInBook() {
 
-		List<Long> newCategoriesIdToAdd = List.of(2L, 3L);
-		List<Long> currentBookCategoriesId = List.of(1L, 2L);
+		List<Long> newCategoriesIdToAdd = List.of(2L, 4L);
 
-		when(bookRepository.findById(expectedFirstBook.getId())).thenReturn(Optional.of(expectedFirstBook));
-		when(bookRepository.findAllIdsOfCategories(expectedFirstBook.getId())).thenReturn(currentBookCategoriesId);
+		when(bookRepository.findById(bookInitial.getId())).thenReturn(Optional.of(bookInitial));
 		when(categoryRepository.findAll()).thenReturn(categoryListInitial);
 
 		Exception exception = assertThrows(CategoryExistException.class,
-				() -> bookAdminServiceImpl.addCategoriesToBook(expectedFirstBook.getId(), newCategoriesIdToAdd));
+				() -> bookAdminServiceImpl.addCategoriesToBook(bookInitial.getId(), newCategoriesIdToAdd));
 		assertThat(exception.getMessage(), is("Category with id: 2 is already existed in this book!"));
 
-		verify(bookRepository, times(1)).findById(expectedFirstBook.getId());
-		verify(bookRepository, times(1)).findAllIdsOfCategories(expectedFirstBook.getId());
+		verify(bookRepository, times(1)).findById(bookInitial.getId());
 		verify(categoryRepository, times(1)).findAll();
 	}
 
@@ -275,18 +228,15 @@ class BookAdminServiceTest {
 	void addCategoriesToBook_ShouldThrowCategoryNotFoundException_WhenCategoryNotFound() {
 
 		List<Long> newCategoriesIdToAdd = List.of(3L, 5L);
-		List<Long> currentBookCategoriesId = List.of(1L, 2L);
 
-		when(bookRepository.findById(expectedFirstBook.getId())).thenReturn(Optional.of(expectedFirstBook));
-		when(bookRepository.findAllIdsOfCategories(expectedFirstBook.getId())).thenReturn(currentBookCategoriesId);
+		when(bookRepository.findById(bookInitial.getId())).thenReturn(Optional.of(bookInitial));
 		when(categoryRepository.findAll()).thenReturn(categoryListInitial);
 
 		Exception exception = assertThrows(CategoryNotFoundException.class,
-				() -> bookAdminServiceImpl.addCategoriesToBook(expectedFirstBook.getId(), newCategoriesIdToAdd));
+				() -> bookAdminServiceImpl.addCategoriesToBook(bookInitial.getId(), newCategoriesIdToAdd));
 		assertThat(exception.getMessage(), is("Category with id: 5 is not found!"));
 
-		verify(bookRepository, times(1)).findById(expectedFirstBook.getId());
-		verify(bookRepository, times(1)).findAllIdsOfCategories(expectedFirstBook.getId());
+		verify(bookRepository, times(1)).findById(bookInitial.getId());
 		verify(categoryRepository, times(1)).findAll();
 	}
 
@@ -295,13 +245,13 @@ class BookAdminServiceTest {
 
 		List<Long> newCategoriesIdToAdd = List.of(3L, 5L);
 
-		when(bookRepository.findById(expectedFirstBook.getId())).thenReturn(Optional.empty());
+		when(bookRepository.findById(bookInitial.getId())).thenReturn(Optional.empty());
 
 		Exception exception = assertThrows(BookNotFoundException.class,
-				() -> bookAdminServiceImpl.addCategoriesToBook(expectedFirstBook.getId(), newCategoriesIdToAdd));
-		assertThat(exception.getMessage(), is("Book with id: " + expectedFirstBook.getId() + " is not found!"));
+				() -> bookAdminServiceImpl.addCategoriesToBook(bookInitial.getId(), newCategoriesIdToAdd));
+		assertThat(exception.getMessage(), is("Book with id: " + bookInitial.getId() + " is not found!"));
 
-		verify(bookRepository, times(1)).findById(expectedFirstBook.getId());
+		verify(bookRepository, times(1)).findById(bookInitial.getId());
 	}
 
 	// UnitTest for function removeCategoriesFromBook()
@@ -309,28 +259,28 @@ class BookAdminServiceTest {
 	void removeCategoriesFromBook_ShouldRemoveCategoriesFromBook() {
 
 		List<Long> categoriesIdToRemove = List.of(1L, 2L);
-		List<Long> currentBookCategoriesId = List.of(1L, 2L);
+		List<Category> savedCategoriesListExpected = List.of(categoryInitialThird);
 
-		when(bookRepository.findById(expectedFirstBook.getId())).thenReturn(Optional.of(expectedFirstBook));
-		when(bookRepository.findAllIdsOfCategories(expectedFirstBook.getId())).thenReturn(currentBookCategoriesId);
+		Book bookInitial = Book.builder().id(1L)
+				.categories(new HashSet<>(List.of(categoryInitialFirst, categoryInitialSecond, categoryInitialThird)))
+				.build();
+
+		when(bookRepository.findById(bookInitial.getId())).thenReturn(Optional.of(bookInitial));
 		when(categoryRepository.findAll()).thenReturn(categoryListInitial);
 
-		assertThat(expectedFirstBook.getCategories().contains(categoryInitialFirst), is(true));
-		assertThat(expectedFirstBook.getCategories().contains(categoryInitialSecond), is(true));
-
-		String stringResult = bookAdminServiceImpl.removeCategoriesFromBook(expectedFirstBook.getId(),
-				categoriesIdToRemove);
+		String stringResult = bookAdminServiceImpl.removeCategoriesFromBook(bookInitial.getId(), categoriesIdToRemove);
 
 		ArgumentCaptor<Book> bookCaptor = ArgumentCaptor.forClass(Book.class);
 		verify(bookRepository).save(bookCaptor.capture());
 		Book savedBook = bookCaptor.getValue();
 
-		assertThat(savedBook.getCategories().contains(categoryInitialFirst), is(false));
-		assertThat(savedBook.getCategories().contains(categoryInitialSecond), is(false));
-		assertThat(stringResult.equals("Category successfully removed."), is(true));
+		List<Category> savedCategoriesList = new ArrayList<Category>(savedBook.getCategories());
+		Collections.sort(savedCategoriesList, Comparator.comparingLong(Category::getId));
 
-		verify(bookRepository, times(1)).findById(expectedFirstBook.getId());
-		verify(bookRepository, times(1)).findAllIdsOfCategories(expectedFirstBook.getId());
+		assertThat(savedCategoriesList, is(savedCategoriesListExpected));
+		assertThat(stringResult, is("Category successfully removed."));
+
+		verify(bookRepository, times(1)).findById(bookInitial.getId());
 		verify(categoryRepository, times(1)).findAll();
 	}
 
@@ -338,18 +288,15 @@ class BookAdminServiceTest {
 	void removeCategoriesFromBook_ShouldThrowCategoryNotFoundInBookException_WhenCategoryNotFoundInBook() {
 
 		List<Long> categoriesIdToRemove = List.of(1L, 3L);
-		List<Long> currentBookCategoriesId = List.of(1L, 2L);
 
-		when(bookRepository.findById(expectedFirstBook.getId())).thenReturn(Optional.of(expectedFirstBook));
-		when(bookRepository.findAllIdsOfCategories(expectedFirstBook.getId())).thenReturn(currentBookCategoriesId);
+		when(bookRepository.findById(bookInitial.getId())).thenReturn(Optional.of(bookInitial));
 		when(categoryRepository.findAll()).thenReturn(categoryListInitial);
 
 		Exception exception = assertThrows(CategoryNotFoundInBookException.class,
-				() -> bookAdminServiceImpl.removeCategoriesFromBook(expectedFirstBook.getId(), categoriesIdToRemove));
+				() -> bookAdminServiceImpl.removeCategoriesFromBook(bookInitial.getId(), categoriesIdToRemove));
 		assertThat(exception.getMessage(), is("Category 3 is not found in this book!"));
 
-		verify(bookRepository, times(1)).findById(expectedFirstBook.getId());
-		verify(bookRepository, times(1)).findAllIdsOfCategories(expectedFirstBook.getId());
+		verify(bookRepository, times(1)).findById(bookInitial.getId());
 		verify(categoryRepository, times(1)).findAll();
 	}
 
@@ -357,18 +304,18 @@ class BookAdminServiceTest {
 	void removeCategoriesFromBook_ShouldThrowCategoryNotFoundException_WhenCategoryNotFound() {
 
 		List<Long> categoriesIdToRemove = List.of(1L, 5L);
-		List<Long> currentBookCategoriesId = List.of(1L, 5L);
+		Book bookInitial = Book.builder().id(1L)
+				.categories(new HashSet<>(List.of(categoryInitialFirst, categoryInitialSecond, categoryInitialFifth)))
+				.build();
 
-		when(bookRepository.findById(expectedFirstBook.getId())).thenReturn(Optional.of(expectedFirstBook));
-		when(bookRepository.findAllIdsOfCategories(expectedFirstBook.getId())).thenReturn(currentBookCategoriesId);
+		when(bookRepository.findById(bookInitial.getId())).thenReturn(Optional.of(bookInitial));
 		when(categoryRepository.findAll()).thenReturn(categoryListInitial);
 
 		Exception exception = assertThrows(CategoryNotFoundException.class,
-				() -> bookAdminServiceImpl.removeCategoriesFromBook(expectedFirstBook.getId(), categoriesIdToRemove));
+				() -> bookAdminServiceImpl.removeCategoriesFromBook(bookInitial.getId(), categoriesIdToRemove));
 		assertThat(exception.getMessage(), is("Category with id: 5 is not found!"));
 
-		verify(bookRepository, times(1)).findById(expectedFirstBook.getId());
-		verify(bookRepository, times(1)).findAllIdsOfCategories(expectedFirstBook.getId());
+		verify(bookRepository, times(1)).findById(bookInitial.getId());
 		verify(categoryRepository, times(1)).findAll();
 	}
 
@@ -377,25 +324,24 @@ class BookAdminServiceTest {
 
 		List<Long> categoriesIdToRemove = List.of(1L, 5L);
 
-		when(bookRepository.findById(expectedFirstBook.getId())).thenReturn(Optional.empty());
+		when(bookRepository.findById(bookInitial.getId())).thenReturn(Optional.empty());
 
 		Exception exception = assertThrows(BookNotFoundException.class,
-				() -> bookAdminServiceImpl.removeCategoriesFromBook(expectedFirstBook.getId(), categoriesIdToRemove));
-		assertThat(exception.getMessage(), is("Book with id: " + expectedFirstBook.getId() + " is not found!"));
+				() -> bookAdminServiceImpl.removeCategoriesFromBook(bookInitial.getId(), categoriesIdToRemove));
+		assertThat(exception.getMessage(), is("Book with id: " + bookInitial.getId() + " is not found!"));
 
-		verify(bookRepository, times(1)).findById(expectedFirstBook.getId());
+		verify(bookRepository, times(1)).findById(bookInitial.getId());
 	}
 
 	// UnitTest for function updateBook()
 	@Test
 	void updateBook_ShouldReturnUpdatedBook_WhenIdAndTitleValid() {
 
-		bookUpdateRequestInitial = BookRequest.builder().id(1L).title("title1Updated").author("author1Updated")
-				.totalPages(22L).requiredAge(33L).releaseDate(LocalDate.now()).price(900000).imgSrc("imgSrc1Updated")
-				.description("description1Updated").build();
+		bookUpdateRequestInitial = mock(BookRequest.class);
 
 		when(bookRepository.findById(bookUpdateRequestInitial.getId())).thenReturn(Optional.of(expectedFirstBook));
 		when(bookRepository.findByTitle(bookUpdateRequestInitial.getTitle())).thenReturn(Optional.empty());
+		when(bookUpdateRequestInitial.getTitle()).thenReturn("title");
 		when(commonMapper.convertToEntity(bookUpdateRequestInitial, Book.class))
 				.thenReturn(bookUpdateRequestConvertToEntity);
 		when(bookRepository.save(any())).thenReturn(bookUpdateRequestConvertToEntity);
@@ -408,12 +354,8 @@ class BookAdminServiceTest {
 		verify(bookRepository).save(bookCaptor.capture());
 		Book savedBook = bookCaptor.getValue();
 
-		assertThat(savedBook.getCategories(), is(expectedFirstBook.getCategories()));
-		assertThat(savedBook.getCreateDate(), is(expectedFirstBook.getCreateDate()));
-		assertThat(savedBook.getRatingPoint(), is(expectedFirstBook.getRatingPoint()));
-		assertThat(savedBook.getTotalRatings(), is(expectedFirstBook.getTotalRatings()));
-
-		assertThat(BookResponseResult.equals(expectedFirstBookResponse), is(true));
+		assertThat(savedBook, is(bookUpdateRequestConvertToEntity));
+		assertThat(BookResponseResult, is(expectedFirstBookResponse));
 
 		verify(bookRepository, times(1)).findById(bookUpdateRequestInitial.getId());
 		verify(bookRepository, times(1)).findByTitle(bookUpdateRequestInitial.getTitle());
@@ -425,13 +367,10 @@ class BookAdminServiceTest {
 	@Test
 	void updateBook_ShouldThrowBookExistException_WhenTitleAlreadyInUse() {
 
-		bookUpdateRequestInitial = BookRequest.builder().id(1L).title("title1Updated").author("author1Updated")
-				.totalPages(22L).requiredAge(33L).releaseDate(LocalDate.now()).price(900000).imgSrc("imgSrc1Updated")
-				.description("description1Updated").build();
-
 		when(bookRepository.findById(bookUpdateRequestInitial.getId())).thenReturn(Optional.of(expectedFirstBook));
+		when(bookUpdateRequestInitial.getTitle()).thenReturn("title");
 		when(bookRepository.findByTitle(bookUpdateRequestInitial.getTitle()))
-				.thenReturn(Optional.of(expectedSecondBook));
+				.thenReturn(Optional.of(expectedFirstBook));
 
 		Exception exception = assertThrows(BookExistException.class,
 				() -> bookAdminServiceImpl.updateBook(bookUpdateRequestInitial));
@@ -445,11 +384,8 @@ class BookAdminServiceTest {
 	@Test
 	void updateBook_ShouldThrowBookNotFoundException_WhenBookNotFound() {
 
-		bookUpdateRequestInitial = BookRequest.builder().id(1L).title("title1Updated").author("author1Updated")
-				.totalPages(22L).requiredAge(33L).releaseDate(LocalDate.now()).price(900000).imgSrc("imgSrc1Updated")
-				.description("description1Updated").build();
-
 		when(bookRepository.findById(bookUpdateRequestInitial.getId())).thenReturn(Optional.empty());
+		when(bookUpdateRequestInitial.getId()).thenReturn(1L);
 
 		Exception exception = assertThrows(BookNotFoundException.class,
 				() -> bookAdminServiceImpl.updateBook(bookUpdateRequestInitial));
@@ -496,11 +432,7 @@ class BookAdminServiceTest {
 		List<BookAdminResponse> bookResponseListResult = bookAdminServiceImpl
 				.findBooksByCategory(categoryInitialFirst.getId());
 
-		bookResponseListResult.forEach(bookResponse -> {
-			assertThat(bookResponse.equals(expectedListBookResponse.get(bookResponseListResult.indexOf(bookResponse))),
-					is(true));
-		});
-		assertThat(bookResponseListResult.size(), is(2));
+		assertThat(bookResponseListResult, is(expectedListBookResponse));
 
 		verify(categoryRepository, times(1)).findById(categoryInitialFirst.getId());
 		verify(bookRepository, times(1)).findByCategory(categoryInitialFirst.getId());
@@ -511,13 +443,14 @@ class BookAdminServiceTest {
 	@Test
 	void findBooksByCategory_ShouldThrowCategoryNotFoundException_WhenCategoryNotFound() {
 
-		when(categoryRepository.findById(categoryInitialFirst.getId())).thenReturn(Optional.empty());
+		when(categoryRepository.findById(categoryInitial.getId())).thenReturn(Optional.empty());
+		when(categoryInitial.getId()).thenReturn(1L);
 
 		Exception exception = assertThrows(CategoryNotFoundException.class,
-				() -> bookAdminServiceImpl.findBooksByCategory(categoryInitialFirst.getId()));
-		assertThat(exception.getMessage(), is("Category with id: " + categoryInitialFirst.getId() + " is not found!"));
+				() -> bookAdminServiceImpl.findBooksByCategory(categoryInitial.getId()));
+		assertThat(exception.getMessage(), is("Category with id: " + categoryInitial.getId() + " is not found!"));
 
-		verify(categoryRepository, times(1)).findById(categoryInitialFirst.getId());
+		verify(categoryRepository, times(1)).findById(categoryInitial.getId());
 	}
 
 	// UnitTest for function findBooksByCategory()
@@ -530,11 +463,7 @@ class BookAdminServiceTest {
 
 		List<BookAdminResponse> bookResponseListResult = bookAdminServiceImpl.findFeaturesBooks();
 
-		bookResponseListResult.forEach(bookResponse -> {
-			assertThat(bookResponse.equals(expectedListBookResponse.get(bookResponseListResult.indexOf(bookResponse))),
-					is(true));
-		});
-		assertThat(bookResponseListResult.size(), is(2));
+		assertThat(bookResponseListResult, is(expectedListBookResponse));
 
 		verify(bookRepository, times(1)).findFeaturesBooks();
 		verify(commonMapper, times(1)).convertToResponseList(expectedBookList, BookAdminResponse.class);

@@ -80,7 +80,10 @@ public class BookAdminServiceImpl implements BookAdminService {
 		if (bookFromDb.isEmpty()) {
 			throw new BookNotFoundException(bookId);
 		}
-		List<Long> bookCategoriesId = bookRepository.findAllIdsOfCategories(bookId);
+		List<Long> bookCategoriesId = new ArrayList<>();
+		bookFromDb.get().getCategories().stream().forEach((Category) -> {
+			bookCategoriesId.add(Category.getId());
+		});
 		List<Category> allCategories = categoryRepository.findAll();
 
 		categoriesId.forEach(categoryId -> {
@@ -104,7 +107,10 @@ public class BookAdminServiceImpl implements BookAdminService {
 		if (bookFromDb.isEmpty()) {
 			throw new BookNotFoundException(bookId);
 		}
-		List<Long> bookCategoriesId = bookRepository.findAllIdsOfCategories(bookId);
+		List<Long> bookCategoriesId = new ArrayList<>();
+		bookFromDb.get().getCategories().stream().forEach((Category) -> {
+			bookCategoriesId.add(Category.getId());
+		});
 		List<Category> allCategories = categoryRepository.findAll();
 
 		categoriesId.forEach(categoryId -> {
@@ -128,7 +134,7 @@ public class BookAdminServiceImpl implements BookAdminService {
 			throw new BookNotFoundException(bookRequest.getId());
 		}
 		Optional<Book> bookCheckTitleFromDb = bookRepository.findByTitle(bookRequest.getTitle());
-		if (bookCheckTitleFromDb.isPresent()) {
+		if (!bookRequest.getTitle().equals(bookFromDb.get().getTitle()) && bookCheckTitleFromDb.isPresent()) {
 			throw new BookExistException(bookRequest.getTitle());
 		}
 
