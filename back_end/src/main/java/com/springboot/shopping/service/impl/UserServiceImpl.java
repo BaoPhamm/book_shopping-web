@@ -103,20 +103,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public UserResponse updateProfile(String username, UserRequest userRequest) {
-		UserEntity newUserInfo = commonMapper.convertToEntity(userRequest, UserEntity.class);
 		Optional<UserEntity> userFromDb = userRepository.findByUsername(username);
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
 		}
-		Optional<UserEntity> checkUserPhoneNumFromDb = userRepository.findByPhoneNumber(newUserInfo.getPhoneNumber());
-		if (!newUserInfo.getPhoneNumber().equals(userFromDb.get().getPhoneNumber())
+		Optional<UserEntity> checkUserPhoneNumFromDb = userRepository.findByPhoneNumber(userRequest.getPhoneNumber());
+		if (!userRequest.getPhoneNumber().equals(userFromDb.get().getPhoneNumber())
 				&& checkUserPhoneNumFromDb.isPresent()) {
 			throw new PhoneNumberExistException();
 		}
-		userFromDb.get().setFirstName(newUserInfo.getFirstName());
-		userFromDb.get().setLastName(newUserInfo.getLastName());
-		userFromDb.get().setAddress(newUserInfo.getAddress());
-		userFromDb.get().setPhoneNumber(newUserInfo.getPhoneNumber());
+		userFromDb.get().setFirstName(userRequest.getFirstName());
+		userFromDb.get().setLastName(userRequest.getLastName());
+		userFromDb.get().setAddress(userRequest.getAddress());
+		userFromDb.get().setPhoneNumber(userRequest.getPhoneNumber());
 		UserEntity savedUser = userRepository.save(userFromDb.get());
 		return commonMapper.convertToResponse(savedUser, UserResponse.class);
 	}
@@ -160,7 +159,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		Optional<UserEntity> userFromDb = userRepository.findById(userId);
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
-		}else if (!userFromDb.get().isBlocked()) {
+		} else if (!userFromDb.get().isBlocked()) {
 			throw new UserNotBlockedException();
 		}
 		userFromDb.get().setBlocked(false);
@@ -225,25 +224,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		userRepository.save(userFromDb.get());
 		return "Role successfully removed.";
 	}
-
-//	@Override
-//	public String removeRolesFromUser(Long userId, List<Long> rolesId) {
-//
-//		Optional<UserEntity> userFromDb = userRepository.findByUsername(userId);
-//		if (userFromDb.isEmpty()) {
-//			throw new UserNotFoundException();
-//		}
-//		Optional<Role> roleFromDb = roleRepository.findByname(roleName);
-//		if (roleFromDb.isEmpty()) {
-//			throw new RoleNotFoundException();
-//		}
-//		if (!userFromDb.get().getRoles().contains(roleFromDb.get())) {
-//			throw new UserRoleNotFoundException();
-//		}
-//		userFromDb.get().getRoles().remove(roleFromDb.get());
-//		userRepository.save(userFromDb.get());
-//		return "Role successfully removed.";
-//	}
 
 	@Override
 	public String passwordReset(String username, PasswordResetRequest passwordResetRequest) {
