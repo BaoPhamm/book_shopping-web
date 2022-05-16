@@ -7,14 +7,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookRating {
@@ -23,11 +23,11 @@ public class BookRating {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Long point;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "book_id")
 	private Book book;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private UserEntity user;
