@@ -15,7 +15,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,7 +50,6 @@ class BookAdminServiceTest {
 	private Book bookUpdateRequestConvertToEntity;
 	private List<Book> expectedBookList;
 	private List<Category> categoryListInitial;
-	private Set<Category> bookCategories;
 	private Category categoryInitial;
 	private Category categoryInitialFirst;
 	private Category categoryInitialSecond;

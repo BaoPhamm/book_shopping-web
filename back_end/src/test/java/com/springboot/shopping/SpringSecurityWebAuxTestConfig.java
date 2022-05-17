@@ -19,11 +19,16 @@ public class SpringSecurityWebAuxTestConfig {
 	@Primary
 	public UserDetailsService userDetailsService() {
 
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority("ADMIN"));
-		User user = new User("admin", "password", authorities);
+		Collection<SimpleGrantedAuthority> userAuthorities = new ArrayList<>();
+		userAuthorities.add(new SimpleGrantedAuthority("USER"));
 
-		return new InMemoryUserDetailsManager(Arrays.asList(user));
+		Collection<SimpleGrantedAuthority> adminAuthorities = new ArrayList<>();
+		adminAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
+
+		User user = new User("user", "password", userAuthorities);
+		User admin = new User("admin", "password", adminAuthorities);
+
+		return new InMemoryUserDetailsManager(Arrays.asList(user, admin));
 
 	}
 }

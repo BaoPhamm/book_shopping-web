@@ -2,9 +2,11 @@ package com.springboot.shopping.dto;
 
 import javax.validation.constraints.Size;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder(toBuilder = true)
 public class PasswordResetRequest {
 
 	@Size(min = 4, max = 16, message = "The password must be between 4 and 16 characters long")

@@ -40,7 +40,8 @@ public class UserController {
 	public ResponseEntity<UserResponse> updateUserInfo(@Validated @RequestBody UserRequest request) {
 		// Get username from SecurityContextHolder
 		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return ResponseEntity.ok(userService.updateProfile(username, request));
+		UserResponse updatedUser = userService.updateProfile(username, request);
+		return ResponseEntity.ok(updatedUser);
 	}
 
 	@PutMapping("/password")
