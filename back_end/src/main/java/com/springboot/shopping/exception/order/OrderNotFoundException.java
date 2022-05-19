@@ -1,16 +1,11 @@
-package com.springboot.shopping.exception;
-
-import org.springframework.http.HttpStatus;
+package com.springboot.shopping.exception.order;
 
 import lombok.Getter;
 
 @Getter
 public class OrderNotFoundException extends RuntimeException {
 
-	private final HttpStatus status;
-
 	public OrderNotFoundException() {
 		super("Order is not found!");
-		this.status = HttpStatus.NOT_FOUND;
 	}
 }

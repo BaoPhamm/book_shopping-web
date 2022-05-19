@@ -62,7 +62,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			return response;
 
 		} catch (BadCredentialsException e) {
-			throw new UserAuthenticationException();
+			throw new UserAuthenticationException(e);
 		}
 	}
 }

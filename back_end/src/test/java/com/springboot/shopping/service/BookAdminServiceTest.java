@@ -32,7 +32,7 @@ import com.springboot.shopping.model.Book;
 import com.springboot.shopping.model.Category;
 import com.springboot.shopping.repository.BookRepository;
 import com.springboot.shopping.repository.CategoryRepository;
-import com.springboot.shopping.service.book.impl.BookAdminServiceImpl;
+import com.springboot.shopping.service.impl.book.BookAdminServiceImpl;
 
 class BookAdminServiceTest {
 

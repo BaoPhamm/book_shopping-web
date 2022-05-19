@@ -1,4 +1,4 @@
-package com.springboot.shopping.service.book.impl;
+package com.springboot.shopping.service.impl.book;
 
 import java.util.List;
 import java.util.Optional;

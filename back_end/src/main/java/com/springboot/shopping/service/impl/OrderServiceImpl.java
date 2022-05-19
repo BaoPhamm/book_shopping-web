@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.springboot.shopping.dto.order.OrderRequest;
 import com.springboot.shopping.dto.order.OrderResponse;
-import com.springboot.shopping.exception.OrderNotFoundException;
 import com.springboot.shopping.exception.book.BookNotFoundException;
+import com.springboot.shopping.exception.order.OrderNotFoundException;
 import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Book;
 import com.springboot.shopping.model.Order;
