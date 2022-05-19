@@ -1,11 +1,8 @@
 package com.springboot.shopping.service.impl.book;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,7 +60,7 @@ public class BookAdminServiceImpl implements BookAdminService {
 		return commonMapper.convertToResponse(savedBook, BookAdminResponse.class);
 	}
 
-	private Category findCategoryExist(List<Category> allCategories, Long categoryId) {
+	private Category findCategoryToThrowExcepion(List<Category> allCategories, Long categoryId) {
 		for (Category category : allCategories) {
 			if (category.getId() == categoryId) {
 				return category;
@@ -73,55 +70,62 @@ public class BookAdminServiceImpl implements BookAdminService {
 	}
 
 	@Override
-	public String addCategoriesToBook(Long bookId, List<Long> categoriesId) {
+	public String addCategoriesToBook(Long bookId, List<Long> categoryIds) {
 
-		Set<Category> validCategories = new HashSet<>();
 		Optional<Book> bookFromDb = bookRepository.findById(bookId);
 		if (bookFromDb.isEmpty()) {
 			throw new BookNotFoundException(bookId);
 		}
-		List<Long> bookCategoriesId = new ArrayList<>();
+		List<Long> bookCategoryIds = new ArrayList<>();
 		bookFromDb.get().getCategories().stream().forEach((Category) -> {
-			bookCategoriesId.add(Category.getId());
+			bookCategoryIds.add(Category.getId());
 		});
-		List<Category> allCategories = categoryRepository.findAll();
+		List<Category> allValidCategoryIds = categoryRepository.findAllById(categoryIds);
 
-		categoriesId.forEach(categoryId -> {
-			if (bookCategoriesId.contains(categoryId)) {
-				throw new CategoryExistException(categoryId);
-			}
-			Category validCategory = findCategoryExist(allCategories, categoryId);
-			validCategories.add(validCategory);
-		});
+		if (allValidCategoryIds.size() == categoryIds.size()) {
+			categoryIds.forEach(categoryId -> {
+				if (bookCategoryIds.contains(categoryId)) {
+					throw new CategoryExistException(categoryId);
+				}
+			});
+		} else if (allValidCategoryIds.size() < categoryIds.size()) {
+			categoryIds.stream().forEach(categorieId -> {
+				findCategoryToThrowExcepion(allValidCategoryIds, categorieId);
+			});
+		}
 
-		bookFromDb.get().getCategories().addAll(validCategories);
+		bookFromDb.get().getCategories().addAll(allValidCategoryIds);
 		bookRepository.save(bookFromDb.get());
 		return "Category successfully added.";
 	}
 
 	@Override
-	public String removeCategoriesFromBook(Long bookId, List<Long> categoriesId) {
+	public String removeCategoriesFromBook(Long bookId, List<Long> categoryIds) {
 
-		Collection<Category> validCategoriesToRemove = new ArrayList<>();
 		Optional<Book> bookFromDb = bookRepository.findById(bookId);
 		if (bookFromDb.isEmpty()) {
 			throw new BookNotFoundException(bookId);
 		}
-		List<Long> bookCategoriesId = new ArrayList<>();
+		List<Long> bookCategoryIds = new ArrayList<>();
 		bookFromDb.get().getCategories().stream().forEach((Category) -> {
-			bookCategoriesId.add(Category.getId());
-		});
-		List<Category> allCategories = categoryRepository.findAll();
-
-		categoriesId.forEach(categoryId -> {
-			if (!bookCategoriesId.contains(categoryId)) {
-				throw new CategoryNotFoundInBookException(categoryId);
-			}
-			Category validCategory = findCategoryExist(allCategories, categoryId);
-			validCategoriesToRemove.add(validCategory);
+			bookCategoryIds.add(Category.getId());
 		});
 
-		bookFromDb.get().getCategories().removeAll(validCategoriesToRemove);
+		List<Category> allValidCategoryIds = categoryRepository.findAllById(categoryIds);
+
+		if (allValidCategoryIds.size() == categoryIds.size()) {
+			categoryIds.forEach(categoryId -> {
+				if (!bookCategoryIds.contains(categoryId)) {
+					throw new CategoryNotFoundInBookException(categoryId);
+				}
+			});
+		} else if (allValidCategoryIds.size() < categoryIds.size()) {
+			categoryIds.stream().forEach(categorieId -> {
+				findCategoryToThrowExcepion(allValidCategoryIds, categorieId);
+			});
+		}
+
+		bookFromDb.get().getCategories().removeAll(allValidCategoryIds);
 		bookRepository.save(bookFromDb.get());
 		return "Category successfully removed.";
 	}
