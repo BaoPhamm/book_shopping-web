@@ -60,13 +60,12 @@ public class BookAdminServiceImpl implements BookAdminService {
 		return commonMapper.convertToResponse(savedBook, BookAdminResponse.class);
 	}
 
-	private Category findCategoryToThrowExcepion(List<Category> allCategories, Long categoryId) {
+	private void findCategoryToThrowExcepion(List<Category> allCategories, Long categoryId) {
 		for (Category category : allCategories) {
-			if (category.getId() == categoryId) {
-				return category;
+			if (category.getId() != categoryId) {
+				throw new CategoryNotFoundException(categoryId);
 			}
 		}
-		throw new CategoryNotFoundException(categoryId);
 	}
 
 	@Override

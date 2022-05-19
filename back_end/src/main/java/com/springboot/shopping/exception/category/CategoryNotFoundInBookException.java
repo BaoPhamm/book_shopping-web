@@ -10,6 +10,6 @@ public class CategoryNotFoundInBookException extends RuntimeException {
 	}
 
 	public CategoryNotFoundInBookException(Long categoryId) {
-		super("Category " + categoryId + " is not found in this book!");
+		super("Category with id " + categoryId + " is not found in this book!");
 	}
 }

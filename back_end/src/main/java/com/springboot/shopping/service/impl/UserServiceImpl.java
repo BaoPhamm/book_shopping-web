@@ -37,6 +37,7 @@ import com.springboot.shopping.exception.user.UserAlreadyBlockedException;
 import com.springboot.shopping.exception.user.UserNotBlockedException;
 import com.springboot.shopping.exception.user.UserNotFoundException;
 import com.springboot.shopping.exception.user.UserRoleExistException;
+import com.springboot.shopping.exception.user.UserRoleNotFoundException;
 import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Role;
 import com.springboot.shopping.model.UserEntity;
@@ -167,60 +168,64 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return "User successfully unblocked.";
 	}
 
-	private Role findRoleExist(List<Role> allRoles, Long roleId) {
+	private void findRoleToThrowExcepion(List<Role> allRoles, Long roleId) {
 		for (Role role : allRoles) {
-			if (role.getId() == roleId) {
-				return role;
+			if (role.getId() != roleId) {
+				throw new RoleNotFoundException(roleId);
 			}
 		}
-		throw new RoleNotFoundException(roleId);
 	}
 
 	@Override
-	public String addRolesToUser(Long userId, List<Long> rolesId) {
+	public String addRolesToUser(Long userId, List<Long> roleIds) {
 
 		Optional<UserEntity> userFromDb = userRepository.findById(userId);
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
 		}
+		List<Long> userRoleIds = userRepository.findAllIdsOfRoles(userId);
+		List<Role> allValidRoles = roleRepository.findAllById(roleIds);
 
-		Collection<Role> validRoles = new ArrayList<>();
-		List<Long> userRolesId = userRepository.findAllIdsOfRoles(userId);
-		List<Role> allRoles = roleRepository.findAll();
+		if (allValidRoles.size() == roleIds.size()) {
+			roleIds.forEach(roleId -> {
+				if (userRoleIds.contains(roleId)) {
+					throw new UserRoleExistException(roleId);
+				}
+			});
+		} else if (allValidRoles.size() < roleIds.size()) {
+			roleIds.stream().forEach(roleId -> {
+				findRoleToThrowExcepion(allValidRoles, roleId);
+			});
+		}
 
-		rolesId.forEach(roleId -> {
-			if (userRolesId.contains(roleId)) {
-				throw new UserRoleExistException(roleId);
-			}
-			Role validRole = findRoleExist(allRoles, roleId);
-			validRoles.add(validRole);
-		});
-
-		userFromDb.get().getRoles().addAll(validRoles);
+		userFromDb.get().getRoles().addAll(allValidRoles);
 		userRepository.save(userFromDb.get());
 		return "Role successfully added.";
 	}
 
 	@Override
-	public String removeRolesFromUser(Long userId, List<Long> rolesId) {
+	public String removeRolesFromUser(Long userId, List<Long> roleIds) {
 
 		Optional<UserEntity> userFromDb = userRepository.findById(userId);
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
 		}
-		Collection<Role> validRolesToRemove = new ArrayList<>();
-		List<Long> bookCategoriesId = userRepository.findAllIdsOfRoles(userId);
-		List<Role> allRoles = roleRepository.findAll();
+		List<Long> userRoleIds = userRepository.findAllIdsOfRoles(userId);
+		List<Role> allValidRoles = roleRepository.findAllById(roleIds);
 
-		rolesId.forEach(categoryId -> {
-			if (!bookCategoriesId.contains(categoryId)) {
-				throw new RoleNotFoundException(categoryId);
-			}
-			Role validRole = findRoleExist(allRoles, categoryId);
-			validRolesToRemove.add(validRole);
-		});
+		if (allValidRoles.size() == roleIds.size()) {
+			roleIds.forEach(roleId -> {
+				if (!userRoleIds.contains(roleId)) {
+					throw new UserRoleNotFoundException(roleId);
+				}
+			});
+		} else if (allValidRoles.size() < roleIds.size()) {
+			roleIds.stream().forEach(roleId -> {
+				findRoleToThrowExcepion(allValidRoles, roleId);
+			});
+		}
 
-		userFromDb.get().getRoles().removeAll(validRolesToRemove);
+		userFromDb.get().getRoles().removeAll(allValidRoles);
 		userRepository.save(userFromDb.get());
 		return "Role successfully removed.";
 	}
