@@ -80,16 +80,20 @@ public class BookAdminServiceImpl implements BookAdminService {
 			bookCategoryIds.add(Category.getId());
 		});
 		List<Category> allValidCategoryIds = categoryRepository.findAllById(categoryIds);
+		System.out.println(allValidCategoryIds.size());
+		System.out.println(categoryIds.size());
 
-		if (allValidCategoryIds.size() == categoryIds.size()) {
+		if (allValidCategoryIds.size() == 0) {
+			throw new CategoryNotFoundException(categoryIds.get(0));
+		} else if (allValidCategoryIds.size() < categoryIds.size()) {
+			categoryIds.stream().forEach(categorieId -> {
+				findCategoryToThrowExcepion(allValidCategoryIds, categorieId);
+			});
+		} else if (allValidCategoryIds.size() == categoryIds.size()) {
 			categoryIds.forEach(categoryId -> {
 				if (bookCategoryIds.contains(categoryId)) {
 					throw new CategoryExistException(categoryId);
 				}
-			});
-		} else if (allValidCategoryIds.size() < categoryIds.size()) {
-			categoryIds.stream().forEach(categorieId -> {
-				findCategoryToThrowExcepion(allValidCategoryIds, categorieId);
 			});
 		}
 
@@ -112,18 +116,19 @@ public class BookAdminServiceImpl implements BookAdminService {
 
 		List<Category> allValidCategoryIds = categoryRepository.findAllById(categoryIds);
 
-		if (allValidCategoryIds.size() == categoryIds.size()) {
+		if (allValidCategoryIds.size() == 0) {
+			throw new CategoryNotFoundException(categoryIds.get(0));
+		} else if (allValidCategoryIds.size() < categoryIds.size()) {
+			categoryIds.stream().forEach(categorieId -> {
+				findCategoryToThrowExcepion(allValidCategoryIds, categorieId);
+			});
+		} else if (allValidCategoryIds.size() == categoryIds.size()) {
 			categoryIds.forEach(categoryId -> {
 				if (!bookCategoryIds.contains(categoryId)) {
 					throw new CategoryNotFoundInBookException(categoryId);
 				}
 			});
-		} else if (allValidCategoryIds.size() < categoryIds.size()) {
-			categoryIds.stream().forEach(categorieId -> {
-				findCategoryToThrowExcepion(allValidCategoryIds, categorieId);
-			});
 		}
-
 		bookFromDb.get().getCategories().removeAll(allValidCategoryIds);
 		bookRepository.save(bookFromDb.get());
 		return "Category successfully removed.";
