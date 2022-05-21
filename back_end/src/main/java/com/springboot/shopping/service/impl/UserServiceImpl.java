@@ -186,15 +186,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		List<Long> userRoleIds = userRepository.findAllIdsOfRoles(userId);
 		List<Role> allValidRoles = roleRepository.findAllById(roleIds);
 
-		if (allValidRoles.size() == roleIds.size()) {
+		if (allValidRoles.size() == 0) {
+			throw new RoleNotFoundException(roleIds.get(0));
+		} else if (allValidRoles.size() < roleIds.size()) {
+			roleIds.stream().forEach(roleId -> {
+				findRoleToThrowExcepion(allValidRoles, roleId);
+			});
+		} else if (allValidRoles.size() == roleIds.size()) {
 			roleIds.forEach(roleId -> {
 				if (userRoleIds.contains(roleId)) {
 					throw new UserRoleExistException(roleId);
 				}
-			});
-		} else if (allValidRoles.size() < roleIds.size()) {
-			roleIds.stream().forEach(roleId -> {
-				findRoleToThrowExcepion(allValidRoles, roleId);
 			});
 		}
 
@@ -213,15 +215,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		List<Long> userRoleIds = userRepository.findAllIdsOfRoles(userId);
 		List<Role> allValidRoles = roleRepository.findAllById(roleIds);
 
-		if (allValidRoles.size() == roleIds.size()) {
+		if (allValidRoles.size() == 0) {
+			throw new RoleNotFoundException(roleIds.get(0));
+		} else if (allValidRoles.size() < roleIds.size()) {
+			roleIds.stream().forEach(roleId -> {
+				findRoleToThrowExcepion(allValidRoles, roleId);
+			});
+		} else if (allValidRoles.size() == roleIds.size()) {
 			roleIds.forEach(roleId -> {
 				if (!userRoleIds.contains(roleId)) {
 					throw new UserRoleNotFoundException(roleId);
 				}
-			});
-		} else if (allValidRoles.size() < roleIds.size()) {
-			roleIds.stream().forEach(roleId -> {
-				findRoleToThrowExcepion(allValidRoles, roleId);
 			});
 		}
 
