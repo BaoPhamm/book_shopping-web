@@ -2,6 +2,8 @@ package com.springboot.shopping.controller.admin;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.shopping.dto.book.AddCategoryToBookForm;
@@ -37,8 +40,11 @@ public class BookAdminController {
 
 	// Get all books
 	@GetMapping()
-	public ResponseEntity<List<BookAdminResponse>> getAllBooks() {
-		List<BookAdminResponse> allBooks = bookAdminService.findAllBooks();
+	public ResponseEntity<List<BookAdminResponse>> getAllBooks(
+			@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+			@RequestParam(name = "size", required = false, defaultValue = "20") Integer size) {
+		Pageable pageable = PageRequest.of(page, size);
+		List<BookAdminResponse> allBooks = bookAdminService.findAllBooks(pageable);
 		return ResponseEntity.ok(allBooks);
 	}
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +34,9 @@ public class BookAdminServiceImpl implements BookAdminService {
 	private final CommonMapper commonMapper;
 
 	@Override
-	public List<BookAdminResponse> findAllBooks() {
-		List<Book> bookList = bookRepository.findAll();
+	public List<BookAdminResponse> findAllBooks(Pageable pageable) {
+		Page<Book> page = bookRepository.findAll(pageable);
+		List<Book> bookList = page.getContent();
 		return commonMapper.convertToResponseList(bookList, BookAdminResponse.class);
 	}
 

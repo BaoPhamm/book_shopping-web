@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +35,10 @@ public class OrderServiceImpl implements OrderService {
 	private final CommonMapper commonMapper;
 
 	@Override
-	public List<OrderResponse> findAllOrders() {
-		return commonMapper.convertToResponseList(orderRepository.findAllByOrderByIdAsc(), OrderResponse.class);
+	public List<OrderResponse> findAllOrders(Pageable pageable) {
+		Page<Order> page = orderRepository.findAllByOrderByIdAsc(pageable);
+		List<Order> allOrders = page.getContent();
+		return commonMapper.convertToResponseList(allOrders, OrderResponse.class);
 	}
 
 	@Override
@@ -86,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	@Transactional
-	public List<OrderResponse> deleteOrder(Long orderId) {
+	public String deleteOrder(Long orderId) {
 
 		Optional<Order> orderFromDb = orderRepository.findById(orderId);
 		if (orderFromDb.isEmpty()) {
@@ -94,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 		orderFromDb.get().getOrderItems().forEach(orderItem -> orderItemRepository.deleteById(orderItem.getId()));
 		orderRepository.delete(orderFromDb.get());
-		return commonMapper.convertToResponseList(orderRepository.findAllByOrderByIdAsc(), OrderResponse.class);
+		return "Order successfully deleted.";
 	}
 
 }

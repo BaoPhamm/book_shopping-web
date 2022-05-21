@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -97,8 +99,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public List<UserResponse> findAllUsers() {
-		List<UserEntity> allUsers = userRepository.findAll();
+	public List<UserResponse> findAllUsers(Pageable pageable) {
+		Page<UserEntity> page = userRepository.findAll(pageable);
+		List<UserEntity> allUsers = page.getContent();
 		return commonMapper.convertToResponseList(allUsers, UserResponse.class);
 	}
 

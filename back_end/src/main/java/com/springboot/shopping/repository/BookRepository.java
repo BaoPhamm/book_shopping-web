@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.springboot.shopping.model.Book;
 
@@ -24,5 +26,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 	Long getTotalRatings(Long bookId);
 
 	Optional<Book> findByTitle(String bookTitle);
+	
+	Page<Book> findAll(Pageable pageable);
 
 }

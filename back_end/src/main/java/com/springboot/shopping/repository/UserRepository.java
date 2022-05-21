@@ -3,6 +3,8 @@ package com.springboot.shopping.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,4 +22,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 			+ "inner join users_roles ur on u.id = ur.user_entity_id "
 			+ "where ur.user_entity_id = :userId" ,nativeQuery = true)
 	List<Long> findAllIdsOfRoles(Long userId);
+	
+	Page<UserEntity> findAll(Pageable pageable);
 }

@@ -2,14 +2,16 @@ package com.springboot.shopping.service.book;
 
 import java.util.List;
 
-import com.springboot.shopping.dto.book.BookRequest;
+import org.springframework.data.domain.Pageable;
+
 import com.springboot.shopping.dto.book.BookAdminResponse;
+import com.springboot.shopping.dto.book.BookRequest;
 
 public interface BookAdminService {
 
 	BookAdminResponse findBookById(Long bookId);
 
-	List<BookAdminResponse> findAllBooks();
+	List<BookAdminResponse> findAllBooks(Pageable pageable);
 
 	List<BookAdminResponse> findFeaturesBooks();
 

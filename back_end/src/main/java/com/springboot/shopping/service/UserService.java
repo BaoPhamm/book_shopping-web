@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 
 import com.springboot.shopping.dto.PasswordResetRequest;
@@ -25,7 +26,7 @@ public interface UserService {
 
 	UserEntity findUserByUsernameReturnUserEntity(String username);
 
-	List<UserResponse> findAllUsers();
+	List<UserResponse> findAllUsers(Pageable pageable);
 
 	String addRolesToUser(Long userId, List<Long> rolesId);
 

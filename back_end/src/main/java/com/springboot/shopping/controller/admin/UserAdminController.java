@@ -3,6 +3,8 @@ package com.springboot.shopping.controller.admin;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.shopping.dto.user.AddRoleToUserForm;
@@ -40,8 +43,11 @@ public class UserAdminController {
 
 	// Get All users
 	@GetMapping()
-	public ResponseEntity<List<UserResponse>> getAllUsers() {
-		List<UserResponse> allUsers = userService.findAllUsers();
+	public ResponseEntity<List<UserResponse>> getAllUsers(
+			@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+			@RequestParam(name = "size", required = false, defaultValue = "20") Integer size) {
+		Pageable pageable = PageRequest.of(page, size);
+		List<UserResponse> allUsers = userService.findAllUsers(pageable);
 		return ResponseEntity.ok(allUsers);
 	}
 
