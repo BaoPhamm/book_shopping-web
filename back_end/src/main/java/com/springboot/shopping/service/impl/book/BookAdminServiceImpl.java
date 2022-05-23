@@ -184,4 +184,10 @@ public class BookAdminServiceImpl implements BookAdminService {
 	public List<BookAdminResponse> findFeaturesBooks() {
 		return commonMapper.convertToResponseList(bookRepository.findFeaturesBooks(), BookAdminResponse.class);
 	}
+
+	@Override
+	public Long getTotalBooks() {
+		long totalBooks = bookRepository.count();
+		return totalBooks;
+	}
 }

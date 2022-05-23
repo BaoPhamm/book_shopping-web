@@ -5,6 +5,7 @@ import { PopupContainer } from "../PopupForm/Container/index";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@material-ui/styles";
 import Table from "@mui/material/Table";
+import TablePagination from "@mui/material/TablePagination";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -25,10 +26,6 @@ const AddBookButtonContainer = styled("div")(() => ({
 
 const ButtonContainer = styled("div")(() => ({
   display: "flex",
-}));
-
-const Select = styled("select")(() => ({
-  width: "80%",
 }));
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -60,28 +57,95 @@ const useStyles = makeStyles({
   },
 });
 
+const columns = [
+  { id: "id", label: "ID", width: "2%", align: "center" },
+  { id: "title", label: "Title", width: "14%", align: "center" },
+  {
+    id: "author",
+    label: "Author",
+    align: "center",
+    width: "10%",
+  },
+  {
+    id: "totalPages",
+    label: "TotalPage",
+    align: "center",
+    width: "4%",
+  },
+  {
+    id: "requiredAge",
+    label: "ReqAge",
+    align: "center",
+    width: "4%",
+  },
+  {
+    id: "releaseDate",
+    label: "ReleaseDate",
+    align: "center",
+    width: "6%",
+  },
+  {
+    id: "price",
+    label: "Price",
+    align: "center",
+    width: "5%",
+  },
+  {
+    id: "ratingPoint",
+    label: "RatingPoint",
+    align: "center",
+    width: "4%",
+  },
+  {
+    id: "totalRatings",
+    label: "TotalRating",
+    align: "center",
+    width: "4%",
+  },
+  {
+    id: "categories",
+    label: "Categories",
+    align: "center",
+    width: "8%",
+  },
+  {
+    id: "actions",
+    label: "Actions",
+    align: "center",
+    width: "5%",
+  },
+];
+
 const ProductsList = () => {
   const [allProducts, setAllProducts] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [dataChange, toggleDataChange] = useState(false);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [totalPtoducts, setTotalPtoducts] = useState(0);
   const tableClasses = useStyles();
+  const rowsPerPage = 25;
 
   useEffect(() => {
     GetAllBooks();
     GetAllCategories();
+    GetTotalPtoducts();
   }, [dataChange]);
 
   const GetAllBooks = async () => {
     await setIsLoading(true);
-    BookAdminService.getAllBooks().then(async (res) => {
-      console.log(res);
+    BookAdminService.getAllBooks(pageNumber).then(async (res) => {
       await setAllProducts([...res]);
     });
   };
   const GetAllCategories = async () => {
     CategoryService.getAllCategories().then(async (res) => {
       await setAllCategories([...res]);
+    });
+  };
+  const GetTotalPtoducts = async () => {
+    BookAdminService.getTotalBooks().then(async (res) => {
+      await setTotalPtoducts(res.data);
       await setIsLoading(false);
     });
   };
@@ -243,6 +307,17 @@ const ProductsList = () => {
     });
   };
 
+  const handleChangePage = async (event, newPageNumber) => {
+    await setPageNumber(newPageNumber);
+    await toggleDataChange(!dataChange);
+  };
+
+  const getCategogiesString = (categories) => {
+    let CategogiesString = "";
+    categories.map((category) => (CategogiesString += category.name + " - "));
+    return CategogiesString.slice(0, -2);
+  };
+
   return !isLoading ? (
     <Container>
       <AddBookButtonContainer>
@@ -252,128 +327,115 @@ const ProductsList = () => {
           typeSubmit="addNew"
         />
       </AddBookButtonContainer>
-      <TableContainer component={Paper}>
-        <Table
-          size="small"
-          classes={{ root: tableClasses.customTableCell }}
-          aria-label="customized table"
-        >
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="center" style={{ width: "2%" }}>
-                ID
-              </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: "18%" }}>
-                Title
-              </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: "10%" }}>
-                Author
-              </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: "4%" }}>
-                TotalPage
-              </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: "4%" }}>
-                ReqAge
-              </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: "6%" }}>
-                ReleaseDate
-              </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: "5%" }}>
-                Price
-              </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: "4%" }}>
-                RatingPoint
-              </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: "4%" }}>
-                TotalRating
-              </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: "7%" }}>
-                Categories
-              </StyledTableCell>
-              <StyledTableCell align="center" style={{ width: "5%" }}>
-                Actions
-              </StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {allProducts.map((product) => (
-              <StyledTableRow key={product.id}>
-                <StyledTableCell align="center" omponent="th" scope="row">
-                  {product.id}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {product.title}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {product.author}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {product.totalPages}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {product.requiredAge}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {product.releaseDate}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {product.price}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {product.ratingPoint}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  {product.totalRatings}
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  <Select>
-                    {product.categories.map((category) => (
-                      <option value={category.id}>{category.name}</option>
-                    ))}
-                  </Select>
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  <ButtonContainer
-                    sx={{
-                      "& .MuiButton-root": {
-                        fontSize: 11,
-                        padding: "1px 1px 1px 1px",
-                        marginLeft: "1px",
-                      },
-                    }}
+      <Paper sx={{ width: "100%" }}>
+        <TableContainer sx={{ maxHeight: "100vw" }}>
+          <Table
+            className="ProductListTable"
+            stickyHeader
+            size="small"
+            classes={{ root: tableClasses.customTableCell }}
+            aria-label="sticky table"
+          >
+            <TableHead>
+              <StyledTableRow>
+                {columns.map((column) => (
+                  <StyledTableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ width: column.width }}
                   >
-                    <PopupContainer
-                      onSubmit={onUpdateBookSubmit}
-                      typeSubmitGroup="book"
-                      typeSubmit="update"
-                      productDetails={product}
-                    />
-                    <PopupContainer
-                      onSubmit={onAddCatToBookSubmit}
-                      typeSubmitGroup="book"
-                      typeSubmit="addCat"
-                      productDetails={product}
-                      allCategories={allCategories}
-                    />
-                    <PopupContainer
-                      onSubmit={onRemoveCatFromBookSubmit}
-                      typeSubmitGroup="book"
-                      typeSubmit="removeCat"
-                      productDetails={product}
-                    />
-                    <PopupContainer
-                      onSubmit={onDeleteBookSubmit}
-                      typeSubmitGroup="book"
-                      typeSubmit="delete"
-                      productDetails={product}
-                    />
-                  </ButtonContainer>
-                </StyledTableCell>
+                    {column.label}
+                  </StyledTableCell>
+                ))}
               </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {allProducts.map((product, index) => (
+                <StyledTableRow key={product.id} hover role="checkbox">
+                  <StyledTableCell align="center" component="th" scope="row">
+                    {index + pageNumber * rowsPerPage + 1}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {product.title}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {product.author}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {product.totalPages}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {product.requiredAge}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {product.releaseDate}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {product.price}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {product.ratingPoint}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {product.totalRatings}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {getCategogiesString(product.categories)}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    <ButtonContainer
+                      sx={{
+                        "& .MuiButton-root": {
+                          fontSize: 11,
+                          padding: "1px 1px 1px 1px",
+                          marginLeft: "1px",
+                        },
+                      }}
+                    >
+                      <PopupContainer
+                        onSubmit={onUpdateBookSubmit}
+                        typeSubmitGroup="book"
+                        typeSubmit="update"
+                        productDetails={product}
+                      />
+                      <PopupContainer
+                        onSubmit={onAddCatToBookSubmit}
+                        typeSubmitGroup="book"
+                        typeSubmit="addCat"
+                        productDetails={product}
+                        allCategories={allCategories}
+                      />
+                      <PopupContainer
+                        onSubmit={onRemoveCatFromBookSubmit}
+                        typeSubmitGroup="book"
+                        typeSubmit="removeCat"
+                        productDetails={product}
+                      />
+                      <PopupContainer
+                        onSubmit={onDeleteBookSubmit}
+                        typeSubmitGroup="book"
+                        typeSubmit="delete"
+                        productDetails={product}
+                      />
+                    </ButtonContainer>
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[]}
+          component="div"
+          count={totalPtoducts}
+          rowsPerPage={rowsPerPage}
+          page={pageNumber}
+          onPageChange={handleChangePage}
+          labelRowsPerPage="Rows per page"
+          showFirstButton={true}
+          showLastButton={true}
+        />
+      </Paper>
     </Container>
   ) : (
     ""

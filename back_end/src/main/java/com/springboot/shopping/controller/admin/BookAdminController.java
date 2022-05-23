@@ -42,7 +42,7 @@ public class BookAdminController {
 	@GetMapping()
 	public ResponseEntity<List<BookAdminResponse>> getAllBooks(
 			@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
-			@RequestParam(name = "size", required = false, defaultValue = "20") Integer size) {
+			@RequestParam(name = "size", required = false, defaultValue = "25") Integer size) {
 		Pageable pageable = PageRequest.of(page, size);
 		List<BookAdminResponse> allBooks = bookAdminService.findAllBooks(pageable);
 		return ResponseEntity.ok(allBooks);
@@ -96,6 +96,13 @@ public class BookAdminController {
 	public ResponseEntity<String> deleteBook(@PathVariable("id") Long BookId) {
 		String message = bookAdminService.deleteBook(BookId);
 		return ResponseEntity.ok(message);
+	}
+
+	// get total books
+	@GetMapping("/total")
+	public ResponseEntity<Long> getTotalBooks() {
+		Long totalBooks = bookAdminService.getTotalBooks();
+		return ResponseEntity.ok(totalBooks);
 	}
 
 }

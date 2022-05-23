@@ -17,10 +17,14 @@ class BookAdminService {
     return response;
   }
 
-  async getAllBooks() {
+  async getAllBooks(pageNumber) {
     const response = await axios
-      .get(ADMIN_BOOK_API_BASE_URL, { headers: AuthHeader() })
+      .get(ADMIN_BOOK_API_BASE_URL, {
+        params: { page: pageNumber },
+        headers: AuthHeader(),
+      })
       .then(function (response) {
+        console.log(response.data);
         return response.data;
       })
       .catch(function (error) {
@@ -136,6 +140,19 @@ class BookAdminService {
       })
       .then(function (response) {
         console.log(response);
+        return response;
+      })
+      .catch(function (error) {
+        console.log(error);
+        return error.response;
+      });
+    return response;
+  }
+
+  async getTotalBooks() {
+    const response = await axios
+      .get(ADMIN_BOOK_API_BASE_URL + "/total", { headers: AuthHeader() })
+      .then(function (response) {
         return response;
       })
       .catch(function (error) {

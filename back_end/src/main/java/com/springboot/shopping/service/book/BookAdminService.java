@@ -26,5 +26,7 @@ public interface BookAdminService {
 	BookAdminResponse updateBook(BookRequest bookRequest);
 
 	String deleteBook(Long bookId);
+	
+	Long getTotalBooks();
 
 }

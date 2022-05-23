@@ -25,8 +25,6 @@ public class SpringDocConfiguration {
 						"<p><em>Book shopping web API</em></p>").version("v1.0.0")
 						.license(new License().name("Copyright ©2022 BaoPham")
 								.url("https://www.github.com/BaoPhamm")))
-				.externalDocs(new ExternalDocumentation().description("Myshop Website")
-						.url("https://www.github.com/BaoPhamm"))
 				.components(new Components().addSecuritySchemes("appSecret", apiSecretToken))
 				.addSecurityItem(new SecurityRequirement().addList("appSecret"));
 	}
