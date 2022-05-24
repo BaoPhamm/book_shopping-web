@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import RoleAdminService from "../../services/admin/RoleAdminService";
+import RoleAdminService from "../../services/manageAdmin/RoleAdminService";
 import { PopupContainer } from "../PopupForm/Container/index";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@material-ui/styles";

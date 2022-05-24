@@ -1,12 +1,12 @@
 import axios from "axios";
 import AuthHeader from "../AuthHeader";
 
-const ADMIN_USER_API_BASE_URL = "http://localhost:8080/api/v1/admin/users";
+const MANAGE_ADMIN_API_BASE_URL = "http://localhost:8080/api/v1/manage-admin";
 
-class UserAdminService {
-  async getAllUsers(pageNumber) {
+class ManageAdminService {
+  async getAllAdmins(pageNumber) {
     const response = await axios
-      .get(ADMIN_USER_API_BASE_URL, {
+      .get(MANAGE_ADMIN_API_BASE_URL, {
         params: { page: pageNumber },
         headers: AuthHeader(),
       })
@@ -20,9 +20,9 @@ class UserAdminService {
     return response;
   }
 
-  async getUserById(userId) {
+  async getAdminById(adminId) {
     const response = await axios
-      .get(ADMIN_USER_API_BASE_URL + "/" + userId, {
+      .get(MANAGE_ADMIN_API_BASE_URL + "/" + adminId, {
         headers: AuthHeader(),
       })
       .then(function (response) {
@@ -36,9 +36,9 @@ class UserAdminService {
     return response;
   }
 
-  async deleteUser(userId) {
+  async deleteAdmin(adminId) {
     const response = await axios
-      .delete(ADMIN_USER_API_BASE_URL + "/" + userId, {
+      .delete(MANAGE_ADMIN_API_BASE_URL + "/" + adminId, {
         headers: AuthHeader(),
       })
       .then(function (response) {
@@ -52,9 +52,9 @@ class UserAdminService {
     return response;
   }
 
-  async blockUser(userId) {
+  async blockAdmin(adminId) {
     const response = await axios
-      .put(ADMIN_USER_API_BASE_URL + "/block", userId, {
+      .put(MANAGE_ADMIN_API_BASE_URL + "/block", adminId, {
         headers: AuthHeader(),
       })
       .then(function (response) {
@@ -68,9 +68,9 @@ class UserAdminService {
     return response;
   }
 
-  async unBlockUser(userId) {
+  async unBlockAdmin(adminId) {
     const response = await axios
-      .put(ADMIN_USER_API_BASE_URL + "/unblock", userId, {
+      .put(MANAGE_ADMIN_API_BASE_URL + "/unblock", adminId, {
         headers: AuthHeader(),
       })
       .then(function (response) {
@@ -84,9 +84,49 @@ class UserAdminService {
     return response;
   }
 
-  async getTotalUsers() {
+  async addRoleToUser(addRoleToUserRequest) {
     const response = await axios
-      .get(ADMIN_USER_API_BASE_URL + "/total", {
+      .post(
+        MANAGE_ADMIN_API_BASE_URL + "/role/add-to-user",
+        addRoleToUserRequest,
+        {
+          headers: AuthHeader(),
+        }
+      )
+      .then(function (response) {
+        console.log(response);
+        return response;
+      })
+      .catch(function (error) {
+        console.log(error);
+        return error.response;
+      });
+    return response;
+  }
+
+  async removeRoleFromUser(removeRoleFromUserRequest) {
+    const response = await axios
+      .post(
+        MANAGE_ADMIN_API_BASE_URL + "/role/remove-from-user",
+        removeRoleFromUserRequest,
+        {
+          headers: AuthHeader(),
+        }
+      )
+      .then(function (response) {
+        console.log(response);
+        return response;
+      })
+      .catch(function (error) {
+        console.log(error);
+        return error.response;
+      });
+    return response;
+  }
+
+  async getTotalAdmins() {
+    const response = await axios
+      .get(MANAGE_ADMIN_API_BASE_URL + "/total", {
         headers: AuthHeader(),
       })
       .then(function (response) {
@@ -100,4 +140,4 @@ class UserAdminService {
   }
 }
 
-export default new UserAdminService();
+export default new ManageAdminService();

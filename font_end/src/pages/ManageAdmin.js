@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import ProductsList from "../components/admin/ProductsList";
 import UsersList from "../components/admin/UsersList";
-import CategoriesList from "../components/admin/CategoriesList";
+import RolesList from "../components/admin/RolesList";
+import AdminsList from "../components/admin/AdminsList";
 import styled from "styled-components";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -16,7 +16,7 @@ const Container = styled.div`
   margin-top: 1rem;
 `;
 
-const Admin = () => {
+const ManageAdmin = () => {
   const [value, setValue] = useState("1");
   const loginInfo = useSelector(loginSelector);
 
@@ -27,7 +27,7 @@ const Admin = () => {
     await setValue(newValue);
   };
   return !loginInfo.isLoading ? (
-    loginInfo.isAdmin ? (
+    loginInfo.isAdminManager ? (
       <Container>
         <Box
           sx={{
@@ -51,22 +51,22 @@ const Admin = () => {
             >
               <TabList
                 onChange={handleChange}
-                aria-label="BookStore management page"
+                aria-label="BookStore admin management page"
                 centered
               >
-                <Tab label="USERS" value="1" />
-                <Tab label="BOOKS" value="2" />
-                <Tab label="CATEGORIES" value="3" />
+                <Tab label="ADMINS" value="1" />
+                <Tab label="USERS" value="2" />
+                <Tab label="ROLES" value="3" />
               </TabList>
             </Box>
             <TabPanel value="1">
-              <UsersList />
+              <AdminsList />
             </TabPanel>
             <TabPanel value="2">
-              <ProductsList />
+              <UsersList />
             </TabPanel>
             <TabPanel value="3">
-              <CategoriesList />
+              <RolesList />
             </TabPanel>
           </TabContext>
         </Box>
@@ -79,4 +79,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default ManageAdmin;

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import RoleAdminService from "../../services/manageAdmin/RoleAdminService";
-import UserAdminService from "../../services/admin/UserAdminService";
 import ManageAdminService from "../../services/manageAdmin/ManageAdminService";
 import { PopupContainer } from "../PopupForm/Container/index";
 import { styled } from "@mui/material/styles";
@@ -95,7 +94,7 @@ const columns = [
   },
 ];
 
-const UsersList = () => {
+const AdminsList = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [allRoles, setAllRoles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -107,14 +106,14 @@ const UsersList = () => {
   const loginInfo = useSelector(loginSelector);
 
   useEffect(() => {
-    GetAllUsers();
+    GetAllAdmins();
     GetAllRoles();
     GetTotalUsers();
   }, [dataChange]);
 
-  const GetAllUsers = async () => {
+  const GetAllAdmins = async () => {
     await setIsLoading(true);
-    UserAdminService.getAllUsers(pageNumber).then(async (res) => {
+    ManageAdminService.getAllAdmins(pageNumber).then(async (res) => {
       await setAllUsers([...res]);
     });
   };
@@ -124,7 +123,7 @@ const UsersList = () => {
     });
   };
   const GetTotalUsers = async () => {
-    UserAdminService.getTotalUsers().then(async (res) => {
+    ManageAdminService.getTotalAdmins().then(async (res) => {
       await setTotalUsers(res.data);
       await setIsLoading(false);
     });
@@ -185,7 +184,7 @@ const UsersList = () => {
       ManageAdminService.removeRoleFromUser(userRemoveRoleRequest).then(
         async (res) => {
           if (res.status === 200) {
-            alert("Roles successfully removed from user.");
+            alert("Categories successfully removed from user ");
             await toggleDataChange(!dataChange);
           } else if (res.status === 400) {
             alert(res.data.message);
@@ -205,7 +204,7 @@ const UsersList = () => {
     event.preventDefault(event);
 
     console.log(event.target.id.value);
-    UserAdminService.deleteUser(event.target.id.value).then(async (res) => {
+    ManageAdminService.deleteAdmin(event.target.id.value).then(async (res) => {
       console.log(res);
       if (res.status === 200) {
         alert("User successfully deleted.");
@@ -225,7 +224,7 @@ const UsersList = () => {
     event.preventDefault(event);
 
     if (event.target.blockstatus.value === "false") {
-      UserAdminService.blockUser(event.target.id.value).then(async (res) => {
+      ManageAdminService.blockAdmin(event.target.id.value).then(async (res) => {
         if (res.status === 200) {
           alert("User successfully blocked.");
           await toggleDataChange(!dataChange);
@@ -237,17 +236,19 @@ const UsersList = () => {
         }
       });
     } else if (event.target.blockstatus.value === "true") {
-      UserAdminService.unBlockUser(event.target.id.value).then(async (res) => {
-        if (res.status === 200) {
-          alert("User successfully unblocked.");
-          await toggleDataChange(!dataChange);
-        } else if (res.status === 404 || res.status === 405) {
-          alert(res.data.message);
-        } else if (res.status === 403) {
-          alert("Please login again!");
-          await toggleDataChange(!dataChange);
+      ManageAdminService.unBlockAdmin(event.target.id.value).then(
+        async (res) => {
+          if (res.status === 200) {
+            alert("User successfully unblocked.");
+            await toggleDataChange(!dataChange);
+          } else if (res.status === 404 || res.status === 405) {
+            alert(res.data.message);
+          } else if (res.status === 403) {
+            alert("Please login again!");
+            await toggleDataChange(!dataChange);
+          }
         }
-      });
+      );
     }
   };
 
@@ -371,10 +372,120 @@ const UsersList = () => {
           showLastButton={true}
         />
       </Paper>
+      {/* <Paper sx={{ width: "100%", marginTop: "1rem" }}>
+        <TableContainer sx={{ maxHeight: "100vw" }}>
+          <Table
+            size="small"
+            classes={{ root: tableClasses.customTableCell }}
+            aria-label="customized table"
+          >
+            <TableHead>
+              <StyledTableRow>
+                <StyledTableCell align="center" colSpan={8}>
+                  ADMINS
+                </StyledTableCell>
+              </StyledTableRow>
+              <StyledTableRow>
+                {columns.map((column) => (
+                  <StyledTableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ width: column.width }}
+                  >
+                    {column.label}
+                  </StyledTableCell>
+                ))}
+              </StyledTableRow>
+            </TableHead>
+            <TableBody>
+              {allUsers.map((user, index) => (
+                <StyledTableRow key={user.id}>
+                  <StyledTableCell align="center" omponent="th" scope="row">
+                    {index + 1}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {user.username}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {user.firstName}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {user.lastName}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {user.phoneNumber}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {user.address}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {getRolesString(user.roles)}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    <ButtonContainer
+                      sx={{
+                        "& .MuiButton-root": {
+                          fontSize: 11,
+                          padding: "1px 1px 1px 1px",
+                          marginLeft: "1px",
+                        },
+                        "& .MuiFormGroup-root": {
+                          padding: "1px 1px 1px 1px",
+                          marginLeft: "10px",
+                        },
+                        "& .MuiTypography-root": {
+                          fontSize: 13,
+                        },
+                      }}
+                    >
+                      <PopupContainer
+                        onSubmit={onAddRoleToUserSubmit}
+                        typeSubmitGroup="user"
+                        typeSubmit="addRole"
+                        userDetails={user}
+                        allRoles={allRoles}
+                      />
+                      <PopupContainer
+                        onSubmit={onRemoveRoleFromUserSubmit}
+                        typeSubmitGroup="user"
+                        typeSubmit="removeRole"
+                        userDetails={user}
+                      />
+                      <PopupContainer
+                        onSubmit={onDeleteUserSubmit}
+                        typeSubmitGroup="user"
+                        typeSubmit="delete"
+                        userDetails={user}
+                      />
+                      <PopupContainer
+                        onSubmit={onBlockOrUnBlockUserSubmit}
+                        typeSubmitGroup="user"
+                        typeSubmit="block"
+                        userDetails={user}
+                      />
+                    </ButtonContainer>
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[]}
+          component="div"
+          count={totalUsers}
+          rowsPerPage={rowsPerPage}
+          page={pageNumber}
+          onPageChange={handleChangePage}
+          labelRowsPerPage="Rows per page"
+          showFirstButton={true}
+          showLastButton={true}
+        />
+      </Paper> */}
     </Container>
   ) : (
     ""
   );
 };
 
-export default UsersList;
+export default AdminsList;

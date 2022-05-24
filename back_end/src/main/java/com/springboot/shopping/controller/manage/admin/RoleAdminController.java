@@ -1,4 +1,4 @@
-package com.springboot.shopping.controller.admin;
+package com.springboot.shopping.controller.manage.admin;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import com.springboot.shopping.service.RoleService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/admin/role")
+@RequestMapping("/api/v1/manage-admin/role")
 @RequiredArgsConstructor
 public class RoleAdminController {
 

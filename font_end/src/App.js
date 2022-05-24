@@ -10,6 +10,7 @@ import UpdateProfile from "./pages/UpdateProfile";
 import ProductList from "./pages/ProductList";
 import Product from "./pages/Product";
 import Admin from "./pages/Admin";
+import ManageAdmin from "./pages/ManageAdmin";
 import { Provider } from "react-redux";
 import store from "./store";
 
@@ -21,6 +22,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/manage-admin" element={<ManageAdmin />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<UpdateProfile />} />

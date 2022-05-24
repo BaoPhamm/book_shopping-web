@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.springboot.shopping.dto.role.RoleResponse;
+import com.springboot.shopping.exception.role.DeleteDefaultRoleException;
 import com.springboot.shopping.exception.role.RoleExistException;
 import com.springboot.shopping.exception.role.RoleNotFoundException;
+import com.springboot.shopping.exception.role.UpdateDefaultRoleException;
 import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Role;
 import com.springboot.shopping.repository.RoleRepository;
@@ -54,6 +56,11 @@ public class RoleServiceImpl implements RoleService {
 		Optional<Role> roleFromDb = roleRepository.findById(roleId);
 		if (roleFromDb.isEmpty()) {
 			throw new RoleNotFoundException();
+		} else {
+			String rolename = roleFromDb.get().getName();
+			if (rolename.equals("USER") || rolename.equals("ADMANAGER") || rolename.equals("ADMIN")) {
+				throw new UpdateDefaultRoleException(roleFromDb.get().getName());
+			}
 		}
 		Optional<Role> existRoleFromDb = roleRepository.findByname(roleName);
 		if (existRoleFromDb.isPresent()) {
@@ -70,6 +77,11 @@ public class RoleServiceImpl implements RoleService {
 		Optional<Role> roleFromDb = roleRepository.findById(roleId);
 		if (roleFromDb.isEmpty()) {
 			throw new RoleNotFoundException();
+		} else {
+			String rolename = roleFromDb.get().getName();
+			if (rolename.equals("USER") || rolename.equals("ADMANAGER") || rolename.equals("ADMIN")) {
+				throw new DeleteDefaultRoleException(roleFromDb.get().getName());
+			}
 		}
 		roleRepository.delete(roleFromDb.get());
 		return "Role successfully deleted.";

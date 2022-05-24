@@ -96,6 +96,7 @@ export class PopupContainer extends Component {
           <AddRoleToUserButton
             showModal={this.showModal}
             buttonRef={(n) => (this.TriggerButton = n)}
+            isAdminManager={this.props.isAdminManager}
           />
         );
       } else if (this.props.typeSubmit === "removeRole") {
@@ -103,6 +104,7 @@ export class PopupContainer extends Component {
           <RemoveRoleFromUserButton
             showModal={this.showModal}
             buttonRef={(n) => (this.TriggerButton = n)}
+            isAdminManager={this.props.isAdminManager}
           />
         );
       } else if (this.props.typeSubmit === "delete") {

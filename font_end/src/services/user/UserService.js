@@ -10,7 +10,6 @@ class UserService {
         headers: AuthHeader(),
       })
       .then(function (response) {
-        console.log(response);
         return response;
       })
       .catch(function (error) {

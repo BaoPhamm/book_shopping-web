@@ -1,7 +1,8 @@
 import axios from "axios";
 import AuthHeader from "../AuthHeader";
 
-const ADMIN_ROLE_API_BASE_URL = "http://localhost:8080/api/v1/admin/role";
+const ADMIN_ROLE_API_BASE_URL =
+  "http://localhost:8080/api/v1/manage-admin/role";
 
 class RoleAdminService {
   async getRoleByName(roleName) {

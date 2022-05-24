@@ -158,6 +158,15 @@ const Navbar = () => {
               BOOKSTORE MANAGEMENT
             </Link>
           </Logo>
+        ) : loginInfo.isAdminManager ? (
+          <Logo>
+            <Link
+              to="/manage-admin"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              ADMIN MANAGEMENT
+            </Link>
+          </Logo>
         ) : (
           <Logo>
             <Link to="/" style={{ textDecoration: "none", color: "black" }}>

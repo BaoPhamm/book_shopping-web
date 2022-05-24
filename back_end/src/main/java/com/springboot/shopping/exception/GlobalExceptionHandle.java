@@ -22,11 +22,12 @@ import com.springboot.shopping.exception.category.CategoryNotFoundException;
 import com.springboot.shopping.exception.category.CategoryNotFoundInBookException;
 import com.springboot.shopping.exception.order.OrderNotFoundException;
 import com.springboot.shopping.exception.rating.RatingExistException;
+import com.springboot.shopping.exception.role.DeleteDefaultRoleException;
 import com.springboot.shopping.exception.role.RoleExistException;
 import com.springboot.shopping.exception.role.RoleNotFoundException;
-import com.springboot.shopping.exception.user.AdminSelfBlockException;
-import com.springboot.shopping.exception.user.AdminSelfDeleteException;
+import com.springboot.shopping.exception.role.UpdateDefaultRoleException;
 import com.springboot.shopping.exception.user.PhoneNumberExistException;
+import com.springboot.shopping.exception.user.RemoveDefaultRoleException;
 import com.springboot.shopping.exception.user.UserAlreadyBlockedException;
 import com.springboot.shopping.exception.user.UserNotBlockedException;
 import com.springboot.shopping.exception.user.UserNotFoundException;
@@ -134,22 +135,6 @@ public class GlobalExceptionHandle extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
 	}
 
-	@ExceptionHandler(AdminSelfBlockException.class)
-	@ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
-	public final ResponseEntity<ExceptionResponse> handleAdminSelfBlockException(Exception ex, WebRequest request) {
-		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
-				request.getDescription(false), HttpStatus.METHOD_NOT_ALLOWED.value());
-		return new ResponseEntity<>(exceptionResponse, HttpStatus.METHOD_NOT_ALLOWED);
-	}
-
-	@ExceptionHandler(AdminSelfDeleteException.class)
-	@ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
-	public final ResponseEntity<ExceptionResponse> handleAdminSelfDeleteException(Exception ex, WebRequest request) {
-		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
-				request.getDescription(false), HttpStatus.METHOD_NOT_ALLOWED.value());
-		return new ResponseEntity<>(exceptionResponse, HttpStatus.METHOD_NOT_ALLOWED);
-	}
-
 	@ExceptionHandler(PhoneNumberExistException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	public final ResponseEntity<ExceptionResponse> handlePhoneNumberExistException(Exception ex, WebRequest request) {
@@ -204,6 +189,30 @@ public class GlobalExceptionHandle extends ResponseEntityExceptionHandler {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
 				request.getDescription(false), HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(RemoveDefaultRoleException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public final ResponseEntity<ExceptionResponse> handleDeleteRoleNameUserException(Exception ex, WebRequest request) {
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+				request.getDescription(false), HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(DeleteDefaultRoleException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public final ResponseEntity<ExceptionResponse> handleDeleteDefaultRoleException(Exception ex, WebRequest request) {
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+				request.getDescription(false), HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(UpdateDefaultRoleException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public final ResponseEntity<ExceptionResponse> handleUpdateDefaultRoleException(Exception ex, WebRequest request) {
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+				request.getDescription(false), HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
 	}
 
 	@Override

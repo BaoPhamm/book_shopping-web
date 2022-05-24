@@ -32,8 +32,7 @@ import com.springboot.shopping.dto.user.UserRequest;
 import com.springboot.shopping.dto.user.UserResponse;
 import com.springboot.shopping.exception.auth.PasswordException;
 import com.springboot.shopping.exception.role.RoleNotFoundException;
-import com.springboot.shopping.exception.user.AdminSelfBlockException;
-import com.springboot.shopping.exception.user.AdminSelfDeleteException;
+import com.springboot.shopping.exception.user.RemoveDefaultRoleException;
 import com.springboot.shopping.exception.user.PhoneNumberExistException;
 import com.springboot.shopping.exception.user.UserAlreadyBlockedException;
 import com.springboot.shopping.exception.user.UserNotBlockedException;
@@ -76,6 +75,27 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		Optional<UserEntity> userFromDb = userRepository.findById(userId);
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
+		} else {
+			List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName)
+					.collect(Collectors.toList());
+			if (userRoles.contains("ADMIN") || userRoles.contains("ADMANAGER")) {
+				throw new UserNotFoundException();
+			}
+		}
+		return commonMapper.convertToResponse(userFromDb.get(), UserResponse.class);
+	}
+
+	@Override
+	public UserResponse findAdminById(Long adminId) {
+		Optional<UserEntity> userFromDb = userRepository.findById(adminId);
+		if (userFromDb.isEmpty()) {
+			throw new UserNotFoundException();
+		} else {
+			List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName)
+					.collect(Collectors.toList());
+			if (userRoles.contains("ADMANAGER")) {
+				throw new UserNotFoundException();
+			}
 		}
 		return commonMapper.convertToResponse(userFromDb.get(), UserResponse.class);
 	}
@@ -100,9 +120,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public List<UserResponse> findAllUsers(Pageable pageable) {
-		Page<UserEntity> page = userRepository.findAll(pageable);
+		Page<UserEntity> page = userRepository.findAllUsers(pageable);
 		List<UserEntity> allUsers = page.getContent();
 		return commonMapper.convertToResponseList(allUsers, UserResponse.class);
+	}
+
+	@Override
+	public List<UserResponse> findAllAdmins(Pageable pageable) {
+		Page<UserEntity> page = userRepository.findAllAdmins(pageable);
+		List<UserEntity> allAdmins = page.getContent();
+		return commonMapper.convertToResponseList(allAdmins, UserResponse.class);
 	}
 
 	@Override
@@ -125,32 +152,53 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public String deleteUser(Long userId, String adminUsername) {
+	public String deleteUser(Long userId) {
 
 		Optional<UserEntity> userFromDb = userRepository.findById(userId);
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
-		}
-		Optional<UserEntity> adminFromDb = userRepository.findByUsername(adminUsername);
-		if (adminFromDb.get().getId() == userId) {
-			throw new AdminSelfDeleteException();
+		} else {
+			List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName)
+					.collect(Collectors.toList());
+			if (userRoles.contains("ADMIN") || userRoles.contains("ADMANAGER")) {
+				throw new UserNotFoundException();
+			}
 		}
 		userRepository.deleteById(userId);
 		return "User successfully deleted.";
 	}
 
 	@Override
-	public String blockUser(Long userId, String adminUsername) {
+	public String deleteAdmin(Long adminId) {
+
+		Optional<UserEntity> userFromDb = userRepository.findById(adminId);
+		if (userFromDb.isEmpty()) {
+			throw new UserNotFoundException();
+		} else {
+			List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName)
+					.collect(Collectors.toList());
+			if (userRoles.contains("ADMANAGER")) {
+				throw new UserNotFoundException();
+			}
+		}
+		userRepository.deleteById(adminId);
+		return "User successfully deleted.";
+	}
+
+	@Override
+	public String blockUser(Long userId) {
 
 		Optional<UserEntity> userFromDb = userRepository.findById(userId);
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
-		} else if (userFromDb.get().isBlocked()) {
-			throw new UserAlreadyBlockedException();
-		}
-		Optional<UserEntity> adminFromDb = userRepository.findByUsername(adminUsername);
-		if (adminFromDb.get().getId() == userId) {
-			throw new AdminSelfBlockException();
+		} else {
+			List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName)
+					.collect(Collectors.toList());
+			if (userRoles.contains("ADMIN") || userRoles.contains("ADMANAGER")) {
+				throw new UserNotFoundException();
+			} else if (userFromDb.get().isBlocked()) {
+				throw new UserAlreadyBlockedException();
+			}
 		}
 		userFromDb.get().setBlocked(true);
 		userRepository.save(userFromDb.get());
@@ -163,8 +211,54 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		Optional<UserEntity> userFromDb = userRepository.findById(userId);
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
-		} else if (!userFromDb.get().isBlocked()) {
-			throw new UserNotBlockedException();
+		} else {
+			List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName)
+					.collect(Collectors.toList());
+			if (userRoles.contains("ADMIN") || userRoles.contains("ADMANAGER")) {
+				throw new UserNotFoundException();
+			} else if (!userFromDb.get().isBlocked()) {
+				throw new UserNotBlockedException();
+			}
+		}
+		userFromDb.get().setBlocked(false);
+		userRepository.save(userFromDb.get());
+		return "User successfully unblocked.";
+	}
+
+	@Override
+	public String blockAdmin(Long userId) {
+
+		Optional<UserEntity> userFromDb = userRepository.findById(userId);
+		if (userFromDb.isEmpty()) {
+			throw new UserNotFoundException();
+		} else {
+			List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName)
+					.collect(Collectors.toList());
+			if (userRoles.contains("ADMANAGER")) {
+				throw new UserNotFoundException();
+			} else if (userFromDb.get().isBlocked()) {
+				throw new UserAlreadyBlockedException();
+			}
+		}
+		userFromDb.get().setBlocked(true);
+		userRepository.save(userFromDb.get());
+		return "User successfully blocked.";
+	}
+
+	@Override
+	public String unBlockAdmin(Long userId) {
+
+		Optional<UserEntity> userFromDb = userRepository.findById(userId);
+		if (userFromDb.isEmpty()) {
+			throw new UserNotFoundException();
+		} else {
+			List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName)
+					.collect(Collectors.toList());
+			if (userRoles.contains("ADMANAGER")) {
+				throw new UserNotFoundException();
+			} else if (!userFromDb.get().isBlocked()) {
+				throw new UserNotBlockedException();
+			}
 		}
 		userFromDb.get().setBlocked(false);
 		userRepository.save(userFromDb.get());
@@ -186,7 +280,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
 		}
-		List<Long> userRoleIds = userRepository.findAllIdsOfRoles(userId);
+		List<Long> userRoleIds = userRepository.findAllIdsOfUserRoles(userId);
 		List<Role> allValidRoles = roleRepository.findAllById(roleIds);
 
 		if (allValidRoles.size() == 0) {
@@ -196,6 +290,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 				findRoleToThrowExcepion(allValidRoles, roleId);
 			});
 		} else if (allValidRoles.size() == roleIds.size()) {
+			allValidRoles.forEach((role) -> {
+				if (role.getName().equals("ADMANAGER")) {
+					throw new RoleNotFoundException(role.getId());
+				}
+			});
 			roleIds.forEach(roleId -> {
 				if (userRoleIds.contains(roleId)) {
 					throw new UserRoleExistException(roleId);
@@ -215,7 +314,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		if (userFromDb.isEmpty()) {
 			throw new UserNotFoundException();
 		}
-		List<Long> userRoleIds = userRepository.findAllIdsOfRoles(userId);
+		List<Long> userRoleIds = userRepository.findAllIdsOfUserRoles(userId);
 		List<Role> allValidRoles = roleRepository.findAllById(roleIds);
 
 		if (allValidRoles.size() == 0) {
@@ -225,6 +324,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 				findRoleToThrowExcepion(allValidRoles, roleId);
 			});
 		} else if (allValidRoles.size() == roleIds.size()) {
+			allValidRoles.forEach((role) -> {
+				if (role.getName().equals("USER")) {
+					throw new RemoveDefaultRoleException();
+				}
+			});
 			roleIds.forEach(roleId -> {
 				if (!userRoleIds.contains(roleId)) {
 					throw new UserRoleNotFoundException(roleId);
@@ -300,6 +404,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		} else {
 			throw new RuntimeException("Refesh token is missing!");
 		}
+	}
+
+	@Override
+	public Long getTotalUsers() {
+		long totalUsers = userRepository.countTotalUsers();
+		return totalUsers;
+	}
+
+	@Override
+	public Long getTotalAdmins() {
+		long totalAdmins = userRepository.countTotalAdmins();
+		return totalAdmins;
 	}
 
 }

@@ -5,6 +5,9 @@ import { Link, Navigate } from "react-router-dom";
 import AuthService from "../services/user/AuthService";
 import { useSelector, useDispatch } from "react-redux";
 import { loginAction, loginSelector } from "../store/reducers/loginSlice";
+import Alert from "@mui/material/Alert";
+import Collapse from "@mui/material/Collapse";
+import Box from "@mui/material/Box";
 
 const Container = styled.div`
   width: 98vw;
@@ -76,6 +79,8 @@ const TextLinkNoneUnderLine = styled.p`
 const Login = () => {
   const [formUsername, setUsername] = useState("");
   const [formPassword, setPassword] = useState("");
+  const [openAlert, setOpenAlert] = useState(false);
+  const [messageAlert, setmessageAlert] = useState("");
 
   const loginInfo = useSelector(loginSelector);
   const dispatch = useDispatch();
@@ -95,11 +100,13 @@ const Login = () => {
       password: formPassword,
     });
 
-    AuthService.login(authenticationRequest).then((res) => {
+    AuthService.login(authenticationRequest).then(async (res) => {
       if (res.status === 400) {
-        alert("Username and password could not be blank!");
+        await setmessageAlert("Username and password could not be blank!");
+        setOpenAlert(true);
       } else if (res.status === 403) {
-        alert("Wrong username and password.");
+        await setmessageAlert("Wrong username and password.");
+        setOpenAlert(true);
       } else if (res.status === 200) {
         let loginResponse = {
           token: res.data.token,
@@ -141,6 +148,13 @@ const Login = () => {
                 CREATE A NEW ACCOUNT
               </Link>
             </TextLink>
+            <Box sx={{ width: "100%" }}>
+              <Collapse in={openAlert}>
+                <Alert variant="outlined" severity="error">
+                  {messageAlert}
+                </Alert>
+              </Collapse>
+            </Box>
           </Form>
         </Wrapper>
       </Container>

@@ -89,7 +89,7 @@ const Payment = styled.img`
 const Footer = () => {
   const loginInfo = useSelector(loginSelector);
   return !loginInfo.isLoading ? (
-    !loginInfo.isAdmin ? (
+    !loginInfo.isAdmin & !loginInfo.isAdminManager ? (
       <Container>
         <Left>
           <Logo>BOOKSTORE.</Logo>

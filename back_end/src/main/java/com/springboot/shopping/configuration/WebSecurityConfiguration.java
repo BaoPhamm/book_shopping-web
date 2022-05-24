@@ -61,10 +61,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/v1/user/**").hasAnyAuthority("USER");
 
 		// Admin Authorization
-		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/admin/**").hasAnyAuthority("ADMIN");
-		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/admin/**").hasAnyAuthority("ADMIN");
-		http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/v1/admin/**").hasAnyAuthority("ADMIN");
-		http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/v1/admin/**").hasAnyAuthority("ADMIN");
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/admin/**").hasAnyAuthority("ADMIN", "ADMANAGER");
+		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/admin/**").hasAnyAuthority("ADMIN", "ADMANAGER");
+		http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/v1/admin/**").hasAnyAuthority("ADMIN", "ADMANAGER");
+		http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/v1/admin/**").hasAnyAuthority("ADMIN", "ADMANAGER");
+		
+		// Admin-manager Authorization
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/manage-admin/**").hasAnyAuthority("ADMANAGER");
+		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/manage-admin/**").hasAnyAuthority("ADMANAGER");
+		http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/v1/manage-admin/**").hasAnyAuthority("ADMANAGER");
+		http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/v1/manage-admin/**").hasAnyAuthority("ADMANAGER");
 		http.authorizeRequests().anyRequest().fullyAuthenticated();
 
 		// Add AuthorizationFilter

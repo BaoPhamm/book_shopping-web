@@ -16,6 +16,7 @@ const loginSlice = createSlice({
       isBlocked: true,
       isLogged: false,
       isAdmin: false,
+      isAdminManager: false,
       isLoading: true,
     },
   },
@@ -32,6 +33,8 @@ const loginSlice = createSlice({
       state.loginInfo.refreshToken = action.payload.refreshToken;
       state.loginInfo.userRoles = action.payload.userRoles;
       state.loginInfo.isAdmin = action.payload.userRoles.includes("ADMIN");
+      state.loginInfo.isAdminManager =
+        action.payload.userRoles.includes("ADMANAGER");
       state.loginInfo.isBlocked = action.payload.isBlocked;
       state.loginInfo.isLogged = true;
     },
@@ -54,6 +57,7 @@ const loginSlice = createSlice({
       state.loginInfo.userRoles = "";
       state.loginInfo.isLogged = false;
       state.loginInfo.isAdmin = false;
+      state.loginInfo.isAdminManager = false;
       state.loginInfo.isBlocked = true;
       localStorage.removeItem("userLoginInfo");
     },
