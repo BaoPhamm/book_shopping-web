@@ -25,16 +25,21 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	
 	@Query(value = "select u.id, u.address, u.address, u.first_name, u.is_blocked, "
 			+ "u.last_name, u.phone_number, u.username, u.password from users u "
+			+ "where u.id not in "
+			+ "(select u.id from users u "
 			+ "inner join users_roles ur on u.id = ur.user_entity_id "
 			+ "inner join role r on r.id = ur.roles_id "
-			+ "group by u.id "
-			+ "having count(r.id) = 1" ,nativeQuery = true)
+			+ "where r.name = 'ADMIN' "
+			+ "or r.name = 'ADMANAGER')" ,nativeQuery = true)
 	Page<UserEntity> findAllUsers(Pageable pageable);
 	
-	@Query(value = "select count(all_user.id) from "
-			+ "(select user_entity_id as id from users_roles "
-			+ "group by user_entity_id "
-			+ "having count(roles_id) = 1) all_user;" ,nativeQuery = true)
+	@Query(value = "select count(u.id) from users u "
+			+ "where u.id not in "
+			+ "(select u.id from users u "
+			+ "inner join users_roles ur on u.id = ur.user_entity_id "
+			+ "inner join role r on r.id = ur.roles_id "
+			+ "where r.name = 'ADMIN' "
+			+ "or r.name = 'ADMANAGER')" ,nativeQuery = true)
 	Long countTotalUsers();
 	
 	@Query(value = "select u.id, u.address, u.address, u.first_name, u.is_blocked, u.last_name, "

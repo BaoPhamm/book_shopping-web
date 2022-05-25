@@ -6,7 +6,7 @@ import Rating from "@material-ui/lab/Rating";
 const Container = styled.div`
   flex: 1;
   margin: 5px;
-  width: 22vw;
+  width: 18vw;
   height: 400px;
   display: grid-column;
   align-items: center;

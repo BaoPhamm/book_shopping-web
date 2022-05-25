@@ -2,6 +2,8 @@ package com.springboot.shopping.controller.user;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,11 +32,14 @@ public class BookController {
 
 	// Get all books
 	@GetMapping()
-	public ResponseEntity<List<BookResponse>> getAllBooks() {
-		List<BookResponse> allBooks = bookService.findAllBooks();
+	public ResponseEntity<List<BookResponse>> getAllBooks(
+			@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+			@RequestParam(name = "size", required = false, defaultValue = "20") Integer size) {
+		Pageable pageable = PageRequest.of(page, size);
+		List<BookResponse> allBooks = bookService.findAllBooks(pageable);
 		return ResponseEntity.ok(allBooks);
 	}
-	
+
 	// Get features books
 	@GetMapping("/features")
 	public ResponseEntity<List<BookResponse>> getFeaturesBooks() {
@@ -47,5 +52,19 @@ public class BookController {
 	public ResponseEntity<List<BookResponse>> getBooksByCategory(@PathVariable("categoryId") Long categoryId) {
 		List<BookResponse> bookList = bookService.findBooksByCategory(categoryId);
 		return ResponseEntity.ok(bookList);
+	}
+
+	// get total books
+	@GetMapping("/total")
+	public ResponseEntity<Long> getTotalBooks() {
+		Long totalBooks = bookService.getTotalBooks();
+		return ResponseEntity.ok(totalBooks);
+	}
+
+	// get total books by category
+	@GetMapping("/total/{categoryId}")
+	public ResponseEntity<Long> getTotalBooksByCategory(@PathVariable("categoryId") Long categoryId) {
+		Long totalBooksByCategory = bookService.getTotalBooksByCategory(categoryId);
+		return ResponseEntity.ok(totalBooksByCategory);
 	}
 }

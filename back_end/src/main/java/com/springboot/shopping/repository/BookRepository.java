@@ -3,11 +3,11 @@ package com.springboot.shopping.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import com.springboot.shopping.model.Book;
 
@@ -28,5 +28,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 	Optional<Book> findByTitle(String bookTitle);
 	
 	Page<Book> findAll(Pageable pageable);
+	
+	@Query(value = "select count(b.id) from books b "
+			+ "inner join books_categories bc on b.id = bc.book_id "
+			+ "where bc.categories_id = :categoryId" ,nativeQuery = true)
+	Long getTotalBooksByCategory(Long categoryId);
 
 }

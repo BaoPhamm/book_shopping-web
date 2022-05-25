@@ -3,6 +3,8 @@ package com.springboot.shopping.service.impl.book;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.springboot.shopping.dto.book.BookResponse;
@@ -26,8 +28,9 @@ public class BookServiceImpl implements BookService {
 	private final CommonMapper commonMapper;
 
 	@Override
-	public List<BookResponse> findAllBooks() {
-		List<Book> bookList = bookRepository.findAll();
+	public List<BookResponse> findAllBooks(Pageable pageable) {
+		Page<Book> page = bookRepository.findAll(pageable);
+		List<Book> bookList = page.getContent();
 		return commonMapper.convertToResponseList(bookList, BookResponse.class);
 	}
 
@@ -53,6 +56,18 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public List<BookResponse> findFeaturesBooks() {
 		return commonMapper.convertToResponseList(bookRepository.findFeaturesBooks(), BookResponse.class);
+	}
+	
+	@Override
+	public Long getTotalBooks() {
+		long totalBooks = bookRepository.count();
+		return totalBooks;
+	}
+	
+	@Override
+	public Long getTotalBooksByCategory(Long categoryId) {
+		long totalBooksByCategory = bookRepository.getTotalBooksByCategory(categoryId);
+		return totalBooksByCategory;
 	}
 
 }

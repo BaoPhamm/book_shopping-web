@@ -16,9 +16,9 @@ class BookService {
     return response;
   }
 
-  async getAllBooks() {
+  async getAllBooks(pageNumber) {
     const response = await axios
-      .get(BOOK_API_BASE_URL)
+      .get(BOOK_API_BASE_URL, { params: { page: pageNumber } })
       .then(function (response) {
         return response.data;
       })
@@ -47,6 +47,32 @@ class BookService {
       .get(BOOK_API_BASE_URL + "/category/" + categoryId)
       .then(function (response) {
         return response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+        return error.response;
+      });
+    return response;
+  }
+
+  async getTotalBooks() {
+    const response = await axios
+      .get(BOOK_API_BASE_URL + "/total")
+      .then(function (response) {
+        return response;
+      })
+      .catch(function (error) {
+        console.log(error);
+        return error.response;
+      });
+    return response;
+  }
+
+  async getTotalBooksByCategory(categoryId) {
+    const response = await axios
+      .get(BOOK_API_BASE_URL + "/total/" + categoryId)
+      .then(function (response) {
+        return response;
       })
       .catch(function (error) {
         console.log(error);

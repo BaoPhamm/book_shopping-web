@@ -325,21 +325,30 @@ const UsersList = () => {
                         },
                       }}
                     >
-                      <PopupContainer
-                        onSubmit={onAddRoleToUserSubmit}
-                        typeSubmitGroup="user"
-                        typeSubmit="addRole"
-                        userDetails={user}
-                        isAdminManager={loginInfo.isAdminManager}
-                        allRoles={allRoles}
-                      />
-                      <PopupContainer
-                        onSubmit={onRemoveRoleFromUserSubmit}
-                        typeSubmitGroup="user"
-                        typeSubmit="removeRole"
-                        userDetails={user}
-                        isAdminManager={loginInfo.isAdminManager}
-                      />
+                      {loginInfo.isAdminManager ? (
+                        <PopupContainer
+                          onSubmit={onAddRoleToUserSubmit}
+                          typeSubmitGroup="user"
+                          typeSubmit="addRole"
+                          userDetails={user}
+                          isAdminManager={loginInfo.isAdminManager}
+                          allRoles={allRoles}
+                        />
+                      ) : (
+                        ""
+                      )}
+                      {loginInfo.isAdminManager ? (
+                        <PopupContainer
+                          onSubmit={onRemoveRoleFromUserSubmit}
+                          typeSubmitGroup="user"
+                          typeSubmit="removeRole"
+                          userDetails={user}
+                          isAdminManager={loginInfo.isAdminManager}
+                        />
+                      ) : (
+                        ""
+                      )}
+
                       <PopupContainer
                         onSubmit={onDeleteUserSubmit}
                         typeSubmitGroup="user"
