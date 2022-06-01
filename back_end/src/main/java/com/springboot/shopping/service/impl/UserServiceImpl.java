@@ -61,10 +61,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<UserEntity> userFromDb = userRepository.findByUsername(username);
-		if (userFromDb.isEmpty()) {
-			throw new UserNotFoundException();
-		}
+		Optional<UserEntity> userFromDb = Optional
+				.of(userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException()));
+
 		Collection<SimpleGrantedAuthority> Authorities = new ArrayList<>();
 		userFromDb.get().getRoles().forEach(role -> Authorities.add(new SimpleGrantedAuthority(role.getName())));
 		return new User(userFromDb.get().getUsername(), userFromDb.get().getPassword(), Authorities);
@@ -72,49 +71,39 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public UserResponse findUserById(Long userId) {
-		Optional<UserEntity> userFromDb = userRepository.findById(userId);
-		if (userFromDb.isEmpty()) {
+		Optional<UserEntity> userFromDb = Optional
+				.of(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException()));
+
+		List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName).collect(Collectors.toList());
+		if (userRoles.contains("ADMIN") || userRoles.contains("ADMANAGER")) {
 			throw new UserNotFoundException();
-		} else {
-			List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName)
-					.collect(Collectors.toList());
-			if (userRoles.contains("ADMIN") || userRoles.contains("ADMANAGER")) {
-				throw new UserNotFoundException();
-			}
 		}
 		return commonMapper.convertToResponse(userFromDb.get(), UserResponse.class);
 	}
 
 	@Override
 	public UserResponse findAdminById(Long adminId) {
-		Optional<UserEntity> userFromDb = userRepository.findById(adminId);
-		if (userFromDb.isEmpty()) {
+		Optional<UserEntity> userFromDb = Optional
+				.of(userRepository.findById(adminId).orElseThrow(() -> new UserNotFoundException()));
+
+		List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName).collect(Collectors.toList());
+		if (userRoles.contains("ADMANAGER")) {
 			throw new UserNotFoundException();
-		} else {
-			List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName)
-					.collect(Collectors.toList());
-			if (userRoles.contains("ADMANAGER")) {
-				throw new UserNotFoundException();
-			}
 		}
 		return commonMapper.convertToResponse(userFromDb.get(), UserResponse.class);
 	}
 
 	@Override
 	public UserResponse findUserByUsername(String username) {
-		Optional<UserEntity> userFromDb = userRepository.findByUsername(username);
-		if (userFromDb.isEmpty()) {
-			throw new UserNotFoundException();
-		}
+		Optional<UserEntity> userFromDb = Optional
+				.of(userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException()));
 		return commonMapper.convertToResponse(userFromDb.get(), UserResponse.class);
 	}
 
 	@Override
 	public UserEntity findUserByUsernameReturnUserEntity(String username) {
-		Optional<UserEntity> userFromDb = userRepository.findByUsername(username);
-		if (userFromDb.isEmpty()) {
-			throw new UserNotFoundException();
-		}
+		Optional<UserEntity> userFromDb = Optional
+				.of(userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException()));
 		return userFromDb.get();
 	}
 
@@ -134,11 +123,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public UserResponse updateProfile(String username, UserRequest userRequest) {
-		Optional<UserEntity> userFromDb = userRepository.findByUsername(username);
-		if (userFromDb.isEmpty()) {
-			throw new UserNotFoundException();
-		}
+		Optional<UserEntity> userFromDb = Optional
+				.of(userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException()));
 		Optional<UserEntity> checkUserPhoneNumFromDb = userRepository.findByPhoneNumber(userRequest.getPhoneNumber());
+
 		if (!userRequest.getPhoneNumber().equals(userFromDb.get().getPhoneNumber())
 				&& checkUserPhoneNumFromDb.isPresent()) {
 			throw new PhoneNumberExistException();
@@ -153,16 +141,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public String deleteUser(Long userId) {
+		Optional<UserEntity> userFromDb = Optional
+				.of(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException()));
 
-		Optional<UserEntity> userFromDb = userRepository.findById(userId);
-		if (userFromDb.isEmpty()) {
+		List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName).collect(Collectors.toList());
+		if (userRoles.contains("ADMIN") || userRoles.contains("ADMANAGER")) {
 			throw new UserNotFoundException();
-		} else {
-			List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName)
-					.collect(Collectors.toList());
-			if (userRoles.contains("ADMIN") || userRoles.contains("ADMANAGER")) {
-				throw new UserNotFoundException();
-			}
 		}
 		userRepository.deleteById(userId);
 		return "User successfully deleted.";
@@ -170,16 +154,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public String deleteAdmin(Long adminId) {
+		Optional<UserEntity> userFromDb = Optional
+				.of(userRepository.findById(adminId).orElseThrow(() -> new UserNotFoundException()));
 
-		Optional<UserEntity> userFromDb = userRepository.findById(adminId);
-		if (userFromDb.isEmpty()) {
+		List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName).collect(Collectors.toList());
+		if (userRoles.contains("ADMANAGER")) {
 			throw new UserNotFoundException();
-		} else {
-			List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName)
-					.collect(Collectors.toList());
-			if (userRoles.contains("ADMANAGER")) {
-				throw new UserNotFoundException();
-			}
 		}
 		userRepository.deleteById(adminId);
 		return "User successfully deleted.";
@@ -187,18 +167,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public String blockUser(Long userId) {
+		Optional<UserEntity> userFromDb = Optional
+				.of(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException()));
 
-		Optional<UserEntity> userFromDb = userRepository.findById(userId);
-		if (userFromDb.isEmpty()) {
+		List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName).collect(Collectors.toList());
+		if (userRoles.contains("ADMIN") || userRoles.contains("ADMANAGER")) {
 			throw new UserNotFoundException();
-		} else {
-			List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName)
-					.collect(Collectors.toList());
-			if (userRoles.contains("ADMIN") || userRoles.contains("ADMANAGER")) {
-				throw new UserNotFoundException();
-			} else if (userFromDb.get().isBlocked()) {
-				throw new UserAlreadyBlockedException();
-			}
+		} else if (userFromDb.get().isBlocked()) {
+			throw new UserAlreadyBlockedException();
 		}
 		userFromDb.get().setBlocked(true);
 		userRepository.save(userFromDb.get());
@@ -207,19 +183,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public String unBlockUser(Long userId) {
+		Optional<UserEntity> userFromDb = Optional
+				.of(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException()));
 
-		Optional<UserEntity> userFromDb = userRepository.findById(userId);
-		if (userFromDb.isEmpty()) {
+		List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName).collect(Collectors.toList());
+		if (userRoles.contains("ADMIN") || userRoles.contains("ADMANAGER")) {
 			throw new UserNotFoundException();
-		} else {
-			List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName)
-					.collect(Collectors.toList());
-			if (userRoles.contains("ADMIN") || userRoles.contains("ADMANAGER")) {
-				throw new UserNotFoundException();
-			} else if (!userFromDb.get().isBlocked()) {
-				throw new UserNotBlockedException();
-			}
+		} else if (!userFromDb.get().isBlocked()) {
+			throw new UserNotBlockedException();
 		}
+
 		userFromDb.get().setBlocked(false);
 		userRepository.save(userFromDb.get());
 		return "User successfully unblocked.";
@@ -227,18 +200,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public String blockAdmin(Long userId) {
+		Optional<UserEntity> userFromDb = Optional
+				.of(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException()));
 
-		Optional<UserEntity> userFromDb = userRepository.findById(userId);
-		if (userFromDb.isEmpty()) {
+		List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName).collect(Collectors.toList());
+		if (userRoles.contains("ADMANAGER")) {
 			throw new UserNotFoundException();
-		} else {
-			List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName)
-					.collect(Collectors.toList());
-			if (userRoles.contains("ADMANAGER")) {
-				throw new UserNotFoundException();
-			} else if (userFromDb.get().isBlocked()) {
-				throw new UserAlreadyBlockedException();
-			}
+		} else if (userFromDb.get().isBlocked()) {
+			throw new UserAlreadyBlockedException();
 		}
 		userFromDb.get().setBlocked(true);
 		userRepository.save(userFromDb.get());
@@ -247,18 +216,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public String unBlockAdmin(Long userId) {
+		Optional<UserEntity> userFromDb = Optional
+				.of(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException()));
 
-		Optional<UserEntity> userFromDb = userRepository.findById(userId);
-		if (userFromDb.isEmpty()) {
+		List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName).collect(Collectors.toList());
+		if (userRoles.contains("ADMANAGER")) {
 			throw new UserNotFoundException();
-		} else {
-			List<String> userRoles = userFromDb.get().getRoles().stream().map(Role::getName)
-					.collect(Collectors.toList());
-			if (userRoles.contains("ADMANAGER")) {
-				throw new UserNotFoundException();
-			} else if (!userFromDb.get().isBlocked()) {
-				throw new UserNotBlockedException();
-			}
+		} else if (!userFromDb.get().isBlocked()) {
+			throw new UserNotBlockedException();
 		}
 		userFromDb.get().setBlocked(false);
 		userRepository.save(userFromDb.get());
@@ -275,11 +240,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public String addRolesToUser(Long userId, List<Long> roleIds) {
+		Optional<UserEntity> userFromDb = Optional
+				.of(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException()));
 
-		Optional<UserEntity> userFromDb = userRepository.findById(userId);
-		if (userFromDb.isEmpty()) {
-			throw new UserNotFoundException();
-		}
 		List<Long> userRoleIds = userRepository.findAllIdsOfUserRoles(userId);
 		List<Role> allValidRoles = roleRepository.findAllById(roleIds);
 
@@ -309,11 +272,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public String removeRolesFromUser(Long userId, List<Long> roleIds) {
+		Optional<UserEntity> userFromDb = Optional
+				.of(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException()));
 
-		Optional<UserEntity> userFromDb = userRepository.findById(userId);
-		if (userFromDb.isEmpty()) {
-			throw new UserNotFoundException();
-		}
 		List<Long> userRoleIds = userRepository.findAllIdsOfUserRoles(userId);
 		List<Role> allValidRoles = roleRepository.findAllById(roleIds);
 
@@ -343,11 +304,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public String passwordReset(String username, PasswordResetRequest passwordResetRequest) {
+		Optional<UserEntity> userFromDb = Optional
+				.of(userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException()));
 
-		Optional<UserEntity> userFromDb = userRepository.findByUsername(username);
-		if (userFromDb.isEmpty()) {
-			throw new UserNotFoundException();
-		}
 		String currentPassword = passwordResetRequest.getCurrentPassword();
 		String newPassword = passwordResetRequest.getNewPassword();
 		String newPasswordRepeat = passwordResetRequest.getNewPasswordRepeat();
@@ -377,13 +336,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 		if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 			try {
-				// Get username from header
 				String username = jwtProvider.getUsername(authorizationHeader);
-				// Get User entity from DB
 				UserEntity userFromDb = findUserByUsernameReturnUserEntity(username);
-				// Get User roles
 				List<String> userRoles = userFromDb.getRoles().stream().map(Role::getName).collect(Collectors.toList());
-				// Create new accessToken
 				String accessToken = jwtProvider.createToken(username, userRoles);
 
 				Map<String, String> tokens = new HashMap<String, String>();
