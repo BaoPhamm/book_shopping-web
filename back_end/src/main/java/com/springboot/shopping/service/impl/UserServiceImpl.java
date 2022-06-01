@@ -192,7 +192,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		} else if (!userFromDb.get().isBlocked()) {
 			throw new UserNotBlockedException();
 		}
-
 		userFromDb.get().setBlocked(false);
 		userRepository.save(userFromDb.get());
 		return "User successfully unblocked.";
@@ -296,7 +295,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 				}
 			});
 		}
-
 		userFromDb.get().getRoles().removeAll(allValidRoles);
 		userRepository.save(userFromDb.get());
 		return "Role successfully removed.";
@@ -322,7 +320,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		if (!newPassword.equals(newPasswordRepeat)) {
 			throw new PasswordException("Passwords do not match.");
 		}
-
 		userFromDb.get().setPassword(passwordEncoder.encode(newPassword));
 		userRepository.save(userFromDb.get());
 		return "Password successfully changed!";

@@ -43,7 +43,8 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public List<OrderResponse> findOrderByUsername(String username) {
-		return commonMapper.convertToResponseList(orderRepository.findOrderByUsername(username), OrderResponse.class);
+		List<Order> order = orderRepository.findOrderByUsername(username);
+		return commonMapper.convertToResponseList(order, OrderResponse.class);
 	}
 
 	private Book findBook(List<Book> books, Long bookId) {
@@ -91,11 +92,9 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	@Transactional
 	public String deleteOrder(Long orderId) {
+		Optional<Order> orderFromDb = Optional
+				.of(orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException()));
 
-		Optional<Order> orderFromDb = orderRepository.findById(orderId);
-		if (orderFromDb.isEmpty()) {
-			throw new OrderNotFoundException();
-		}
 		orderFromDb.get().getOrderItems().forEach(orderItem -> orderItemRepository.deleteById(orderItem.getId()));
 		orderRepository.delete(orderFromDb.get());
 		return "Order successfully deleted.";

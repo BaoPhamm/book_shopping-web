@@ -27,10 +27,8 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public RoleResponse findRoleByName(String roleName) {
-		Optional<Role> roleFromDb = roleRepository.findByname(roleName);
-		if (roleFromDb.isEmpty()) {
-			throw new RoleNotFoundException();
-		}
+		Optional<Role> roleFromDb = Optional
+				.of(roleRepository.findByname(roleName).orElseThrow(() -> new RoleNotFoundException()));
 		return commonMapper.convertToResponse(roleFromDb.get(), RoleResponse.class);
 	}
 
@@ -53,14 +51,12 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public RoleResponse updateRole(Long roleId, String roleName) {
-		Optional<Role> roleFromDb = roleRepository.findById(roleId);
-		if (roleFromDb.isEmpty()) {
-			throw new RoleNotFoundException();
-		} else {
-			String rolename = roleFromDb.get().getName();
-			if (rolename.equals("USER") || rolename.equals("ADMANAGER") || rolename.equals("ADMIN")) {
-				throw new UpdateDefaultRoleException(roleFromDb.get().getName());
-			}
+		Optional<Role> roleFromDb = Optional
+				.of(roleRepository.findById(roleId).orElseThrow(() -> new RoleNotFoundException()));
+
+		String rolename = roleFromDb.get().getName();
+		if (rolename.equals("USER") || rolename.equals("ADMANAGER") || rolename.equals("ADMIN")) {
+			throw new UpdateDefaultRoleException(roleFromDb.get().getName());
 		}
 		Optional<Role> existRoleFromDb = roleRepository.findByname(roleName);
 		if (existRoleFromDb.isPresent()) {
@@ -74,14 +70,12 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	@Transactional
 	public String deleteRole(Long roleId) {
-		Optional<Role> roleFromDb = roleRepository.findById(roleId);
-		if (roleFromDb.isEmpty()) {
-			throw new RoleNotFoundException();
-		} else {
-			String rolename = roleFromDb.get().getName();
-			if (rolename.equals("USER") || rolename.equals("ADMANAGER") || rolename.equals("ADMIN")) {
-				throw new DeleteDefaultRoleException(roleFromDb.get().getName());
-			}
+		Optional<Role> roleFromDb = Optional
+				.of(roleRepository.findById(roleId).orElseThrow(() -> new RoleNotFoundException()));
+
+		String rolename = roleFromDb.get().getName();
+		if (rolename.equals("USER") || rolename.equals("ADMANAGER") || rolename.equals("ADMIN")) {
+			throw new DeleteDefaultRoleException(roleFromDb.get().getName());
 		}
 		roleRepository.delete(roleFromDb.get());
 		return "Role successfully deleted.";

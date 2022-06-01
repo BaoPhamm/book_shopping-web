@@ -36,10 +36,9 @@ public class RatingServiceImpl implements RatingService {
 		BookRating savedBookRating = ratingRepository.save(newBookRating);
 
 		Long totalBookRatings = bookRepository.getTotalRatings(ratingRequest.getBookId());
-		Optional<Book> currentBook = bookRepository.findById(ratingRequest.getBookId());
-		if (currentBook.isEmpty()) {
-			throw new BookNotFoundException();
-		}
+		Optional<Book> currentBook = Optional
+				.of(bookRepository.findById(ratingRequest.getBookId()).orElseThrow(() -> new BookNotFoundException()));
+
 		Double newRatingPoint = 1.0
 				* ((currentBook.get().getRatingPoint() * (totalBookRatings - 1) + ratingRequest.getPoint())
 						/ totalBookRatings);
@@ -51,15 +50,11 @@ public class RatingServiceImpl implements RatingService {
 
 	@Override
 	public Long getUserRatingPoingBook(String username, Long bookId) {
-		Optional<Book> bookFromDb = bookRepository.findById(bookId);
-		if (bookFromDb.isEmpty()) {
-			throw new BookNotFoundException(bookId);
-		}
+		bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId));
 		Long point = ratingRepository.getUserRatingPoingBook(username, bookId);
 		if (point == null) {
 			return (long) 0;
 		} else {
-			System.out.println(point);
 			return point;
 		}
 	}

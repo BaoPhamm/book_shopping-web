@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.springboot.shopping.dto.RegistrationRequest;
 import com.springboot.shopping.exception.auth.PasswordException;
+import com.springboot.shopping.exception.role.RoleNotFoundException;
 import com.springboot.shopping.exception.user.PhoneNumberExistException;
 import com.springboot.shopping.exception.user.UsernameExistException;
 import com.springboot.shopping.mapper.CommonMapper;
@@ -52,7 +53,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 		}
 
 		// Create default role is "USER"
-		Optional<Role> role = roleRepository.findByname("USER");
+		Optional<Role> role = Optional
+				.of(roleRepository.findByname("USER").orElseThrow(() -> new RoleNotFoundException()));
 
 		newUser.getRoles().add(role.get());
 		newUser.setBlocked(false);

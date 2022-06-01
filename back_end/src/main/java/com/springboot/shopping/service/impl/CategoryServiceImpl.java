@@ -26,19 +26,15 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategoryResponse findCategoryById(Long categoryId) {
-		Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
-		if (categoryFromDb.isEmpty()) {
-			throw new CategoryNotFoundException();
-		}
+		Optional<Category> categoryFromDb = Optional
+				.of(categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException()));
 		return commonMapper.convertToResponse(categoryFromDb.get(), CategoryResponse.class);
 	}
 
 	@Override
 	public CategoryResponse findCategoryByName(String categoryName) {
-		Optional<Category> categoryFromDb = categoryRepository.findByName(categoryName);
-		if (categoryFromDb.isEmpty()) {
-			throw new CategoryNotFoundException();
-		}
+		Optional<Category> categoryFromDb = Optional
+				.of(categoryRepository.findByName(categoryName).orElseThrow(() -> new CategoryNotFoundException()));
 		return commonMapper.convertToResponse(categoryFromDb.get(), CategoryResponse.class);
 	}
 
@@ -60,10 +56,8 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategoryResponse updateCategory(CategoryRequest categoryRequest) {
-		Optional<Category> categoryFromDb = categoryRepository.findById(categoryRequest.getId());
-		if (categoryFromDb.isEmpty()) {
-			throw new CategoryNotFoundException();
-		}
+		Optional<Category> categoryFromDb = Optional.of(categoryRepository.findById(categoryRequest.getId())
+				.orElseThrow(() -> new CategoryNotFoundException()));
 		categoryFromDb.get().setName(categoryRequest.getName());
 		categoryFromDb.get().setDescription(categoryRequest.getDescription());
 		categoryFromDb.get().setImgSrc(categoryRequest.getImgSrc());
@@ -74,10 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	@Transactional
 	public String deleteCategory(Long categoryId) {
-		Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
-		if (categoryFromDb.isEmpty()) {
-			throw new CategoryNotFoundException();
-		}
+		categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException());
 		categoryRepository.deleteById(categoryId);
 		return "Category successfully deleted.";
 	}
