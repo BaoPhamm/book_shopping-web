@@ -42,16 +42,13 @@ public class BookAdminServiceImpl implements BookAdminService {
 
 	@Override
 	public BookAdminResponse findBookById(Long bookId) {
-		Optional<Book> bookFromDb = bookRepository.findById(bookId);
-		if (bookFromDb.isEmpty()) {
-			throw new BookNotFoundException();
-		}
+		Optional<Book> bookFromDb = Optional
+				.of(bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException()));
 		return commonMapper.convertToResponse(bookFromDb.get(), BookAdminResponse.class);
 	}
 
 	@Override
 	public BookAdminResponse createBook(BookRequest bookRequest) {
-
 		Optional<Book> bookCheckTitleFromDb = bookRepository.findByTitle(bookRequest.getTitle());
 		if (bookCheckTitleFromDb.isPresent()) {
 			throw new BookExistException(bookRequest.getTitle());
@@ -73,11 +70,9 @@ public class BookAdminServiceImpl implements BookAdminService {
 
 	@Override
 	public String addCategoriesToBook(Long bookId, List<Long> categoryIds) {
+		Optional<Book> bookFromDb = Optional
+				.of(bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId)));
 
-		Optional<Book> bookFromDb = bookRepository.findById(bookId);
-		if (bookFromDb.isEmpty()) {
-			throw new BookNotFoundException(bookId);
-		}
 		List<Long> bookCategoryIds = new ArrayList<>();
 		bookFromDb.get().getCategories().stream().forEach((Category) -> {
 			bookCategoryIds.add(Category.getId());
@@ -107,18 +102,15 @@ public class BookAdminServiceImpl implements BookAdminService {
 
 	@Override
 	public String removeCategoriesFromBook(Long bookId, List<Long> categoryIds) {
+		Optional<Book> bookFromDb = Optional
+				.of(bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId)));
 
-		Optional<Book> bookFromDb = bookRepository.findById(bookId);
-		if (bookFromDb.isEmpty()) {
-			throw new BookNotFoundException(bookId);
-		}
 		List<Long> bookCategoryIds = new ArrayList<>();
 		bookFromDb.get().getCategories().stream().forEach((Category) -> {
 			bookCategoryIds.add(Category.getId());
 		});
 
 		List<Category> allValidCategoryIds = categoryRepository.findAllById(categoryIds);
-
 		if (allValidCategoryIds.size() == 0) {
 			throw new CategoryNotFoundException(categoryIds.get(0));
 		} else if (allValidCategoryIds.size() < categoryIds.size()) {
@@ -139,11 +131,9 @@ public class BookAdminServiceImpl implements BookAdminService {
 
 	@Override
 	public BookAdminResponse updateBook(BookRequest bookRequest) {
+		Optional<Book> bookFromDb = Optional.of(bookRepository.findById(bookRequest.getId())
+				.orElseThrow(() -> new BookNotFoundException(bookRequest.getId())));
 
-		Optional<Book> bookFromDb = bookRepository.findById(bookRequest.getId());
-		if (bookFromDb.isEmpty()) {
-			throw new BookNotFoundException(bookRequest.getId());
-		}
 		Optional<Book> bookCheckTitleFromDb = bookRepository.findByTitle(bookRequest.getTitle());
 		if (!bookRequest.getTitle().equals(bookFromDb.get().getTitle()) && bookCheckTitleFromDb.isPresent()) {
 			throw new BookExistException(bookRequest.getTitle());
@@ -161,23 +151,16 @@ public class BookAdminServiceImpl implements BookAdminService {
 	@Override
 	@Transactional
 	public String deleteBook(Long bookId) {
-
-		Optional<Book> bookFromDb = bookRepository.findById(bookId);
-		if (bookFromDb.isEmpty()) {
-			throw new BookNotFoundException(bookId);
-		}
+		bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId));
 		bookRepository.deleteById(bookId);
 		return "Book successfully deleted.";
 	}
 
 	@Override
 	public List<BookAdminResponse> findBooksByCategory(Long categoryId) {
-
-		Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
-		if (categoryFromDb.isEmpty()) {
-			throw new CategoryNotFoundException(categoryId);
-		}
-		return commonMapper.convertToResponseList(bookRepository.findByCategory(categoryId), BookAdminResponse.class);
+		categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException(categoryId));
+		List<Book> bookList = bookRepository.findByCategory(categoryId);
+		return commonMapper.convertToResponseList(bookList, BookAdminResponse.class);
 	}
 
 	@Override

@@ -12,7 +12,6 @@ import com.springboot.shopping.exception.book.BookNotFoundException;
 import com.springboot.shopping.exception.category.CategoryNotFoundException;
 import com.springboot.shopping.mapper.CommonMapper;
 import com.springboot.shopping.model.Book;
-import com.springboot.shopping.model.Category;
 import com.springboot.shopping.repository.BookRepository;
 import com.springboot.shopping.repository.CategoryRepository;
 import com.springboot.shopping.service.book.BookService;
@@ -36,34 +35,30 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public BookResponse findBookById(Long bookId) {
-		Optional<Book> bookFromDb = bookRepository.findById(bookId);
-		if (bookFromDb.isEmpty()) {
-			throw new BookNotFoundException();
-		}
+		Optional<Book> bookFromDb = Optional
+				.of(bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException()));
 		return commonMapper.convertToResponse(bookFromDb.get(), BookResponse.class);
 	}
 
 	@Override
 	public List<BookResponse> findBooksByCategory(Long categoryId) {
+		categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException());
 
-		Optional<Category> categoryFromDb = categoryRepository.findById(categoryId);
-		if (categoryFromDb.isEmpty()) {
-			throw new CategoryNotFoundException();
-		}
-		return commonMapper.convertToResponseList(bookRepository.findByCategory(categoryId), BookResponse.class);
+		List<Book> bookList = bookRepository.findByCategory(categoryId);
+		return commonMapper.convertToResponseList(bookList, BookResponse.class);
 	}
 
 	@Override
 	public List<BookResponse> findFeaturesBooks() {
 		return commonMapper.convertToResponseList(bookRepository.findFeaturesBooks(), BookResponse.class);
 	}
-	
+
 	@Override
 	public Long getTotalBooks() {
 		long totalBooks = bookRepository.count();
 		return totalBooks;
 	}
-	
+
 	@Override
 	public Long getTotalBooksByCategory(Long categoryId) {
 		long totalBooksByCategory = bookRepository.getTotalBooksByCategory(categoryId);
