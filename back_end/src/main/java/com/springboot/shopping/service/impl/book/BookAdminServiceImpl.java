@@ -42,9 +42,8 @@ public class BookAdminServiceImpl implements BookAdminService {
 
 	@Override
 	public BookAdminResponse findBookById(Long bookId) {
-		Optional<Book> bookFromDb = Optional
-				.of(bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException()));
-		return commonMapper.convertToResponse(bookFromDb.get(), BookAdminResponse.class);
+		Book bookFromDb = bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException());
+		return commonMapper.convertToResponse(bookFromDb, BookAdminResponse.class);
 	}
 
 	@Override
@@ -70,11 +69,10 @@ public class BookAdminServiceImpl implements BookAdminService {
 
 	@Override
 	public String addCategoriesToBook(Long bookId, List<Long> categoryIds) {
-		Optional<Book> bookFromDb = Optional
-				.of(bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId)));
+		Book bookFromDb = bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId));
 
 		List<Long> bookCategoryIds = new ArrayList<>();
-		bookFromDb.get().getCategories().stream().forEach((Category) -> {
+		bookFromDb.getCategories().stream().forEach((Category) -> {
 			bookCategoryIds.add(Category.getId());
 		});
 		List<Category> allValidCategoryIds = categoryRepository.findAllById(categoryIds);
@@ -95,18 +93,17 @@ public class BookAdminServiceImpl implements BookAdminService {
 			});
 		}
 
-		bookFromDb.get().getCategories().addAll(allValidCategoryIds);
-		bookRepository.save(bookFromDb.get());
+		bookFromDb.getCategories().addAll(allValidCategoryIds);
+		bookRepository.save(bookFromDb);
 		return "Category successfully added.";
 	}
 
 	@Override
 	public String removeCategoriesFromBook(Long bookId, List<Long> categoryIds) {
-		Optional<Book> bookFromDb = Optional
-				.of(bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId)));
+		Book bookFromDb = bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId));
 
 		List<Long> bookCategoryIds = new ArrayList<>();
-		bookFromDb.get().getCategories().stream().forEach((Category) -> {
+		bookFromDb.getCategories().stream().forEach((Category) -> {
 			bookCategoryIds.add(Category.getId());
 		});
 
@@ -124,26 +121,26 @@ public class BookAdminServiceImpl implements BookAdminService {
 				}
 			});
 		}
-		bookFromDb.get().getCategories().removeAll(allValidCategoryIds);
-		bookRepository.save(bookFromDb.get());
+		bookFromDb.getCategories().removeAll(allValidCategoryIds);
+		bookRepository.save(bookFromDb);
 		return "Category successfully removed.";
 	}
 
 	@Override
 	public BookAdminResponse updateBook(BookRequest bookRequest) {
-		Optional<Book> bookFromDb = Optional.of(bookRepository.findById(bookRequest.getId())
-				.orElseThrow(() -> new BookNotFoundException(bookRequest.getId())));
+		Book bookFromDb = bookRepository.findById(bookRequest.getId())
+				.orElseThrow(() -> new BookNotFoundException(bookRequest.getId()));
 
 		Optional<Book> bookCheckTitleFromDb = bookRepository.findByTitle(bookRequest.getTitle());
-		if (!bookRequest.getTitle().equals(bookFromDb.get().getTitle()) && bookCheckTitleFromDb.isPresent()) {
+		if (!bookRequest.getTitle().equals(bookFromDb.getTitle()) && bookCheckTitleFromDb.isPresent()) {
 			throw new BookExistException(bookRequest.getTitle());
 		}
 
 		Book newBookInfo = commonMapper.convertToEntity(bookRequest, Book.class);
-		newBookInfo.setCategories(bookFromDb.get().getCategories());
-		newBookInfo.setCreateDate(bookFromDb.get().getCreateDate());
-		newBookInfo.setRatingPoint(bookFromDb.get().getRatingPoint());
-		newBookInfo.setTotalRatings(bookFromDb.get().getTotalRatings());
+		newBookInfo.setCategories(bookFromDb.getCategories());
+		newBookInfo.setCreateDate(bookFromDb.getCreateDate());
+		newBookInfo.setRatingPoint(bookFromDb.getRatingPoint());
+		newBookInfo.setTotalRatings(bookFromDb.getTotalRatings());
 		Book updatedBook = bookRepository.save(newBookInfo);
 		return commonMapper.convertToResponse(updatedBook, BookAdminResponse.class);
 	}

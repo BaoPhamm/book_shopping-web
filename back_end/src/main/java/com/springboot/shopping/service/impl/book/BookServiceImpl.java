@@ -35,9 +35,8 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public BookResponse findBookById(Long bookId) {
-		Optional<Book> bookFromDb = Optional
-				.of(bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException()));
-		return commonMapper.convertToResponse(bookFromDb.get(), BookResponse.class);
+		Book bookFromDb = bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException());
+		return commonMapper.convertToResponse(bookFromDb, BookResponse.class);
 	}
 
 	@Override

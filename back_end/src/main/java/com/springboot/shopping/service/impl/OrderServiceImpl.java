@@ -92,11 +92,10 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	@Transactional
 	public String deleteOrder(Long orderId) {
-		Optional<Order> orderFromDb = Optional
-				.of(orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException()));
+		Order orderFromDb = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException());
 
-		orderFromDb.get().getOrderItems().forEach(orderItem -> orderItemRepository.deleteById(orderItem.getId()));
-		orderRepository.delete(orderFromDb.get());
+		orderFromDb.getOrderItems().forEach(orderItem -> orderItemRepository.deleteById(orderItem.getId()));
+		orderRepository.delete(orderFromDb);
 		return "Order successfully deleted.";
 	}
 

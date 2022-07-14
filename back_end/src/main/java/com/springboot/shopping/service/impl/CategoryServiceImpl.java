@@ -26,16 +26,16 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategoryResponse findCategoryById(Long categoryId) {
-		Optional<Category> categoryFromDb = Optional
-				.of(categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException()));
-		return commonMapper.convertToResponse(categoryFromDb.get(), CategoryResponse.class);
+		Category categoryFromDb = categoryRepository.findById(categoryId)
+				.orElseThrow(() -> new CategoryNotFoundException());
+		return commonMapper.convertToResponse(categoryFromDb, CategoryResponse.class);
 	}
 
 	@Override
 	public CategoryResponse findCategoryByName(String categoryName) {
-		Optional<Category> categoryFromDb = Optional
-				.of(categoryRepository.findByName(categoryName).orElseThrow(() -> new CategoryNotFoundException()));
-		return commonMapper.convertToResponse(categoryFromDb.get(), CategoryResponse.class);
+		Category categoryFromDb = categoryRepository.findByName(categoryName)
+				.orElseThrow(() -> new CategoryNotFoundException());
+		return commonMapper.convertToResponse(categoryFromDb, CategoryResponse.class);
 	}
 
 	@Override
@@ -56,12 +56,12 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategoryResponse updateCategory(CategoryRequest categoryRequest) {
-		Optional<Category> categoryFromDb = Optional.of(categoryRepository.findById(categoryRequest.getId())
-				.orElseThrow(() -> new CategoryNotFoundException()));
-		categoryFromDb.get().setName(categoryRequest.getName());
-		categoryFromDb.get().setDescription(categoryRequest.getDescription());
-		categoryFromDb.get().setImgSrc(categoryRequest.getImgSrc());
-		Category updatedCategory = categoryRepository.save(categoryFromDb.get());
+		Category categoryFromDb = categoryRepository.findById(categoryRequest.getId())
+				.orElseThrow(() -> new CategoryNotFoundException());
+		categoryFromDb.setName(categoryRequest.getName());
+		categoryFromDb.setDescription(categoryRequest.getDescription());
+		categoryFromDb.setImgSrc(categoryRequest.getImgSrc());
+		Category updatedCategory = categoryRepository.save(categoryFromDb);
 		return commonMapper.convertToResponse(updatedCategory, CategoryResponse.class);
 	}
 

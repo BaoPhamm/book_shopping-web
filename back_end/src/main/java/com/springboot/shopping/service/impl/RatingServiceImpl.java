@@ -36,15 +36,14 @@ public class RatingServiceImpl implements RatingService {
 		BookRating savedBookRating = ratingRepository.save(newBookRating);
 
 		Long totalBookRatings = bookRepository.getTotalRatings(ratingRequest.getBookId());
-		Optional<Book> currentBook = Optional
-				.of(bookRepository.findById(ratingRequest.getBookId()).orElseThrow(() -> new BookNotFoundException()));
+		Book currentBook = bookRepository.findById(ratingRequest.getBookId()).orElseThrow(() -> new BookNotFoundException());
 
 		Double newRatingPoint = 1.0
-				* ((currentBook.get().getRatingPoint() * (totalBookRatings - 1) + ratingRequest.getPoint())
+				* ((currentBook.getRatingPoint() * (totalBookRatings - 1) + ratingRequest.getPoint())
 						/ totalBookRatings);
-		currentBook.get().setRatingPoint(newRatingPoint);
-		currentBook.get().setTotalRatings(totalBookRatings);
-		bookRepository.save(currentBook.get());
+		currentBook.setRatingPoint(newRatingPoint);
+		currentBook.setTotalRatings(totalBookRatings);
+		bookRepository.save(currentBook);
 		return commonMapper.convertToResponse(savedBookRating, RatingResponse.class);
 	}
 

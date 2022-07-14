@@ -53,10 +53,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 		}
 
 		// Create default role is "USER"
-		Optional<Role> role = Optional
-				.of(roleRepository.findByname("USER").orElseThrow(() -> new RoleNotFoundException()));
+		Role role = roleRepository.findByname("USER").orElseThrow(() -> new RoleNotFoundException());
 
-		newUser.getRoles().add(role.get());
+		newUser.getRoles().add(role);
 		newUser.setBlocked(false);
 		newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 		userRepository.save(newUser);
